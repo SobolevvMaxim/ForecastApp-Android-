@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HomeworksAndroid</string>
+    <string name="city_example">City, NN</string>
+    <string name="example_date">01 month 2000</string>
+    <string name="weather_image">Weather Image</string>
+    <string name="example_date2">01.01.2000</string>
+    <string name="sunny">Sunny</string>
 </resources>
