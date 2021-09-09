@@ -12,6 +12,7 @@
         <activity android:name=".CitiesActivity"/>
         <activity android:name=".MainPageActivity"
             android:exported="true"
+            android:theme="@style/AppTheme"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
