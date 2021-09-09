@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">HomeworksAndroid</string>
+    <string name="cities_activity_title">Choose the city</string>
     <string name="city_example">City, NN</string>
     <string name="example_date">01 month 2000</string>
     <string name="weather_image">Weather Image</string>
     <string name="example_date2">01.01.2000</string>
     <string name="sunny">Sunny</string>
+    <string name="add_city">add_city</string>
+    <string name="underscore_image">underscore_image</string>
+    <string name="done_image">done_image</string>
 </resources>
