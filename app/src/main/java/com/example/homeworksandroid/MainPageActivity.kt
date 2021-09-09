@@ -8,9 +8,14 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
+            chooseCity()
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainPageFragment.create())
+                .replace(R.id.container_main, MainPageFragment.create())
                 .commit()
         }
+    }
+
+    private fun chooseCity() {
+
     }
 }

@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HomeworksAndroid">
-        <activity android:name=".MainPageActivity">
+        <activity android:name=".CitiesActivity"/>
+        <activity android:name=".MainPageActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
