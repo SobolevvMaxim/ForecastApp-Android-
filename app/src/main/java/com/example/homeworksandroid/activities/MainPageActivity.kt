@@ -1,7 +1,10 @@
-package com.example.homeworksandroid
+package com.example.homeworksandroid.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.homeworksandroid.R
+import com.example.homeworksandroid.fragments.MainPageFragment
 
 class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,6 +19,6 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
     }
 
     private fun chooseCity() {
-
+        startActivity(Intent(this, CitiesActivity::class.java))
     }
 }

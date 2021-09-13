@@ -19,7 +19,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_cr_btn"
         tools:ignore="VectorDrawableCompat"
-        android:contentDescription="@string/add_city" />
+        android:clickable="true"
+        android:contentDescription="@string/add_city"
+        android:focusable="true" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cities_recyclerView"

@@ -9,4 +9,8 @@
     <string name="add_city">add_city</string>
     <string name="underscore_image">underscore_image</string>
     <string name="done_image">done_image</string>
+    <string name="cancel">CANCEL</string>
+    <string name="ok">OK</string>
+    <string name="dialog_title">Please put the city name</string>
+    <string name="dialog_hint">City name</string>
 </resources>
