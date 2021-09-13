@@ -19,6 +19,7 @@ import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import kotlinx.android.synthetic.main.choose_city_fragment.*
+import kotlinx.android.synthetic.main.put_city_dialog.*
 
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
@@ -51,20 +52,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
-    @SuppressLint("InflateParams")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.choose_city_fragment, container, false)
-        view.findViewById<ImageButton>(R.id.button_add_city).setOnClickListener {
-            showNoticeDialog()
-        }
-        return view
-    }
-
-    @SuppressLint("ResourceType", "InflateParams")
     private fun showNoticeDialog() {
         val inflater = requireActivity().layoutInflater
 
@@ -79,6 +66,20 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             }
             show()
         }
+
+//        val ad = AlertDialog.Builder(requireContext()).apply {
+//            setCancelable(true)
+//            setView(R.layout.put_city_dialog)
+//            setPositiveButton("OK") { _, _ ->
+//                val cityInput = city_edit_text.text.toString()
+//                viewModel.value.search(cityInput)
+//            }
+//            setNegativeButton("Cancel") { dialog, _ ->
+//                dialog.cancel()
+//            }
+//            show()
+//        }
+
     }
 
     private fun setRecyclerView(cities: LinkedHashSet<CityWeather>) {
