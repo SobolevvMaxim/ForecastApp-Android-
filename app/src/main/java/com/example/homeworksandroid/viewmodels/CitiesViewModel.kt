@@ -9,10 +9,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.repos.CitiesRepository
+import com.example.homeworksandroid.repos.TemperatureRepository
 import kotlinx.coroutines.*
 
 class CitiesViewModel : ViewModel() {
     private val citiesSearchRepos = CitiesRepository(App.citiesService)
+    private val temperatureSearchRepos = TemperatureRepository(App.temperatureService)
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
@@ -22,7 +24,6 @@ class CitiesViewModel : ViewModel() {
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
-
 
     private var searchJob: Job? = null
 
@@ -39,7 +40,7 @@ class CitiesViewModel : ViewModel() {
             Log.d("MY_ERROR", "search: $text")
             val cityWeatherResponse = citiesSearchRepos.search(text as String)
             cityWeatherResponse.getOrNull()?.let { city ->
-                addCity(name = text, cityWeather = city)
+                searchTemperature(city)
             } ?: run {
                 _errorLiveData.postValue(
                     cityWeatherResponse.exceptionOrNull()?.message ?: "unexpected exception"
@@ -59,5 +60,23 @@ class CitiesViewModel : ViewModel() {
 
         return true
 
+    }
+
+    private fun searchTemperature(city: CityWeather){
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch(exceptionHandler) {
+            delay(500)
+            Log.d("MY_ERROR", "search for coordinates:" +
+                    " lat ${city.lat}, lon ${city.lon}")
+            val cityTemperatureResponse = temperatureSearchRepos.searchTemp(city)
+            cityTemperatureResponse.getOrNull()?.let {
+                Log.d("MY_ERROR", "adding city: $city ")
+                addCity(city.name, city)
+            }?: run {
+                _errorLiveData.postValue(
+                    cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
+                )
+            }
+        }
     }
 }

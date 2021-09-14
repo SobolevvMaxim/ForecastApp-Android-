@@ -1,6 +1,7 @@
 package com.example.homeworksandroid.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,14 +18,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
+import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
+import okhttp3.internal.toImmutableList
 
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
         fun create() = CitiesFragment()
     }
+
     private lateinit var citiesAdapter: CitiesAdapter
 
     private val viewModel = viewModels<CitiesViewModel>()
@@ -32,17 +36,17 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(viewModel.value.citiesLiveData.value.isNullOrEmpty())
+        if (viewModel.value.citiesLiveData.value.isNullOrEmpty())
             showNoticeDialog()
 
-        setRecyclerView((viewModel.value.citiesLiveData.value?: linkedSetOf()))
+        setRecyclerView((viewModel.value.citiesLiveData.value ?: linkedSetOf()))
 
-        viewModel.value.citiesLiveData.observe(viewLifecycleOwner){
+        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             Log.d("MY_ERROR", "onViewCreated: $it")
             updateRecyclerView(it)
         }
 
-        viewModel.value.errorLiveData.observe(viewLifecycleOwner){
+        viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             Log.d("MY_ERROR", "error: $it")
         }
@@ -52,10 +56,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
+    @SuppressLint("InflateParams")
     private fun showNoticeDialog() {
-        val inflater = requireActivity().layoutInflater
-
         AlertDialog.Builder(requireContext()).create().apply {
+            val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.put_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
                 val cityInput = findViewById<EditText>(R.id.city_edit_text)?.text.toString()
@@ -66,20 +70,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             }
             show()
         }
-
-//        val ad = AlertDialog.Builder(requireContext()).apply {
-//            setCancelable(true)
-//            setView(R.layout.put_city_dialog)
-//            setPositiveButton("OK") { _, _ ->
-//                val cityInput = city_edit_text.text.toString()
-//                viewModel.value.search(cityInput)
-//            }
-//            setNegativeButton("Cancel") { dialog, _ ->
-//                dialog.cancel()
-//            }
-//            show()
-//        }
-
     }
 
     private fun setRecyclerView(cities: LinkedHashSet<CityWeather>) {
@@ -93,10 +83,21 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
-    private fun updateRecyclerView(cities: LinkedHashSet<CityWeather>){
+    private fun updateRecyclerView(cities: LinkedHashSet<CityWeather>) {
         cities_recyclerView.adapter?.let {
             val adapter = it as CitiesAdapter
             adapter.updateValues(cities)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val city = viewModel.value.citiesLiveData.value?.elementAt(0)
+        val list = LinkedHashSet(viewModel.value.citiesLiveData.value)
+        startActivity(Intent(context, MainPageActivity::class.java).apply {
+            putExtra("CITY_NAME", city?.name + ", " + city?.country)
+            putExtra("TEMPERATURE_ARRAY", list)
+        })
+        // TODO: 14.09.2021 GetCity to main activity
     }
 }

@@ -4,18 +4,18 @@ import com.example.homeworksandroid.CityWeather
 import com.google.gson.annotations.SerializedName
 import kotlin.math.roundToInt
 
-data class CityResponse(
-    val coord: Any,
-    @SerializedName("weather") val weather: List<Weather>,
+data class CoordinatesResponse(
+    @SerializedName("coord")val coord: Coord,
+    val weather: List<Weather>,
     val base: String,
-    @SerializedName("main") val main: Temperature,
+    val main: Temperature,
     val visibility: Int,
     val wind: Any,
     val clouds: Any,
     val dt: Any,
     @SerializedName("sys") val sys: Sys,
     val timezone: Any,
-    @SerializedName("id") val id: String,
+    val id: String,
     val name: String,
     val cod: Int
 
@@ -25,8 +25,8 @@ data class CityResponse(
         name = name,
         id = id,
         country = sys.country,
-        temp = main.temp.roundToInt() - 273,
-        description = weather[0].main
+        lat = coord.lat,
+        lon = coord.lon,
     )
 }
 
@@ -51,4 +51,9 @@ data class Sys(
     val ID: Int,
     val message: Double,
     val country: String
+)
+
+data class Coord(
+    val lat: String,
+    val lon: String
 )

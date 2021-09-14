@@ -12,5 +12,5 @@ interface CitiesService {
     fun searchCityAsync(
         @Query("q") query: String,
         @Query("appid") ApiKey: String = API_KEY
-    ): Deferred<Response<CityResponse>>
+    ): Deferred<Response<CoordinatesResponse>>
 }

@@ -2,6 +2,7 @@ package com.example.homeworksandroid
 
 import android.app.Application
 import com.example.homeworksandroid.services.CitiesService
+import com.example.homeworksandroid.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,6 +22,8 @@ class App : Application() {
             .build()
 
         val citiesService: CitiesService = retrofit.create(CitiesService::class.java)
+        val temperatureService: TemperatureService =
+            retrofit.create(TemperatureService::class.java)
 
         private fun getHttpClientWithInterceptor(): OkHttpClient {
             val interceptor = HttpLoggingInterceptor()

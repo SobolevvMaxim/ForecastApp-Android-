@@ -4,6 +4,7 @@ data class CityWeather(
     val name: String,
     val id: String,
     val country: String,
-    val temp: Int,
-    val description: String
+    val lat: String,
+    val lon: String,
+    var temperatures: ArrayList<Pair<Int, String>> = mutableListOf<Pair<Int, String>>() as ArrayList<Pair<Int, String>>
     )
