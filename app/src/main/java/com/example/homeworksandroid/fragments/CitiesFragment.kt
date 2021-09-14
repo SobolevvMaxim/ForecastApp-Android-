@@ -1,14 +1,11 @@
 package com.example.homeworksandroid.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -18,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
-import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlinx.android.synthetic.main.put_city_dialog.*
-import okhttp3.internal.toImmutableList
+
+const val CITY_KEY = "CITY_KEY"
+const val TEMPERATURES = "TEMPERATURES"
+const val DESCRIPTIONS = "TEMPERATURES"
 
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
@@ -44,6 +42,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             Log.d("MY_ERROR", "onViewCreated: $it")
             updateRecyclerView(it)
+            writeCity()
         }
 
         viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
@@ -90,14 +89,24 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun writeCity(){
         val city = viewModel.value.citiesLiveData.value?.elementAt(0)
-        val list = LinkedHashSet(viewModel.value.citiesLiveData.value)
-        startActivity(Intent(context, MainPageActivity::class.java).apply {
-            putExtra("CITY_NAME", city?.name + ", " + city?.country)
-            putExtra("TEMPERATURE_ARRAY", list)
-        })
-        // TODO: 14.09.2021 GetCity to main activity
+        val name = city?.name + ", " + city?.country
+        val temps = mutableSetOf<String>()
+        val descriptions = mutableSetOf<String>()
+
+        city?.temperatures?.map {
+            temps.add(it.first.toString())
+            descriptions.add(it.second)
+        }
+
+        val pref = activity?.getSharedPreferences(CITY_KEY, Context.MODE_PRIVATE) ?: return
+        with(pref.edit()){
+            putString(CITY_KEY, name)
+            putStringSet("${TEMPERATURES}_$name", temps)
+            putStringSet("${DESCRIPTIONS}_$name", descriptions)
+            apply()
+        }
+        Log.d("MY_ERROR", "written: temps $temps, descs $descriptions")
     }
 }
