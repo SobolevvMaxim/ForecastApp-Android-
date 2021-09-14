@@ -36,23 +36,11 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
 
         val pref = getSharedPreferences(CITY_KEY, Context.MODE_PRIVATE)
         val cityName = pref.getString(CITY_KEY, "ERROR")
-        val temperaturesSet = pref.getStringSet("${TEMPERATURES}_$cityName", emptySet())
-        val descriptionsSet =pref.getStringSet("${DESCRIPTIONS}_$cityName", emptySet())
-        Log.d("MY_ERROR", "pref $pref from main city $cityName temps ${temperaturesSet?.size}" +
-                " descs ${descriptionsSet?.size}")
+        val temperature = pref.getString(cityName, "20")
 
         currentCity.text = cityName
-        todaysTemp.text = temperaturesSet?.elementAt(0)
-        tempDay1.text = temperaturesSet?.elementAt(1)?: todaysTemp.text
-        tempDay2.text = temperaturesSet?.elementAt(2)?: tempDay1.text
-        tempDay3.text = temperaturesSet?.elementAt(3)?: tempDay2.text
-        tempDay4.text = temperaturesSet?.elementAt(4)?: tempDay3.text
+        todaysTemp.text = temperature
 
-        today_sunny.text = descriptionsSet?.elementAt(0)
-        sunnyDay1.text = descriptionsSet?.elementAt(1)?: today_sunny.text
-        sunnyDay2.text = descriptionsSet?.elementAt(2)?:sunnyDay1.text
-        sunnyDay3.text = descriptionsSet?.elementAt(3)?:sunnyDay2.text
-        sunnyDay4.text = descriptionsSet?.elementAt(4)?:sunnyDay3.text
 
     }
 }

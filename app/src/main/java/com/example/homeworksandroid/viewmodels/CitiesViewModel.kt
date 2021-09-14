@@ -55,6 +55,10 @@ class CitiesViewModel : ViewModel() {
         }
         _citiesLiveData.value?.let {
             it.add(cityWeather)
+
+            if(it.size == 1)
+                it.elementAt(0).chosen = true
+
             _citiesLiveData.postValue(it)
         } ?: _citiesLiveData.postValue(linkedSetOf(cityWeather))
 

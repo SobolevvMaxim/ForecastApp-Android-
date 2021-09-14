@@ -80,6 +80,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             citiesAdapter = CitiesAdapter(it)
             userRecycle?.adapter = citiesAdapter
         }
+
     }
 
     private fun updateRecyclerView(cities: LinkedHashSet<CityWeather>) {
@@ -89,24 +90,24 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
-    private fun writeCity(){
-        val city = viewModel.value.citiesLiveData.value?.elementAt(0)
+    private fun writeCity() {
+        val chosen = if(viewModel.value.citiesLiveData.value?.size == 1) 0 else viewModel.value.citiesLiveData.value?.indexOfFirst { it.chosen }
+        val city = chosen.let { viewModel.value.citiesLiveData.value?.elementAt(it!!) }
         val name = city?.name + ", " + city?.country
-        val temps = mutableSetOf<String>()
-        val descriptions = mutableSetOf<String>()
-
-        city?.temperatures?.map {
-            temps.add(it.first.toString())
-            descriptions.add(it.second)
-        }
+        val temperature = city?.temperatures?.get(0)?.first.toString()
+//        val temps = mutableSetOf<String>()
+//        val descriptions = mutableSetOf<String>()
+//
+//        city?.temperatures?.map {
+//            temps.add(it.first.toString())
+//            descriptions.add(it.second)
+//        }
 
         val pref = activity?.getSharedPreferences(CITY_KEY, Context.MODE_PRIVATE) ?: return
-        with(pref.edit()){
+        with(pref.edit()) {
             putString(CITY_KEY, name)
-            putStringSet("${TEMPERATURES}_$name", temps)
-            putStringSet("${DESCRIPTIONS}_$name", descriptions)
+            putString(name, temperature)
             apply()
         }
-        Log.d("MY_ERROR", "written: temps $temps, descs $descriptions")
     }
 }
