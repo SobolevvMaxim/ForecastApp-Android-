@@ -26,10 +26,11 @@ class CitiesAdapter(private val cities: LinkedHashSet<CityWeather>) :
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.city_item, parent, false)
 
-        return ViewHolder(view).listen { position, _ ->
-            if(position in 0..cities.size)
-                changeChosen(position)
-        }
+        return ViewHolder(view)
+//        return ViewHolder(view).listen { position, _ -> // todo extension is not working?
+//            if(position in 0..cities.size)
+//                changeChosen(position)
+//        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

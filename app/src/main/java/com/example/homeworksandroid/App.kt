@@ -22,7 +22,7 @@ class App : Application() {
             .build()
 
         val citiesService: CitiesService = retrofit.create(CitiesService::class.java)
-        val temperatureService: TemperatureService =
+        val forecastService: TemperatureService =
             retrofit.create(TemperatureService::class.java)
 
         private fun getHttpClientWithInterceptor(): OkHttpClient {

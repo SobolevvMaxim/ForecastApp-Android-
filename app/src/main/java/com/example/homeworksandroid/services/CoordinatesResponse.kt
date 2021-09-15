@@ -6,9 +6,9 @@ import kotlin.math.roundToInt
 
 data class CoordinatesResponse(
     @SerializedName("coord")val coord: Coord,
-    val weather: List<Weather>,
+    val weather: Any,
     val base: String,
-    val main: Temperature,
+    val main: Any,
     val visibility: Int,
     val wind: Any,
     val clouds: Any,
@@ -29,22 +29,6 @@ data class CoordinatesResponse(
         lon = coord.lon,
     )
 }
-
-data class Weather(
-    val id: Int,
-    val main: String,
-    val description: String,
-    val icon: String
-)
-
-data class Temperature(
-    val temp: Double,
-    val feelsLike: Double,
-    val tempMin: Double,
-    val tempMax: Double,
-    val pressure: Int,
-    val humidity: Int
-)
 
 data class Sys(
     val type: Int,

@@ -23,8 +23,6 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
                 .replace(R.id.container_main, MainPageFragment.create())
                 .commit()
         }
-
-
     }
 
     private fun chooseCity() {
@@ -40,7 +38,5 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
 
         currentCity.text = cityName
         todaysTemp.text = temperature
-
-
     }
 }

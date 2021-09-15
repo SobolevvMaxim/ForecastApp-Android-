@@ -10,7 +10,7 @@ data class TemperatureResponse(
     val lon: String,
     val timezone: String,
     val timezoneOffset: String,
-    val current: Current,
+    val current: Any,
     val minutely: Any,
     val hourly: Any,
     @SerializedName("daily")val daily: List<Daily>,
@@ -26,61 +26,17 @@ data class TemperatureResponse(
     }
 }
 
-data class Current(
-    val dt: String?,
-    val sunrise: String?,
-    val sunset: String?,
-    val temp: String?,
-    val f: String?,
-    val press: String?,
-    val hum: String?,
-    val dew: String?,
-    val uvi: String?,
-    val clouds: String?,
-    val vis: String?,
-    val wind: String?,
-    val windDeg: String?,
-    val weather: Any?,
-    val minutely: Any?,
-    val hourly: Any?,
-    val daily: List<Daily>
-)
-
 data class Daily(
-    val dt: String?,
-    val sunrise: String?,
-    val sunset: String?,
-    val moon: String?,
-    val moonSet: String?,
-    val phase: String?,
     val temp: Temp,
-    val fells: Any?,
-    val press: String?,
-    val hum: String?,
-    val dew: String?,
-    val w1: String?,
-    val w2: String?,
-    val w3: String?,
-    val clouds: String?,
-    val uvi: String?,
-    val pop: String?,
-    val rain: String?,
-    val snow: String?,
     val weather: List<WeatherData>
 )
 
 data class Temp(
     val day: Double,
-    val min: String?,
-    val max: String?,
-    val night: String?,
-    val eve: String?,
-    val morn: String?
 )
 
 data class WeatherData(
     val id: String?,
     val main: String,
     val description: String,
-    val icon: Any?
 )

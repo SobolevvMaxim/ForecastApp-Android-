@@ -5,7 +5,7 @@ import com.example.homeworksandroid.services.TemperatureService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TemperatureRepository(
+class ForecastRepository(
     private val temperatureService: TemperatureService
 ) {
     suspend fun searchTemp(city: CityWeather): Result<CityWeather> {

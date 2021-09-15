@@ -1,5 +1,6 @@
 package com.example.homeworksandroid.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -20,13 +21,10 @@ class CitiesActivity : AppCompatActivity(R.layout.acitvity_choose_city) {
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            android.R.id.home -> {
-                finish()
-                return false
-            }
+    override fun onBackPressed() {
+        when(supportFragmentManager.backStackEntryCount){
+            0 -> super.onBackPressed()
+            else -> supportFragmentManager.popBackStack()
         }
-        return super.onContextItemSelected(item)
     }
 }

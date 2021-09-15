@@ -1,7 +1,6 @@
 package com.example.homeworksandroid.viewmodels
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,12 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.repos.CitiesRepository
-import com.example.homeworksandroid.repos.TemperatureRepository
+import com.example.homeworksandroid.repos.ForecastRepository
 import kotlinx.coroutines.*
 
 class CitiesViewModel : ViewModel() {
     private val citiesSearchRepos = CitiesRepository(App.citiesService)
-    private val temperatureSearchRepos = TemperatureRepository(App.temperatureService)
+    private val forecastSearchRepos = ForecastRepository(App.forecastService)
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
@@ -40,7 +39,7 @@ class CitiesViewModel : ViewModel() {
             Log.d("MY_ERROR", "search: $text")
             val cityWeatherResponse = citiesSearchRepos.search(text as String)
             cityWeatherResponse.getOrNull()?.let { city ->
-                searchTemperature(city)
+                searchForecast(city)
             } ?: run {
                 _errorLiveData.postValue(
                     cityWeatherResponse.exceptionOrNull()?.message ?: "unexpected exception"
@@ -66,13 +65,13 @@ class CitiesViewModel : ViewModel() {
 
     }
 
-    private fun searchTemperature(city: CityWeather){
+    private fun searchForecast(city: CityWeather){
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
             Log.d("MY_ERROR", "search for coordinates:" +
                     " lat ${city.lat}, lon ${city.lon}")
-            val cityTemperatureResponse = temperatureSearchRepos.searchTemp(city)
+            val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
             cityTemperatureResponse.getOrNull()?.let {
                 Log.d("MY_ERROR", "adding city: $city ")
                 addCity(city.name, city)
