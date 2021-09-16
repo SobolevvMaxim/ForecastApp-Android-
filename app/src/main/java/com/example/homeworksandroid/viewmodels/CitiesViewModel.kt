@@ -55,7 +55,7 @@ class CitiesViewModel : ViewModel() {
         _citiesLiveData.value?.let {
             it.add(cityWeather)
 
-            if(it.size == 1)
+            if (it.size == 1)
                 it.elementAt(0).chosen = true
 
             _citiesLiveData.postValue(it)
@@ -65,17 +65,19 @@ class CitiesViewModel : ViewModel() {
 
     }
 
-    private fun searchForecast(city: CityWeather){
+    private fun searchForecast(city: CityWeather) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            Log.d("MY_ERROR", "search for coordinates:" +
-                    " lat ${city.lat}, lon ${city.lon}")
+            Log.d(
+                "MY_ERROR", "search for coordinates:" +
+                        " lat ${city.lat}, lon ${city.lon}"
+            )
             val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
             cityTemperatureResponse.getOrNull()?.let {
                 Log.d("MY_ERROR", "adding city: $city ")
                 addCity(city.name, city)
-            }?: run {
+            } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
                 )
