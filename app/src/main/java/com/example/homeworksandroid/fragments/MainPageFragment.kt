@@ -18,8 +18,10 @@ import com.example.homeworksandroid.R
 import com.example.homeworksandroid.adapters.ForecastAdapter
 import com.example.homeworksandroid.viewmodels.MainPageViewModel
 import kotlinx.android.synthetic.main.main_page_fragment.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
@@ -30,6 +32,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private val viewModel = viewModels<MainPageViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -56,16 +59,18 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         currentCity.text = cityInfoText
         todaysTemp.text = city.temperatures[0].first.toString()
         today_sunny.text = city.temperatures[0].second
-        currentDate.text = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
-        setRecyclerView(city.temperatures)
+        currentDate.text = city.forecastDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+        setRecyclerView(city)
     }
 
-    private fun setRecyclerView(temperatures: ArrayList<Pair<Int, String>>) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setRecyclerView(city: CityWeather) {
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         val forecastRecycle: RecyclerView? = view?.findViewById(R.id.forecast_recycler)
         forecastRecycle?.layoutManager = layoutManager
+        val date = LocalDate.parse(city.forecastDate, DateTimeFormatter.ISO_LOCAL_DATE)
 
-        forecastAdapter = ForecastAdapter(temperatures.apply { removeFirst() })
+        forecastAdapter = ForecastAdapter(city.temperatures.apply { removeFirst() }, date)
         forecastRecycle?.adapter = forecastAdapter
     }
 

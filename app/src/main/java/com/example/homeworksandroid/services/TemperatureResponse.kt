@@ -3,6 +3,8 @@ package com.example.homeworksandroid.services
 import android.util.Log
 import com.example.homeworksandroid.CityWeather
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
 data class TemperatureResponse(

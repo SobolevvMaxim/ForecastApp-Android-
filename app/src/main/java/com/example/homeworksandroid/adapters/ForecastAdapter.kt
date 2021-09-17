@@ -1,6 +1,5 @@
 package com.example.homeworksandroid.adapters
 
-import android.icu.util.Calendar
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +8,11 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.R
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class ForecastAdapter(private val forecast: ArrayList<Pair<Int, String>>) :
+class ForecastAdapter(private val forecast: ArrayList<Pair<Int, String>>, private val fromDateTime: LocalDate) :
     RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +34,7 @@ class ForecastAdapter(private val forecast: ArrayList<Pair<Int, String>>) :
             holder.apply {
                 temperatureTV.text = it.first.toString()
                 descriptionTV.text = it.second
-                date.text = LocalDateTime.now().plusDays(position.toLong() + 1).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                date.text = fromDateTime.plusDays(position.toLong() + 1).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             }
         }
     }
