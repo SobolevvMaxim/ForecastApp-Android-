@@ -82,4 +82,6 @@ class CitiesViewModel : ViewModel() {
             _citiesLiveData.postValue(forecastSearchRepos.getAll())
         }
     }
+
+    fun isDbEmpty(): Boolean = forecastSearchRepos.isDbEmpty()
 }

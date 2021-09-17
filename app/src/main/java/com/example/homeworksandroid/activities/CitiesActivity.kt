@@ -1,8 +1,6 @@
 package com.example.homeworksandroid.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.fragments.CitiesFragment

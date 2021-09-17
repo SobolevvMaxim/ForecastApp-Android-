@@ -20,6 +20,7 @@ import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import kotlinx.android.synthetic.main.choose_city_fragment.*
+import kotlinx.coroutines.delay
 
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
@@ -35,15 +36,14 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
         if (savedInstanceState == null) {
             viewModel.value.getAddedCities()
+//            if(viewModel.value.isDbEmpty())
+//                showNoticeDialog()
         }
-
-        if (viewModel.value.citiesLiveData.value.isNullOrEmpty())
-            showNoticeDialog()
-
-        setRecyclerView()
 
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             Log.d("MY_ERROR", "onViewCreated: $it")
+            if(it.isEmpty())
+                showNoticeDialog()
             updateRecyclerView(it)
         }
 
@@ -55,6 +55,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         button_add_city.setOnClickListener {
             showNoticeDialog()
         }
+
+        setRecyclerView()
     }
 
     @SuppressLint("InflateParams")

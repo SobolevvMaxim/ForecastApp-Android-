@@ -50,4 +50,6 @@ class ForecastRepository(
 
         return addedCities ?: emptySet()
     }
+
+    fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 }
