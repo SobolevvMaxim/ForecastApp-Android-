@@ -84,6 +84,7 @@
         app:layout_constraintTop_toBottomOf="@+id/todaysTemp" />
 
     <LinearLayout
+        android:id="@+id/llmain"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="21dp"
@@ -92,245 +93,20 @@
         android:layout_marginEnd="21dp"
         android:layout_marginRight="21dp"
         android:layout_marginBottom="150dp"
-        android:orientation="horizontal"
         android:divider="@drawable/separtor"
         android:dividerPadding="3dp"
+        android:orientation="horizontal"
         android:showDividers="middle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/today_sunny">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/nextDay1"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/forecast_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/dateDay1"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:fontFamily="@font/roboto"
-                android:fontFeatureSettings="pnum, lnum"
-                android:gravity="center"
-                android:lineSpacingExtra="18sp"
-                android:text="@string/example_date2"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/small_image1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateDay1"
-                app:srcCompat="@drawable/image2" />
-
-            <TextView
-                android:id="@+id/tempDay1"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="25"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/small_image1" />
-
-            <TextView
-                android:id="@+id/sunnyDay1"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="@string/sunny"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tempDay1" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/nextDay2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/dateDay2"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:fontFamily="@font/roboto"
-                android:fontFeatureSettings="pnum, lnum"
-                android:gravity="center"
-                android:lineSpacingExtra="18sp"
-                android:text="@string/example_date2"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/small_image2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateDay2"
-                app:srcCompat="@drawable/image2" />
-
-            <TextView
-                android:id="@+id/tempDay2"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="25"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/small_image2" />
-
-            <TextView
-                android:id="@+id/sunnyDay2"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="@string/sunny"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tempDay2" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/nextDay3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/dateDay3"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:fontFamily="@font/roboto"
-                android:fontFeatureSettings="pnum, lnum"
-                android:gravity="center"
-                android:lineSpacingExtra="18sp"
-                android:text="@string/example_date2"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/small_image3"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateDay3"
-                app:srcCompat="@drawable/image2" />
-
-            <TextView
-                android:id="@+id/tempDay3"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="25"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/small_image3" />
-
-            <TextView
-                android:id="@+id/sunnyDay3"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="@string/sunny"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tempDay3" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/nextDay4"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/dateDay4"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:fontFamily="@font/roboto"
-                android:fontFeatureSettings="pnum, lnum"
-                android:gravity="center"
-                android:lineSpacingExtra="18sp"
-                android:text="@string/example_date2"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/small_image4"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dateDay4"
-                app:srcCompat="@drawable/image2" />
-
-            <TextView
-                android:id="@+id/tempDay4"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="25"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/small_image4" />
-
-            <TextView
-                android:id="@+id/sunnyDay4"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:fontFamily="@font/roboto"
-                android:gravity="center"
-                android:text="@string/sunny"
-                android:textColor="@color/grey"
-                android:textSize="12sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tempDay4" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            android:orientation="horizontal" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

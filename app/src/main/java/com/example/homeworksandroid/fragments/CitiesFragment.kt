@@ -19,6 +19,7 @@ import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
+import com.example.homeworksandroid.adapters.MyOnCLickListener
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.coroutines.delay
 
@@ -79,10 +80,16 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         val userRecycle: RecyclerView? = view?.findViewById(R.id.cities_recyclerView)
         userRecycle?.layoutManager = layoutManager
 
-        citiesAdapter = CitiesAdapter()
+        citiesAdapter = CitiesAdapter(onClickListener = MyOnCLickListener {
+            changeChosenCityInBase(it.name)
+        })
         userRecycle?.adapter = citiesAdapter
 
 
+    }
+
+    private fun changeChosenCityInBase(newChosenName: String) {
+        viewModel.value.changeChosenCities(newChosenName = newChosenName)
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {

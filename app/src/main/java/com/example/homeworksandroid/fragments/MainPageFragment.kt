@@ -1,21 +1,32 @@
 package com.example.homeworksandroid.fragments
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.activities.CitiesActivity
 import com.example.homeworksandroid.R
+import com.example.homeworksandroid.adapters.ForecastAdapter
 import com.example.homeworksandroid.viewmodels.MainPageViewModel
+import kotlinx.android.synthetic.main.main_page_fragment.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
     }
+
+    private lateinit var forecastAdapter: ForecastAdapter
 
     private val viewModel = viewModels<MainPageViewModel>()
 
@@ -25,6 +36,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             it?.let {
                 Log.d("MY_ERROR", "city got in fragment: $it ")
+                updateView(it)
             }
         }
 
@@ -36,6 +48,25 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         view.findViewById<ImageButton>(R.id.mainAddButton).setOnClickListener {
             addCityActivity()
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateView(city: CityWeather) {
+        val cityInfoText = "${city.name}, ${city.country}"
+        currentCity.text = cityInfoText
+        todaysTemp.text = city.temperatures[0].first.toString()
+        today_sunny.text = city.temperatures[0].second
+        currentDate.text = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+        setRecyclerView(city.temperatures)
+    }
+
+    private fun setRecyclerView(temperatures: ArrayList<Pair<Int, String>>) {
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        val forecastRecycle: RecyclerView? = view?.findViewById(R.id.forecast_recycler)
+        forecastRecycle?.layoutManager = layoutManager
+
+        forecastAdapter = ForecastAdapter(temperatures.apply { removeFirst() })
+        forecastRecycle?.adapter = forecastAdapter
     }
 
     private fun addCityActivity() {

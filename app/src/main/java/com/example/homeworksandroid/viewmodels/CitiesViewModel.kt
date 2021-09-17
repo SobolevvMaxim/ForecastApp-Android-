@@ -48,14 +48,6 @@ class CitiesViewModel : ViewModel() {
         }
     }
 
-    private fun addCity(name: String = ""): Boolean {
-        if (_citiesLiveData.value?.any { it.name.contentEquals(name) } == true || name.isBlank()) {
-            return false
-        }
-        return true
-
-    }
-
     private fun searchForecast(city: CityWeather) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
@@ -83,5 +75,11 @@ class CitiesViewModel : ViewModel() {
         }
     }
 
-    fun isDbEmpty(): Boolean = forecastSearchRepos.isDbEmpty()
+    fun changeChosenCities(newChosenName: String) {
+        viewModelScope.launch {
+            forecastSearchRepos.changeChosenCityByName(newChosenName = newChosenName)
+        }
+    }
+
+    private fun isDbEmpty(): Boolean = forecastSearchRepos.isDbEmpty()
 }

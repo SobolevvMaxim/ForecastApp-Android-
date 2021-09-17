@@ -51,10 +51,18 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="7"
+                android:layout_weight="5"
                 android:contentDescription="@string/done_image"
                 android:visibility="invisible"
                 app:srcCompat="@drawable/ic_done_24px"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/dots_menu"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                app:srcCompat="@drawable/dots_menu"
                 tools:ignore="VectorDrawableCompat" />
 
         </LinearLayout>

@@ -56,6 +56,17 @@ class ForecastRepository(
             citiesDao.getChosenCity()
         }
 
+    suspend fun changeChosenCityByName(newChosenName: String) {
+        withContext(Dispatchers.IO) {
+            val lastChosenModified = citiesDao.getChosenCity()
+            lastChosenModified.chosen = false
+            citiesDao.update(lastChosenModified)
+            val newChosen = citiesDao.getCityForecastByName(newChosenName)
+            newChosen.chosen = true
+            citiesDao.update(newChosen)
+        }
+    }
 
     fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 }
+
