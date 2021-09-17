@@ -19,5 +19,5 @@ data class CityWeather @RequiresApi(Build.VERSION_CODES.O) constructor(
     var lon: String = "",
     @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<Pair<Int, String>> = mutableListOf<Pair<Int, String>>() as ArrayList<Pair<Int, String>>,
     var chosen: Boolean = false,
-    @ColumnInfo(name = "forecastDate")val forecastDate: String
+    @ColumnInfo(name = "forecastDate") val forecastDate: String
 )

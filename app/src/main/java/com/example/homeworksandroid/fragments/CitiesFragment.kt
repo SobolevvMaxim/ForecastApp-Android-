@@ -3,17 +3,20 @@ package com.example.homeworksandroid.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
@@ -41,7 +44,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             Log.d("MY_ERROR", "onViewCreated: $it")
-            if(it.isEmpty())
+            if (it.isEmpty())
                 showNoticeDialog()
             updateRecyclerView(it)
         }
@@ -97,5 +100,13 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             val adapter = it as CitiesAdapter
             adapter.updateValues(cities)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onResume() {
+        super.onResume()
+
+        if (App.checkNetwork(context)) offline_mode_cities.visibility =
+            View.INVISIBLE else offline_mode_cities.visibility = View.VISIBLE
     }
 }

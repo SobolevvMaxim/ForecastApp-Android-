@@ -1,6 +1,12 @@
 package com.example.homeworksandroid
 
 import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.example.homeworksandroid.database.AppDatabase
 import com.example.homeworksandroid.database.CitiesDao
@@ -45,5 +51,30 @@ class App : Application() {
         }
 
         fun getCityDao(): CitiesDao = appDatabase.citiesDao()
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun checkNetwork(context: Context?): Boolean {
+            val manager: ConnectivityManager =
+                context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val capabilities =
+                manager.getNetworkCapabilities(manager.activeNetwork)
+            if (capabilities != null) {
+                when {
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                        return true
+                    }
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                        return true
+                    }
+                }
+            }
+            return false
+        }
     }
 }

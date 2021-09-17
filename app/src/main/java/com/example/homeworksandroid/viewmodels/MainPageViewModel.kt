@@ -13,7 +13,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainPageViewModel: ViewModel() {
+class MainPageViewModel : ViewModel() {
     private val forecastRepository = ForecastRepository(App.forecastService, App.getCityDao())
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
