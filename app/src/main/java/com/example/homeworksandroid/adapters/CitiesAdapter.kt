@@ -14,8 +14,10 @@ import com.example.homeworksandroid.R
 import java.util.*
 import kotlin.collections.LinkedHashSet
 
-class CitiesAdapter(private val cities: LinkedHashSet<CityWeather>) :
+class CitiesAdapter() :
     RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
+
+    private val cities = LinkedHashSet<CityWeather>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.item_city)
@@ -39,11 +41,11 @@ class CitiesAdapter(private val cities: LinkedHashSet<CityWeather>) :
                 Locale.getDefault()
             )
         holder.textView.text = string
-        if(cities.elementAt(position).chosen)
+        if (cities.elementAt(position).chosen)
             holder.chosen.visibility = View.VISIBLE
     }
 
-    fun updateValues(newValues: LinkedHashSet<CityWeather>) {
+    fun updateValues(newValues: Set<CityWeather>) {
         val historyDiffUtilCallback = HistoryDiffUtilCallback(cities, newValues)
         val historyDiffResult = DiffUtil.calculateDiff(historyDiffUtilCallback, true)
         cities.clear()

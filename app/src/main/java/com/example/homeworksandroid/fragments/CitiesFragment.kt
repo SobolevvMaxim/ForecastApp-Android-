@@ -21,10 +21,6 @@ import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
-const val CITY_KEY = "CITY_KEY"
-const val TEMPERATURES = "TEMPERATURES"
-const val DESCRIPTIONS = "TEMPERATURES"
-
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
         fun create() = CitiesFragment()
@@ -37,15 +33,18 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (savedInstanceState == null) {
+            viewModel.value.getAddedCities()
+        }
+
         if (viewModel.value.citiesLiveData.value.isNullOrEmpty())
             showNoticeDialog()
 
-        setRecyclerView((viewModel.value.citiesLiveData.value ?: linkedSetOf()))
+        setRecyclerView()
 
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
             Log.d("MY_ERROR", "onViewCreated: $it")
             updateRecyclerView(it)
-            writeCity()
         }
 
         viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
@@ -56,8 +55,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         button_add_city.setOnClickListener {
             showNoticeDialog()
         }
-
-
     }
 
     @SuppressLint("InflateParams")
@@ -76,39 +73,22 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
-    private fun setRecyclerView(cities: LinkedHashSet<CityWeather>) {
+    private fun setRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val userRecycle: RecyclerView? = view?.findViewById(R.id.cities_recyclerView)
         userRecycle?.layoutManager = layoutManager
-        cities.let {
-            citiesAdapter = CitiesAdapter(it)
-            userRecycle?.adapter = citiesAdapter
-        }
+
+        citiesAdapter = CitiesAdapter()
+        userRecycle?.adapter = citiesAdapter
+
 
     }
 
-    private fun updateRecyclerView(cities: LinkedHashSet<CityWeather>) {
+    private fun updateRecyclerView(cities: Set<CityWeather>) {
         cities_recyclerView.adapter?.let {
             val adapter = it as CitiesAdapter
             adapter.updateValues(cities)
-        }
-    }
-
-    private fun writeCity() {
-        val index = viewModel.value.citiesLiveData.value?.indexOfFirst { it.chosen }
-        val chosen = if(index !in 0..viewModel.value.citiesLiveData.value?.size!!) 0 else index
-        val city = chosen.let { viewModel.value.citiesLiveData.value?.elementAt(it!!) }
-        val name = city?.name + ", " + city?.country
-        val temperature = city?.temperatures?.get(0)?.first.toString()
-
-        // TODO: 15.09.2021 тяжело передавать через SharedPreferences данные для нескольких дней так как там можно сохранять только сеты,
-        //  так что я это уже сделать в задании с базами данных... Пока просто передал за текущий день и все
-        val pref = activity?.getSharedPreferences(CITY_KEY, Context.MODE_PRIVATE) ?: return
-        with(pref.edit()) {
-            putString(CITY_KEY, name)
-            putString(name, temperature)
-            apply()
         }
     }
 }

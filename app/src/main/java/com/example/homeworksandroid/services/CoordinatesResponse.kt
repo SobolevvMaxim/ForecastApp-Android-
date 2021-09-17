@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlin.math.roundToInt
 
 data class CoordinatesResponse(
-    @SerializedName("coord")val coord: Coord,
+    @SerializedName("coord") val coord: Coord,
     val weather: Any,
     val base: String,
     val main: Any,

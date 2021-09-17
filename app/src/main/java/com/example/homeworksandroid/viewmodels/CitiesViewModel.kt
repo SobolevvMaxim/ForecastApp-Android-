@@ -13,13 +13,13 @@ import kotlinx.coroutines.*
 
 class CitiesViewModel : ViewModel() {
     private val citiesSearchRepos = CitiesRepository(App.citiesService)
-    private val forecastSearchRepos = ForecastRepository(App.forecastService)
+    private val forecastSearchRepos = ForecastRepository(App.forecastService, App.getCityDao())
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
 
-    private val _citiesLiveData = MutableLiveData<LinkedHashSet<CityWeather>>()
-    val citiesLiveData: LiveData<LinkedHashSet<CityWeather>> get() = _citiesLiveData
+    private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
+    val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
@@ -48,19 +48,10 @@ class CitiesViewModel : ViewModel() {
         }
     }
 
-    private fun addCity(name: String, cityWeather: CityWeather): Boolean {
+    private fun addCity(name: String = ""): Boolean {
         if (_citiesLiveData.value?.any { it.name.contentEquals(name) } == true || name.isBlank()) {
             return false
         }
-        _citiesLiveData.value?.let {
-            it.add(cityWeather)
-
-            if (it.size == 1)
-                it.elementAt(0).chosen = true
-
-            _citiesLiveData.postValue(it)
-        } ?: _citiesLiveData.postValue(linkedSetOf(cityWeather))
-
         return true
 
     }
@@ -76,12 +67,19 @@ class CitiesViewModel : ViewModel() {
             val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
             cityTemperatureResponse.getOrNull()?.let {
                 Log.d("MY_ERROR", "adding city: $city ")
-                addCity(city.name, city)
+                if (addCity(city.name))
+                    _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
                 )
             }
+        }
+    }
+
+    fun getAddedCities() {
+        viewModelScope.launch {
+            _citiesLiveData.postValue(forecastSearchRepos.getAll())
         }
     }
 }

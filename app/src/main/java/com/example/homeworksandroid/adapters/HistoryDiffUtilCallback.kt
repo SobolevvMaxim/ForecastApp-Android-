@@ -3,7 +3,7 @@ package com.example.homeworksandroid.adapters
 import androidx.recyclerview.widget.DiffUtil
 import com.example.homeworksandroid.CityWeather
 
-class HistoryDiffUtilCallback (
+class HistoryDiffUtilCallback(
     private val oldList: Set<CityWeather>,
     private val newList: Set<CityWeather>
 ) : DiffUtil.Callback() {

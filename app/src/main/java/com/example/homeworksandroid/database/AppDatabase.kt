@@ -7,7 +7,7 @@ import com.example.homeworksandroid.CityWeather
 
 @Database(entities = [CityWeather::class], version = 1)
 @TypeConverters(TemperatureConverter::class)
-abstract class AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun citiesDao(): CitiesDao
 }

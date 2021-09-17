@@ -1,6 +1,9 @@
 package com.example.homeworksandroid
 
 import android.app.Application
+import androidx.room.Room
+import com.example.homeworksandroid.database.AppDatabase
+import com.example.homeworksandroid.database.CitiesDao
 import com.example.homeworksandroid.services.CitiesService
 import com.example.homeworksandroid.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -11,7 +14,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class App : Application() {
 
+    override fun onCreate() {
+        super.onCreate()
+
+        appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, APP_DATABASE).build()
+    }
+
     companion object {
+        private const val APP_DATABASE = "APP_DATABASE"
+
+        private lateinit var appDatabase: AppDatabase
 
         private val retrofit = Retrofit
             .Builder()
@@ -32,5 +44,6 @@ class App : Application() {
             return OkHttpClient.Builder().addInterceptor(interceptor).build()
         }
 
+        fun getCityDao(): CitiesDao = appDatabase.citiesDao()
     }
 }

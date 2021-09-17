@@ -13,7 +13,7 @@ interface CitiesDao {
     @Query("SELECT * FROM $TABLE_NAME WHERE name = :name")
     fun getCityForecastByName(name: String): CityWeather
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(city: CityWeather)
 
     @Update
