@@ -51,5 +51,11 @@ class ForecastRepository(
         return addedCities ?: emptySet()
     }
 
+    suspend fun getChosenCity(): CityWeather =
+        withContext(Dispatchers.IO) {
+            citiesDao.getChosenCity()
+        }
+
+
     fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 }

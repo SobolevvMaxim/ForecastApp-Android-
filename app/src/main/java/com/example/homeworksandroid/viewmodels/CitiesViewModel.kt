@@ -67,8 +67,8 @@ class CitiesViewModel : ViewModel() {
             val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
             cityTemperatureResponse.getOrNull()?.let {
                 Log.d("MY_ERROR", "adding city: $city ")
-                if (addCity(city.name))
-                    _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
+                if (isDbEmpty()) city.chosen = true
+                _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"

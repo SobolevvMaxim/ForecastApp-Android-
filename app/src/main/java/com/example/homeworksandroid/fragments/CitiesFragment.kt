@@ -36,8 +36,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
         if (savedInstanceState == null) {
             viewModel.value.getAddedCities()
-//            if(viewModel.value.isDbEmpty())
-//                showNoticeDialog()
         }
 
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
