@@ -1,7 +1,5 @@
 package com.example.homeworksandroid.repos
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.database.CitiesDao
 import com.example.homeworksandroid.services.TemperatureService
