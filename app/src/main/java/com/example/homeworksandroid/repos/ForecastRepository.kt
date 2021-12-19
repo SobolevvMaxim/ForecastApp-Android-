@@ -86,4 +86,3 @@ class ForecastRepository(
 
     fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 }
-

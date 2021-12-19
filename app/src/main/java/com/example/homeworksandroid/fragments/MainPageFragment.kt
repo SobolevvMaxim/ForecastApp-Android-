@@ -14,30 +14,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.activities.CitiesActivity
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.adapters.ForecastAdapter
-import com.example.homeworksandroid.responces.FORMAT
 import com.example.homeworksandroid.viewmodels.MainPageViewModel
 import kotlinx.android.synthetic.main.main_page_fragment.*
+import java.util.*
 
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
     }
 
-    private lateinit var forecastAdapter: ForecastAdapter
-
     private val viewModel = viewModels<MainPageViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
-            it?.let {
-                Log.d("MY_ERROR", "city got in fragment: $it ")
+        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) { city ->
+            Log.d("MY_ERROR", "city got in fragment: $city ")
+            city?.let {
                 updateView(it)
-            }
+            } ?: addCityActivity()
         }
 
         viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
@@ -45,29 +44,36 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             Log.d("MY_ERROR", "ERROR: $it ")
         }
 
-        view.findViewById<ImageButton>(R.id.mainAddButton).setOnClickListener {
+        mainAddButton.setOnClickListener {
             addCityActivity()
         }
+
+        viewModel.value.getCurrentCity()
     }
 
     private fun updateView(city: CityWeather) {
-        val cityInfoText = "${city.name}, ${city.country}"
-        currentCity.text = cityInfoText
-        todaysTemp.text = city.temperatures[0].first.toString()
-        today_sunny.text = city.temperatures[0].second
-        currentDate.text = city.forecastDate
-        setRecyclerView(city)
+        city.apply {
+            val cityInfoText = "$name, $country"
+            currentCity.text = cityInfoText
+            temperatures[0].apply {
+                todaysTemp.text = first.toString()
+                today_sunny.text = second
+            }
+            currentDate.text = forecastDate
+            setRecyclerView(this)
+        }
     }
+
 
     private fun setRecyclerView(city: CityWeather) {
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        val forecastRecycle: RecyclerView? = view?.findViewById(R.id.forecast_recycler)
-        forecastRecycle?.layoutManager = layoutManager
-        val date = FORMAT.parse(city.forecastDate)!!
 
-        forecastAdapter = ForecastAdapter(city.temperatures.apply { removeFirst() }, date)
-        forecastRecycle?.adapter = forecastAdapter
+        forecast_recycler.layoutManager = layoutManager
+        val date: Date = FORMAT.parse(city.forecastDate) ?: Date(1)
+
+        val forecastAdapter = ForecastAdapter(city.temperatures.apply { removeFirst() }, date)
+        forecast_recycler.adapter = forecastAdapter
     }
 
     private fun addCityActivity() {
@@ -81,6 +87,5 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         if (!App.checkNetwork(context))
             offline_mode.visibility = View.VISIBLE
         else offline_mode.visibility = View.INVISIBLE
-        viewModel.value.getCurrentCity()
     }
 }

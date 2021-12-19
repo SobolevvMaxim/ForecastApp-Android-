@@ -1,6 +1,5 @@
 package com.example.homeworksandroid.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.repos.ForecastRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainPageViewModel : ViewModel() {
@@ -36,12 +34,8 @@ class MainPageViewModel : ViewModel() {
     fun getCurrentCity() {
         dbJob?.cancel()
         dbJob = viewModelScope.launch(exceptionHandler) {
-            delay(500)
             val cityWeatherResponse = forecastRepository.getChosenCity()
-            Log.d("MY_ERROR", "city got $cityWeatherResponse")
             _citiesLiveData.postValue(cityWeatherResponse)
         }
     }
-
-    fun isDbEmpty(): Boolean = forecastRepository.isDbEmpty()
 }

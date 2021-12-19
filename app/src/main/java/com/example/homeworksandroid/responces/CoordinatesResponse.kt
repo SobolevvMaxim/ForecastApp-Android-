@@ -1,13 +1,10 @@
 package com.example.homeworksandroid.responces
 
-import android.annotation.SuppressLint
 import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.FORMAT
 import com.google.gson.annotations.SerializedName
-import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("ConstantLocale")
-val FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
 data class CoordinatesResponse(
     @SerializedName("coord") val coord: Coord,

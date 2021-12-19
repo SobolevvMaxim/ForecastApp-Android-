@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
-import com.example.homeworksandroid.responces.FORMAT
 import java.util.*
 import kotlin.collections.ArrayList
 
