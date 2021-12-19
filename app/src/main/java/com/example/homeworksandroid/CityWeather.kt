@@ -1,17 +1,12 @@
 package com.example.homeworksandroid
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.*
 import com.example.homeworksandroid.database.TemperatureConverter
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 const val TABLE_NAME = "CITIES_TABLE"
 
 @Entity(tableName = TABLE_NAME)
-data class CityWeather @RequiresApi(Build.VERSION_CODES.O) constructor(
+data class CityWeather constructor(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "country") val country: String,

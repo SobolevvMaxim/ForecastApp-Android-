@@ -15,7 +15,6 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container_main, MainPageFragment.create())
                 .commit()
-            chooseCity()
         }
     }
 

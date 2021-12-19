@@ -1,17 +1,15 @@
 package com.example.homeworksandroid.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.trimmedLength
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,16 +20,22 @@ import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
-import com.example.homeworksandroid.adapters.MyOnCLickListener
+import com.example.homeworksandroid.adapters.RecyclerOnCLickListener
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlinx.coroutines.delay
+import kotlinx.android.synthetic.main.put_city_dialog.*
 
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
         fun create() = CitiesFragment()
     }
 
-    private lateinit var citiesAdapter: CitiesAdapter
+    private val citiesAdapter: CitiesAdapter = CitiesAdapter(
+        RecyclerOnCLickListener { name ->
+            changeChosenCity(newChosenName = name)
+
+            startActivity(Intent(requireContext(), MainPageActivity::class.java))
+        }
+    )
 
     private val viewModel = viewModels<CitiesViewModel>()
 
@@ -42,16 +46,15 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             viewModel.value.getAddedCities()
         }
 
-        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) {
-            Log.d("MY_ERROR", "onViewCreated: $it")
-            if (it.isEmpty())
+        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+            if (cities.isEmpty())
                 showNoticeDialog()
-            updateRecyclerView(it)
+            updateRecyclerView(cities)
         }
 
-        viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            Log.d("MY_ERROR", "error: $it")
+        viewModel.value.errorLiveData.observe(viewLifecycleOwner) { error ->
+            Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
+            Log.d("MY_ERROR", "error: $error")
         }
 
         button_add_city.setOnClickListener {
@@ -67,8 +70,16 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.put_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
-                val cityInput = findViewById<EditText>(R.id.city_edit_text)?.text.toString()
-                viewModel.value.search(cityInput)
+                val cityInput = city_edit_text.text.toString()
+
+                when (cityInput.trimmedLength()) {
+                    in 0..3 -> Toast.makeText(
+                        requireContext(),
+                        "Incorrect input!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    else -> viewModel.value.search(cityInput)
+                }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
                 dialog.cancel()
@@ -80,26 +91,27 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private fun setRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        val userRecycle: RecyclerView? = view?.findViewById(R.id.cities_recyclerView)
-        userRecycle?.layoutManager = layoutManager
+        val userRecycle: RecyclerView = cities_recyclerView
+        userRecycle.layoutManager = layoutManager
 
-        citiesAdapter = CitiesAdapter(onClickListener = MyOnCLickListener {
-            changeChosenCityInBase(it.name)
-        })
-        userRecycle?.adapter = citiesAdapter
-
-
+        userRecycle.adapter = citiesAdapter
     }
 
-    private fun changeChosenCityInBase(newChosenName: String) {
-        viewModel.value.changeChosenCities(newChosenName = newChosenName)
+    private fun changeChosenCity(newChosenName: String) {
+        val oldList = citiesAdapter.currentList
+        val lastChosenIndex = oldList.indexOfLast { it.chosen }
+        val newChosenIndex = oldList.indexOfFirst { it.name == newChosenName }
+
+        viewModel.value.changeChosenCities(lastChosenIndex, newChosenIndex)
+
+        citiesAdapter.apply {
+            notifyItemChanged(lastChosenIndex)
+            notifyItemChanged(newChosenIndex)
+        }
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
-        cities_recyclerView.adapter?.let {
-            val adapter = it as CitiesAdapter
-            adapter.updateValues(cities)
-        }
+        citiesAdapter.submitList(cities.toList())
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

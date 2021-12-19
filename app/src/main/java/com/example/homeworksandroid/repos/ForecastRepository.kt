@@ -1,5 +1,7 @@
 package com.example.homeworksandroid.repos
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.database.CitiesDao
 import com.example.homeworksandroid.services.TemperatureService
@@ -56,14 +58,29 @@ class ForecastRepository(
             citiesDao.getChosenCity()
         }
 
-    suspend fun changeChosenCityByName(newChosenName: String) {
+    suspend fun changeChosenCityByName(lastChosenIndex: Int, newChosenIndex: Int) {
         withContext(Dispatchers.IO) {
-            val lastChosenModified = citiesDao.getChosenCity()
-            lastChosenModified.chosen = false
-            citiesDao.update(lastChosenModified)
-            val newChosen = citiesDao.getCityForecastByName(newChosenName)
-            newChosen.chosen = true
-            citiesDao.update(newChosen)
+            addedCities = addedCities?.toMutableSet()?.let { cities ->
+                cities.elementAt(lastChosenIndex).chosen = false
+                cities.elementAt(newChosenIndex).chosen = true
+                cities
+            }
+
+            changeChosenCityInBase(lastChosenIndex, newChosenIndex)
+        }
+    }
+
+    private suspend fun changeChosenCityInBase(lastChosenIndex: Int, newChosenIndex: Int) {
+        withContext(Dispatchers.IO) {
+            addedCities?.let {
+                val lastChosen = it.elementAt(lastChosenIndex)
+                val newChosen = it.elementAt(newChosenIndex)
+
+                citiesDao.apply {
+                    update(lastChosen)
+                    update(newChosen)
+                }
+            }
         }
     }
 

@@ -1,38 +1,26 @@
-package com.example.homeworksandroid.services
+package com.example.homeworksandroid.responces
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.annotation.SuppressLint
 import com.example.homeworksandroid.CityWeather
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
+import java.text.SimpleDateFormat
+import java.util.*
+
+@SuppressLint("ConstantLocale")
+val FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
 data class CoordinatesResponse(
     @SerializedName("coord") val coord: Coord,
-    val weather: Any,
-    val base: String,
-    val main: Any,
-    val visibility: Int,
-    val wind: Any,
-    val clouds: Any,
-    val dt: Any,
     @SerializedName("sys") val sys: Sys,
-    val timezone: Any,
     val id: String,
-    val name: String,
-    val cod: Int
-
-
 ) {
-    @RequiresApi(Build.VERSION_CODES.O)
     fun toCityWeather(name: String) = CityWeather(
         name = name,
         id = id,
         country = sys.country,
         lat = coord.lat,
         lon = coord.lon,
-        forecastDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+        forecastDate = FORMAT.format(Calendar.getInstance().time)
     )
 }
 

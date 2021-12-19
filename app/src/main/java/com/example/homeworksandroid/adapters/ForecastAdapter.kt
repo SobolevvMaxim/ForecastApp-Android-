@@ -1,18 +1,19 @@
 package com.example.homeworksandroid.adapters
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.R
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.example.homeworksandroid.responces.FORMAT
+import java.util.*
+import kotlin.collections.ArrayList
 
-class ForecastAdapter(private val forecast: ArrayList<Pair<Int, String>>, private val fromDateTime: LocalDate) :
+class ForecastAdapter(
+    private val forecast: ArrayList<Pair<Int, String>>,
+    private val fromDateTime: Date
+) :
     RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -28,16 +29,26 @@ class ForecastAdapter(private val forecast: ArrayList<Pair<Int, String>>, privat
         return ViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         forecast[position].let {
             holder.apply {
                 temperatureTV.text = it.first.toString()
                 descriptionTV.text = it.second
-                date.text = fromDateTime.plusDays(position.toLong() + 1).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+                date.text = getItemDate(position)
             }
         }
     }
 
     override fun getItemCount(): Int = forecast.size
+
+    private fun getItemDate(position: Int): String {
+        val calendar = Calendar.getInstance()
+
+        calendar.apply {
+            time = fromDateTime
+            add(Calendar.DATE, position + 1)
+        }
+
+        return FORMAT.format(calendar.time)
+    }
 }

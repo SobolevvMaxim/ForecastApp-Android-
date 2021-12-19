@@ -18,11 +18,4 @@ class CitiesActivity : AppCompatActivity(R.layout.acitvity_choose_city) {
                 .commit()
         }
     }
-
-    override fun onBackPressed() {
-        when (supportFragmentManager.backStackEntryCount) {
-            0 -> super.onBackPressed()
-            else -> supportFragmentManager.popBackStack()
-        }
-    }
 }

@@ -1,5 +1,6 @@
 package com.example.homeworksandroid.services
 
+import com.example.homeworksandroid.responces.CoordinatesResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET

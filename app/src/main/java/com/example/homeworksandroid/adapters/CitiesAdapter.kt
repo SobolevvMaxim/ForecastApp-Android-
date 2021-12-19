@@ -6,76 +6,55 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.R
-import java.util.*
-import kotlin.collections.LinkedHashSet
+import kotlinx.android.synthetic.main.city_item.view.*
 
-class CitiesAdapter(private val onClickListener: MyOnCLickListener) :
-    RecyclerView.Adapter<CitiesAdapter.ViewHolder>() {
-
-    private val cities = LinkedHashSet<CityWeather>()
+class CitiesAdapter(private val onClickListener: RecyclerOnCLickListener) :
+    ListAdapter<CityWeather, CitiesAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.item_city)
-        val chosen: ImageView = view.findViewById(R.id.item_done_image)
-        val menu: ImageView = view.findViewById(R.id.dots_menu) // todo maybe
+        private val city: TextView = view.item_city
+        private val chosen: ImageView = view.item_done_image
+        // private val menu: ImageView = view.dots_menu // todo maybe
+
+        fun bind(item: CityWeather, onClickListener: RecyclerOnCLickListener) = with(itemView) {
+            val cityText = "${item.name}, ${item.country}"
+            city.text = cityText
+
+
+            if (item.chosen) chosen.visibility = View.VISIBLE
+
+            setOnClickListener {
+                onClickListener.onClick(item.name)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.city_item, parent, false)
 
-        return ViewHolder(view).listen { position, _ -> // todo extension is not working?
-            if (position in 0..cities.size)
-                changeChosen(position)
-        }
-
-
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val string =
-            cities.elementAt(position).name + ", " + cities.elementAt(position).country.uppercase(
-                Locale.getDefault()
-            )
-        holder.textView.text = string
-        if (cities.elementAt(position).chosen)
-            holder.chosen.visibility = View.VISIBLE
-
-        holder.itemView.setOnClickListener {
-            changeChosen(position)
-            onClickListener.onCLick(cities.elementAt(position))
-        }
+        holder.bind(getItem(position), onClickListener)
     }
-
-    fun updateValues(newValues: Set<CityWeather>) {
-        val historyDiffUtilCallback = HistoryDiffUtilCallback(cities, newValues)
-        val historyDiffResult = DiffUtil.calculateDiff(historyDiffUtilCallback, true)
-        cities.clear()
-        cities.addAll(newValues)
-        historyDiffResult.dispatchUpdatesTo(this)
-    }
-
-    private fun changeChosen(position: Int) {
-        val firstChosen = cities.indexOfFirst { it.chosen }
-        cities.elementAt(firstChosen).chosen = false
-        cities.elementAt(position).chosen = true
-        notifyItemChanged(position)
-        notifyItemChanged(firstChosen)
-    }
-
-    private fun <T : RecyclerView.ViewHolder> T.listen(event: (position: Int, type: Int) -> Unit): T {
-        itemView.setOnClickListener {
-            event.invoke(adapterPosition, itemViewType)
-        }
-        return this
-    }
-
-    override fun getItemCount(): Int = cities.size
 }
 
-class MyOnCLickListener(val clickListener: (newChosenCity: CityWeather) -> Unit) {
-    fun onCLick(newChosenCity: CityWeather) = clickListener(newChosenCity)
+class RecyclerOnCLickListener(val clickListener: (newChosenCityName: String) -> Unit) {
+    fun onClick(newChosenCityName: String) = clickListener(newChosenCityName)
+}
+
+class DiffCallback : DiffUtil.ItemCallback<CityWeather>() {
+    override fun areItemsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
+        return oldItem == newItem
+    }
 }

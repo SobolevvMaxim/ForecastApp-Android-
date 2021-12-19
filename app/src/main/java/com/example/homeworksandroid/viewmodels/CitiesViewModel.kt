@@ -1,6 +1,7 @@
 package com.example.homeworksandroid.viewmodels
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +37,6 @@ class CitiesViewModel : ViewModel() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            Log.d("MY_ERROR", "search: $text")
             val cityWeatherResponse = citiesSearchRepos.search(text as String)
             cityWeatherResponse.getOrNull()?.let { city ->
                 searchForecast(city)
@@ -52,13 +52,8 @@ class CitiesViewModel : ViewModel() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            Log.d(
-                "MY_ERROR", "search for coordinates:" +
-                        " lat ${city.lat}, lon ${city.lon}"
-            )
             val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
             cityTemperatureResponse.getOrNull()?.let {
-                Log.d("MY_ERROR", "adding city: $city ")
                 if (isDbEmpty()) city.chosen = true
                 _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
             } ?: run {
@@ -75,9 +70,10 @@ class CitiesViewModel : ViewModel() {
         }
     }
 
-    fun changeChosenCities(newChosenName: String) {
+    fun changeChosenCities(lastChosenIndex: Int, newChosenIndex: Int) {
         viewModelScope.launch {
-            forecastSearchRepos.changeChosenCityByName(newChosenName = newChosenName)
+            forecastSearchRepos.changeChosenCityByName(lastChosenIndex, newChosenIndex)
+            _citiesLiveData.postValue(forecastSearchRepos.getAll())
         }
     }
 
