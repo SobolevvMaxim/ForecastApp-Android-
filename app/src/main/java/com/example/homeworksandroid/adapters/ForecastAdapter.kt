@@ -5,14 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworksandroid.DailyForecast
+import com.example.homeworksandroid.Daily
 import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ForecastAdapter(
-    private val forecast: ArrayList<DailyForecast>,
+    private val forecast: ArrayList<Daily>,
     private val fromDateTime: Date
 ) :
     RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
