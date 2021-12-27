@@ -1,22 +1,22 @@
 package com.example.homeworksandroid.responces
 
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.DailyForecast
+import com.example.homeworksandroid.Daily
 import com.google.gson.annotations.SerializedName
 import kotlin.math.roundToInt
 
 data class TemperatureResponse(
-    @SerializedName("daily") val daily: List<Daily>,
+    @SerializedName("daily") val daily: List<DailyTemp>,
 ) {
     fun getTemperature(city: CityWeather) = city.apply {
         val result = ArrayList(daily.map {
-            DailyForecast(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
+            Daily(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
         })
         temperatures = result
     }
 }
 
-data class Daily(
+data class DailyTemp(
     val temp: Temp,
     val weather: List<WeatherData>
 )

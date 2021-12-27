@@ -3,9 +3,7 @@ package com.example.homeworksandroid
 import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
-import android.util.Log
 import androidx.room.*
-import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.database.TemperatureConverter
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
@@ -26,7 +24,7 @@ data class CityWeather(
     @ColumnInfo(name = "country") val country: String,
     var lat: String = "",
     var lon: String = "",
-    @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<DailyForecast>,
+    @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<Daily>,
     var chosen: Boolean = false,
     @ColumnInfo(name = "forecastDate") val forecastDate: String
 ) : Parcelable {
@@ -34,9 +32,9 @@ data class CityWeather(
         override fun create(parcel: Parcel): CityWeather {
             val parcelList: ArrayList<String> = parcel.createStringArrayList() as ArrayList<String>
 
-            val dailyList: List<DailyForecast> = parcelList.map {
+            val dailyList: List<Daily> = parcelList.map {
                 val values = it.split(", ")
-                DailyForecast(
+                Daily(
                     temp = values[0].toInt(),
                     description = values[1]
                 )
@@ -71,16 +69,16 @@ data class CityWeather(
 }
 
 @Parcelize
-data class DailyForecast(val temp: Int, val description: String) : Parcelable {
-    companion object : Parceler<DailyForecast> {
-        override fun create(parcel: Parcel): DailyForecast =
-            DailyForecast(
+data class Daily(val temp: Int, val description: String) : Parcelable {
+    companion object : Parceler<Daily> {
+        override fun create(parcel: Parcel): Daily =
+            Daily(
                 temp = parcel.readInt(),
                 description = parcel.readString() ?: "none"
             )
 
 
-        override fun DailyForecast.write(parcel: Parcel, flags: Int) {
+        override fun Daily.write(parcel: Parcel, flags: Int) {
             parcel.apply {
                 writeInt(temp)
                 writeString(description)
