@@ -26,7 +26,7 @@ data class CityWeather(
     @ColumnInfo(name = "country") val country: String,
     var lat: String = "",
     var lon: String = "",
-    @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<DailyForecast> = mutableListOf<DailyForecast>() as ArrayList<DailyForecast>,
+    @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<DailyForecast>,
     var chosen: Boolean = false,
     @ColumnInfo(name = "forecastDate") val forecastDate: String
 ) : Parcelable {

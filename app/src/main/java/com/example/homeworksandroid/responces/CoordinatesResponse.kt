@@ -1,9 +1,11 @@
 package com.example.homeworksandroid.responces
 
 import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.DailyForecast
 import com.example.homeworksandroid.FORMAT
 import com.google.gson.annotations.SerializedName
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 data class CoordinatesResponse(
@@ -17,7 +19,8 @@ data class CoordinatesResponse(
         country = sys.country,
         lat = coord.lat,
         lon = coord.lon,
-        forecastDate = FORMAT.format(Calendar.getInstance().time)
+        forecastDate = FORMAT.format(Calendar.getInstance().time),
+        temperatures = ArrayList()
     )
 }
 
