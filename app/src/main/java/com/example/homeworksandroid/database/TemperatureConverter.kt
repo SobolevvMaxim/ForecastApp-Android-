@@ -3,29 +3,25 @@ package com.example.homeworksandroid.database
 import android.util.Log
 import androidx.room.TypeConverter
 import com.example.homeworksandroid.DailyForecast
+import com.example.homeworksandroid.activities.P_LOG
+import okhttp3.internal.toImmutableList
 import kotlin.collections.ArrayList
 
 
 class TemperatureConverter {
 
     @TypeConverter
-    fun fromTemperatures(temperatures: ArrayList<DailyForecast>): String {
-        val result = StringBuffer()
-        temperatures.forEach { daily ->
-            result.append("(${daily.temp}, ${daily.description});")
-        }
-        return result.toString()
-//        temperatures.joinToString { it. }
-    }
+    fun fromTemperatures(temperatures: ArrayList<DailyForecast>): String =
+        temperatures.joinToString(separator = "", transform = { daily ->
+            "(${daily.temp}, ${daily.description});"
+        })
 
     @TypeConverter
     fun toTemperatures(data: String): ArrayList<DailyForecast> {
-        val result: ArrayList<DailyForecast> =
-            mutableListOf<DailyForecast>() as ArrayList<DailyForecast>
+        val result = mutableListOf<DailyForecast>() as ArrayList<DailyForecast>
 
-        var s = data.split(";")
+        val s = data.split(";").filter { it.isNotBlank() }
 
-        s = s.filter { it.isNotBlank() }
         Log.d("ParcebleTest", "toTemperatures $s")
 
         s.forEach {
