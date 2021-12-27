@@ -1,6 +1,7 @@
 package com.example.homeworksandroid.responces
 
 import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.DailyForecast
 import com.example.homeworksandroid.FORMAT
 import com.google.gson.annotations.SerializedName
 import java.util.*
