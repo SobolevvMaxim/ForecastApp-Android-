@@ -1,12 +1,11 @@
 package com.example.homeworksandroid
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.room.*
+import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.database.TemperatureConverter
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
@@ -15,6 +14,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 const val TABLE_NAME = "CITIES_TABLE"
+
 @SuppressLint("ConstantLocale")
 val FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -29,58 +29,62 @@ data class CityWeather(
     @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<DailyForecast> = mutableListOf<DailyForecast>() as ArrayList<DailyForecast>,
     var chosen: Boolean = false,
     @ColumnInfo(name = "forecastDate") val forecastDate: String
-): Parcelable {
-    private companion object: Parceler<CityWeather> {
+) : Parcelable {
+    private companion object : Parceler<CityWeather> {
         override fun create(parcel: Parcel): CityWeather {
-            val list: ArrayList<String> = parcel.createStringArrayList() as ArrayList<String>
-            val temperaturesNew = mutableListOf<DailyForecast>()
-            Log.d("ParcebleTest", "list: $list")
-            list.forEach {
+            val parcelList: ArrayList<String> = parcel.createStringArrayList() as ArrayList<String>
+
+            val dailyList: List<DailyForecast> = parcelList.map {
                 val values = it.split(", ")
-                temperaturesNew.add(DailyForecast(temp = values[0].toInt(), description = values[1]))
+                DailyForecast(
+                    temp = values[0].toInt(),
+                    description = values[1]
+                )
             }
-            val city = CityWeather(
-                id = parcel.readString()!!,
-                name = parcel.readString()!!,
-                country = parcel.readString()!!,
-                lat = parcel.readString()!!,
-                lon = parcel.readString()!!,
-                temperatures = temperaturesNew as ArrayList,
+
+            return CityWeather(
+                id = parcel.readString() ?: "",
+                name = parcel.readString() ?: "Default",
+                country = parcel.readString() ?: "NN",
+                lat = parcel.readString() ?: "111",
+                lon = parcel.readString() ?: "222",
+                temperatures = dailyList as ArrayList,
                 chosen = true,
-                forecastDate = parcel.readString()!!
+                forecastDate = parcel.readString() ?: "01.01.2021"
             )
-            Log.d("ParcebleTest", "create: $city")
-            return city
         }
 
         override fun CityWeather.write(parcel: Parcel, flags: Int) {
-            val newTemperatures = mutableListOf<String>()
-            temperatures.forEach { newTemperatures.add("${it.temp}, ${it.description}") }
-            Log.d("ParcebleTest", "write list $newTemperatures")
-            parcel.writeStringList(newTemperatures)
-            parcel.writeString(id)
-            parcel.writeString(name)
-            parcel.writeString(country)
-            parcel.writeString(lat)
-            parcel.writeString(lon)
-            parcel.writeString(forecastDate)
+            val dailyList = temperatures.map { "${it.temp}, ${it.description}" }
+
+            parcel.apply {
+                writeStringList(dailyList)
+                writeString(id)
+                writeString(name)
+                writeString(country)
+                writeString(lat)
+                writeString(lon)
+                writeString(forecastDate)
+            }
         }
     }
 }
 
 @Parcelize
-data class DailyForecast(val temp: Int, val description: String): Parcelable {
-    companion object: Parceler<DailyForecast> {
-        override fun create(parcel: Parcel): DailyForecast {
-            return DailyForecast(
+data class DailyForecast(val temp: Int, val description: String) : Parcelable {
+    companion object : Parceler<DailyForecast> {
+        override fun create(parcel: Parcel): DailyForecast =
+            DailyForecast(
                 temp = parcel.readInt(),
-                description = parcel.readString()!!
+                description = parcel.readString() ?: "none"
             )
-        }
+
 
         override fun DailyForecast.write(parcel: Parcel, flags: Int) {
-            parcel.writeInt(temp)
-            parcel.writeString(description)
+            parcel.apply {
+                writeInt(temp)
+                writeString(description)
+            }
         }
     }
 }
