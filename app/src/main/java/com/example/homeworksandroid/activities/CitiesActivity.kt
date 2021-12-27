@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.fragments.CitiesFragment
 
+// TODO: 27.12.2021 make cities screen without activity
 class CitiesActivity : AppCompatActivity(R.layout.acitvity_choose_city) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
