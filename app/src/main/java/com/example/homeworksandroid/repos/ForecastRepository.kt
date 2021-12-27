@@ -51,11 +51,6 @@ class ForecastRepository(
         return addedCities ?: emptySet()
     }
 
-    suspend fun getChosenCity(): CityWeather =
-        withContext(Dispatchers.IO) {
-            citiesDao.getChosenCity()
-        }
-
     suspend fun changeChosenCityByName(lastChosenIndex: Int, newChosenIndex: Int) {
         withContext(Dispatchers.IO) {
             addedCities = addedCities?.toMutableSet()?.let { cities ->
