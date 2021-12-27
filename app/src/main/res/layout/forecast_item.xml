@@ -18,7 +18,6 @@
             android:layout_width="wrap_content"
             android:layout_height="32dp"
             android:fontFamily="@font/roboto"
-            android:fontFeatureSettings="pnum, lnum"
             android:gravity="center"
             android:lineSpacingExtra="18sp"
             android:text="@string/example_date2"
