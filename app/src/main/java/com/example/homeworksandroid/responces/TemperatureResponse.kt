@@ -9,12 +9,9 @@ data class TemperatureResponse(
     @SerializedName("daily") val daily: List<Daily>,
 ) {
     fun getTemperature(city: CityWeather) = city.apply {
-        val result = ArrayList<DailyForecast>()
-
-        daily.forEach {
-            result.add(DailyForecast(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main))
-        }
-
+        val result = ArrayList(daily.map {
+            DailyForecast(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
+        })
         temperatures = result
     }
 }

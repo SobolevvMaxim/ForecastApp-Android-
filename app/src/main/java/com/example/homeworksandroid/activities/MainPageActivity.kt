@@ -7,7 +7,7 @@ import com.example.homeworksandroid.DailyForecast
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.fragments.MainPageFragment
 
-const val GET_CHOSEN_CITY: String = "CHOSEN_CITY"
+const val GET_CHOSEN_CITY = "CHOSEN_CITY"
 const val P_LOG = "PARCELABLE_LOG"
 
 class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {

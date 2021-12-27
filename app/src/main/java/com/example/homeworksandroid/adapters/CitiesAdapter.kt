@@ -18,7 +18,7 @@ class CitiesAdapter(private val onClickListener: RecyclerOnCLickListener) :
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val city: TextView = view.item_city
         private val chosen: ImageView = view.item_done_image
-        // private val menu: ImageView = view.dots_menu // todo maybe
+        // private val menu: ImageView = view.dots_menu // todo
 
         fun bind(item: CityWeather, onClickListener: RecyclerOnCLickListener) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"

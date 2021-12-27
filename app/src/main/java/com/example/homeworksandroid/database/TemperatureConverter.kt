@@ -18,19 +18,13 @@ class TemperatureConverter {
 
     @TypeConverter
     fun toTemperatures(data: String): ArrayList<DailyForecast> {
-        val result = mutableListOf<DailyForecast>() as ArrayList<DailyForecast>
-
         val s = data.split(";").filter { it.isNotBlank() }
 
-        Log.d("ParcebleTest", "toTemperatures $s")
-
-        s.forEach {
+        return ArrayList(s.map {
             val split = it.split(", ")
             val number = split[0].substring(1)
             val description = split[1].subSequence(0, split[1].length - 1)
-            result.add(DailyForecast(temp = number.toInt(), description = description.toString()))
-        }
-
-        return result
+            DailyForecast(temp = number.toInt(), description = description.toString())
+        })
     }
 }

@@ -27,6 +27,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         fun create(city: CityWeather): MainPageFragment {
             val fragment = MainPageFragment()
             val bundle = Bundle()
+
             bundle.putParcelable(GET_CHOSEN_CITY, city)
             fragment.arguments = bundle
 
@@ -42,7 +43,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         cityP?.let {
             Log.d(P_LOG, "onViewCreated: city $cityP")
-            updateView(cityP)
+            updateView(it)
         } ?: addCityActivity()
 
         mainAddButton.setOnClickListener {
