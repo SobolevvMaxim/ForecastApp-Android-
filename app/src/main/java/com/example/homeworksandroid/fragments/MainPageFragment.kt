@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -17,6 +19,7 @@ import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.activities.CitiesActivity
 import com.example.homeworksandroid.R
+import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.adapters.ForecastAdapter
 import com.example.homeworksandroid.viewmodels.MainPageViewModel
 import kotlinx.android.synthetic.main.main_page_fragment.*
@@ -25,12 +28,25 @@ import java.util.*
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
+
+        fun create(city: CityWeather): MainPageFragment {
+            val fragment = MainPageFragment()
+            val bundle = Bundle()
+            bundle.putParcelable(GET_CHOSEN_CITY, city)
+            fragment.arguments = bundle
+
+            return fragment
+        }
     }
 
     private val viewModel = viewModels<MainPageViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val cityP: CityWeather = requireArguments().getParcelable(GET_CHOSEN_CITY)!!
+        Log.d("ParcebleTest", "city $cityP")
+
 
         viewModel.value.citiesLiveData.observe(viewLifecycleOwner) { city ->
             Log.d("MY_ERROR", "city got in fragment: $city ")
@@ -56,8 +72,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
             temperatures[0].apply {
-                todaysTemp.text = first.toString()
-                today_sunny.text = second
+                todaysTemp.text = temp.toString()
+                today_sunny.text = description
             }
             currentDate.text = forecastDate
             setRecyclerView(this)

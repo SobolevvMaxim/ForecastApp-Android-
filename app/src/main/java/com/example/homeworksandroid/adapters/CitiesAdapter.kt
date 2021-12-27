@@ -28,7 +28,7 @@ class CitiesAdapter(private val onClickListener: RecyclerOnCLickListener) :
             if (item.chosen) chosen.visibility = View.VISIBLE
 
             setOnClickListener {
-                onClickListener.onClick(item.name)
+                onClickListener.onClick(item)
             }
         }
     }
@@ -45,8 +45,8 @@ class CitiesAdapter(private val onClickListener: RecyclerOnCLickListener) :
     }
 }
 
-class RecyclerOnCLickListener(val clickListener: (newChosenCityName: String) -> Unit) {
-    fun onClick(newChosenCityName: String) = clickListener(newChosenCityName)
+class RecyclerOnCLickListener(val clickListener: (newChosenCityName: CityWeather) -> Unit) {
+    fun onClick(newChosenCityName: CityWeather) = clickListener(newChosenCityName)
 }
 
 class DiffCallback : DiffUtil.ItemCallback<CityWeather>() {

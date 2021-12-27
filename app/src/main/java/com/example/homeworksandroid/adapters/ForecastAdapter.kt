@@ -5,13 +5,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homeworksandroid.DailyForecast
 import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ForecastAdapter(
-    private val forecast: ArrayList<Pair<Int, String>>,
+    private val forecast: ArrayList<DailyForecast>,
     private val fromDateTime: Date
 ) :
     RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
@@ -32,8 +33,8 @@ class ForecastAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         forecast[position].let {
             holder.apply {
-                temperatureTV.text = it.first.toString()
-                descriptionTV.text = it.second
+                temperatureTV.text = it.temp.toString()
+                descriptionTV.text = it.description
                 date.text = getItemDate(position)
             }
         }

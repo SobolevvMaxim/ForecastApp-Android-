@@ -18,6 +18,7 @@ import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
+import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesAdapter
 import com.example.homeworksandroid.adapters.RecyclerOnCLickListener
@@ -30,10 +31,12 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     }
 
     private val citiesAdapter: CitiesAdapter = CitiesAdapter(
-        RecyclerOnCLickListener { name ->
-            changeChosenCity(newChosenName = name)
+        RecyclerOnCLickListener { city ->
+            changeChosenCity(newChosenName = city.name)
 
-            startActivity(Intent(requireContext(), MainPageActivity::class.java))
+            val intent = Intent(requireContext(), MainPageActivity::class.java)
+            intent.putExtra(GET_CHOSEN_CITY, city)
+            startActivity(intent)
         }
     )
 
