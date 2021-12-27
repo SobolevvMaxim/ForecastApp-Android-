@@ -20,6 +20,7 @@ import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.activities.CitiesActivity
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
+import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.adapters.ForecastAdapter
 import com.example.homeworksandroid.viewmodels.MainPageViewModel
 import kotlinx.android.synthetic.main.main_page_fragment.*
@@ -39,32 +40,20 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
-    private val viewModel = viewModels<MainPageViewModel>()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val cityP: CityWeather = requireArguments().getParcelable(GET_CHOSEN_CITY)!!
-        Log.d("ParcebleTest", "city $cityP")
 
+        val cityP: CityWeather? = requireArguments().getParcelable(GET_CHOSEN_CITY)
 
-        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) { city ->
-            Log.d("MY_ERROR", "city got in fragment: $city ")
-            city?.let {
-                updateView(it)
-            } ?: addCityActivity()
-        }
-
-        viewModel.value.errorLiveData.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), it.toString(), Toast.LENGTH_LONG).show()
-            Log.d("MY_ERROR", "ERROR: $it ")
-        }
+        cityP?.let {
+            Log.d(P_LOG, "onViewCreated: city $cityP")
+            updateView(cityP)
+        } ?: addCityActivity()
 
         mainAddButton.setOnClickListener {
             addCityActivity()
         }
-
-        viewModel.value.getCurrentCity()
     }
 
     private fun updateView(city: CityWeather) {

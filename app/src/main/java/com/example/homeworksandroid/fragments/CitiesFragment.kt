@@ -36,6 +36,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
             val intent = Intent(requireContext(), MainPageActivity::class.java)
             intent.putExtra(GET_CHOSEN_CITY, city)
+
             startActivity(intent)
         }
     )
