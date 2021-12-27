@@ -3,6 +3,7 @@ package com.example.homeworksandroid.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.DailyForecast
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.fragments.MainPageFragment
 
