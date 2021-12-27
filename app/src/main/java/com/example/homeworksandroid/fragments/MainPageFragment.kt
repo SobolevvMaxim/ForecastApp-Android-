@@ -4,14 +4,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.App
@@ -22,7 +17,6 @@ import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.adapters.ForecastAdapter
-import com.example.homeworksandroid.viewmodels.MainPageViewModel
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.util.*
 
