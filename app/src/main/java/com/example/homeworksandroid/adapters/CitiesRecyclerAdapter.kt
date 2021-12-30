@@ -12,8 +12,8 @@ import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.R
 import kotlinx.android.synthetic.main.city_item.view.*
 
-class CitiesAdapter(private val onClickListener: RecyclerOnCLickListener) :
-    ListAdapter<CityWeather, CitiesAdapter.ViewHolder>(DiffCallback()) {
+class CitiesRecyclerAdapter(private val onClickListener: RecyclerOnCLickListener) :
+    ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val city: TextView = view.item_city

@@ -3,78 +3,104 @@ package com.example.homeworksandroid
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Room
 import com.example.homeworksandroid.database.AppDatabase
-import com.example.homeworksandroid.database.CitiesDao
-import com.example.homeworksandroid.services.CitiesService
-import com.example.homeworksandroid.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
-class App : Application() {
+@HiltAndroidApp
+class App : Application()
 
-    override fun onCreate() {
-        super.onCreate()
+private const val APP_DATABASE = "APP_DATABASE"
 
-        appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, APP_DATABASE).build()
-    }
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
 
-    companion object {
-        private const val APP_DATABASE = "APP_DATABASE"
+    @Singleton
+    @Provides
+    fun provideAppDatabase(@ApplicationContext context: Context) =
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            APP_DATABASE
+        ).build()
 
-        private lateinit var appDatabase: AppDatabase
-
-        private val retrofit = Retrofit
-            .Builder()
+    @Singleton
+    @Provides
+    fun providesNewsRetrofit(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .baseUrl("https://api.openweathermap.org")
-            .client(getHttpClientWithInterceptor())
+            .client(okHttpClient)
             .build()
 
-        val citiesService: CitiesService = retrofit.create(CitiesService::class.java)
-        val forecastService: TemperatureService =
-            retrofit.create(TemperatureService::class.java)
+    @Provides
+    fun provideOkHttpClient(): OkHttpClient {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-        private fun getHttpClientWithInterceptor(): OkHttpClient {
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
-
-            return OkHttpClient.Builder().addInterceptor(interceptor).build()
-        }
-
-        fun getCityDao(): CitiesDao = appDatabase.citiesDao()
-
-        @RequiresApi(Build.VERSION_CODES.M)
-        fun checkNetwork(context: Context?): Boolean {
-            val manager: ConnectivityManager =
-                context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val capabilities =
-                manager.getNetworkCapabilities(manager.activeNetwork)
-            if (capabilities != null) {
-                when {
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-                        return true
-                    }
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-                        return true
-                    }
-                }
-            }
-            return false
-        }
+        return OkHttpClient.Builder().addInterceptor(interceptor).build()
     }
+
+    @MainCoroutineDispatcher
+    @Provides
+    fun mainCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.Main
+
+    @IOCoroutineDispatcher
+    @Provides
+    fun ioCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.IO
+}
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class MainCoroutineDispatcher
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IOCoroutineDispatcher
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+fun checkNetwork(context: Context?): Boolean {
+    val manager: ConnectivityManager =
+        context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val builder = NetworkRequest.Builder()
+    builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+    var result = false
+
+    val networkRequest = builder.build()
+    manager.registerNetworkCallback(networkRequest,
+        object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                Log.i("Test", "Network Available")
+                result = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                Log.i("Test", "Connection lost")
+            }
+        })
+    return result
 }

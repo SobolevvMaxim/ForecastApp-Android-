@@ -14,23 +14,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.MainPageActivity
-import com.example.homeworksandroid.adapters.CitiesAdapter
+import com.example.homeworksandroid.adapters.CitiesRecyclerAdapter
 import com.example.homeworksandroid.adapters.RecyclerOnCLickListener
+import com.example.homeworksandroid.checkNetwork
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
 
+@AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
         fun create() = CitiesFragment()
     }
 
-    private val citiesAdapter: CitiesAdapter = CitiesAdapter(
+    private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener { city ->
             changeChosenCity(newChosenName = city.name)
 
@@ -41,22 +43,23 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     )
 
-    private val viewModel = viewModels<CitiesViewModel>()
+    private val viewModel by viewModels<CitiesViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.value.getAddedCities()
+            viewModel.getAddedCities()
         }
 
-        viewModel.value.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+
+        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
             if (cities.isEmpty())
                 showNoticeDialog()
             updateRecyclerView(cities)
         }
 
-        viewModel.value.errorLiveData.observe(viewLifecycleOwner) { error ->
+        viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
             Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
             Log.d("MY_ERROR", "error: $error")
         }
@@ -82,7 +85,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
                         "Incorrect input!",
                         Toast.LENGTH_LONG
                     ).show()
-                    else -> viewModel.value.search(cityInput)
+                    else -> viewModel.search(cityInput)
                 }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -98,31 +101,31 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         val userRecycle: RecyclerView = cities_recyclerView
         userRecycle.layoutManager = layoutManager
 
-        userRecycle.adapter = citiesAdapter
+        userRecycle.adapter = citiesRecyclerAdapter
     }
 
     private fun changeChosenCity(newChosenName: String) {
-        val oldList = citiesAdapter.currentList
+        val oldList = citiesRecyclerAdapter.currentList
         val lastChosenIndex = oldList.indexOfLast { it.chosen }
         val newChosenIndex = oldList.indexOfFirst { it.name == newChosenName }
 
-        viewModel.value.changeChosenCities(lastChosenIndex, newChosenIndex)
+        viewModel.changeChosenCities(lastChosenIndex, newChosenIndex)
 
-        citiesAdapter.apply {
+        citiesRecyclerAdapter.apply {
             notifyItemChanged(lastChosenIndex)
             notifyItemChanged(newChosenIndex)
         }
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
-        citiesAdapter.submitList(cities.toList())
+        citiesRecyclerAdapter.submitList(cities.toList())
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
 
-        if (App.checkNetwork(context)) offline_mode_cities.visibility =
+        if (!checkNetwork(context)) offline_mode_cities.visibility =
             View.INVISIBLE else offline_mode_cities.visibility = View.VISIBLE
     }
 }

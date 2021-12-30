@@ -5,10 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.fragments.MainPageFragment
+import dagger.hilt.android.AndroidEntryPoint
 
 const val GET_CHOSEN_CITY = "CHOSEN_CITY"
 const val P_LOG = "PARCELABLE_LOG"
 
+@AndroidEntryPoint
 class MainPageActivity : AppCompatActivity(R.layout.activity_main_page) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
