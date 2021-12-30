@@ -1,20 +1,20 @@
 package com.example.homeworksandroid.viewmodels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homeworksandroid.App
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.repos.CitiesRepository
 import com.example.homeworksandroid.repos.ForecastRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class CitiesViewModel : ViewModel() {
-    private val citiesSearchRepos = CitiesRepository(App.citiesService)
-    private val forecastSearchRepos = ForecastRepository(App.forecastService, App.getCityDao())
+@HiltViewModel
+class CitiesViewModel @Inject constructor(
+    private val forecastSearchRepos: ForecastRepository
+) : ViewModel() {
+
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
@@ -37,7 +37,7 @@ class CitiesViewModel : ViewModel() {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            val cityWeatherResponse = citiesSearchRepos.search(text as String)
+            val cityWeatherResponse = forecastSearchRepos.search(text as String)
             cityWeatherResponse.getOrNull()?.let { city ->
                 searchForecast(city)
             } ?: run {

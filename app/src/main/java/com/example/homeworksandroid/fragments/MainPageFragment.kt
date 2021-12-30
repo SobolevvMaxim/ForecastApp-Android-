@@ -4,19 +4,19 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworksandroid.App
-import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.FORMAT
+import com.example.homeworksandroid.*
 import com.example.homeworksandroid.activities.CitiesActivity
-import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.P_LOG
-import com.example.homeworksandroid.adapters.ForecastAdapter
+import com.example.homeworksandroid.adapters.WeekForecastAdapter
+import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.util.*
 
@@ -72,7 +72,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         forecast_recycler.layoutManager = layoutManager
         val date: Date = FORMAT.parse(city.forecastDate) ?: Date(1)
 
-        val forecastAdapter = ForecastAdapter(city.temperatures.apply { removeFirst() }, date)
+        val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date)
         forecast_recycler.adapter = forecastAdapter
     }
 
@@ -80,12 +80,11 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         startActivity(Intent(context, CitiesActivity::class.java))
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {
         super.onResume()
 
-        if (!App.checkNetwork(context))
-            offline_mode.visibility = View.VISIBLE
-        else offline_mode.visibility = View.INVISIBLE
+        if (!checkNetwork(context)) offline_mode.visibility =
+            View.INVISIBLE else offline_mode.visibility = View.VISIBLE
     }
 }

@@ -11,11 +11,11 @@ import com.example.homeworksandroid.R
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ForecastAdapter(
+class WeekForecastAdapter(
     private val forecast: ArrayList<Daily>,
     private val fromDateTime: Date
 ) :
-    RecyclerView.Adapter<ForecastAdapter.ViewHolder>() {
+    RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperatureTV: TextView = view.findViewById(R.id.item_temp)
