@@ -15,13 +15,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import com.example.homeworksandroid.R
-import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesRecyclerAdapter
 import com.example.homeworksandroid.adapters.RecyclerOnCLickListener
 import com.example.homeworksandroid.checkNetwork
+import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
@@ -37,7 +36,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             changeChosenCity(newChosenName = city.name)
 
             val intent = Intent(requireContext(), MainPageActivity::class.java)
-            intent.putExtra(GET_CHOSEN_CITY, city)
+            intent.putExtra(getString(R.string.get_city_extra), city)
 
             startActivity(intent)
         }

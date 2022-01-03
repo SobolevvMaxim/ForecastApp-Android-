@@ -4,31 +4,31 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworksandroid.*
+import com.example.homeworksandroid.CityWeather
+import com.example.homeworksandroid.FORMAT
+import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.CitiesActivity
-import com.example.homeworksandroid.activities.GET_CHOSEN_CITY
 import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.adapters.WeekForecastAdapter
-import kotlinx.android.synthetic.main.choose_city_fragment.*
+import com.example.homeworksandroid.checkNetwork
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.util.*
+import javax.inject.Inject
 
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
 
-        fun create(city: CityWeather): MainPageFragment {
+        fun create(city: CityWeather, city_tag: String): MainPageFragment {
             val fragment = MainPageFragment()
             val bundle = Bundle()
 
-            bundle.putParcelable(GET_CHOSEN_CITY, city)
+            bundle.putParcelable(city_tag, city)
             fragment.arguments = bundle
 
             return fragment
@@ -39,7 +39,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
 
-        val cityP: CityWeather? = requireArguments().getParcelable(GET_CHOSEN_CITY)
+        val cityP: CityWeather? = requireArguments().getParcelable(getString(R.string.get_city_extra))
 
         cityP?.let {
             Log.d(P_LOG, "onViewCreated: city $cityP")

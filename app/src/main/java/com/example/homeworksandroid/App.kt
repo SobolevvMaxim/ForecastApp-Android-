@@ -9,6 +9,7 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.navigation.Navigator
 import androidx.room.Room
 import com.example.homeworksandroid.database.AppDatabase
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -24,6 +25,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -61,6 +63,11 @@ object AppModule {
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder().addInterceptor(interceptor).build()
+    }
+
+    @Provides
+    fun provideGetCityTag(@ApplicationContext context: Context): String {
+        return context.getString(R.string.get_city_extra)
     }
 
     @MainCoroutineDispatcher
