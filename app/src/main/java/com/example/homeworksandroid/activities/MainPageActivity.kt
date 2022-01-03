@@ -9,7 +9,6 @@ import com.example.homeworksandroid.fragments.MainPageFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-//const val GET_CHOSEN_CITY = "CHOSEN_CITY"
 const val P_LOG = "PARCELABLE_LOG"
 
 @AndroidEntryPoint
