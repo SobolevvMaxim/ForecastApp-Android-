@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/citiesFragment">
+
+    <fragment
+        android:id="@+id/citiesFragment"
+        android:name="com.example.homeworksandroid.fragments.CitiesFragment"
+        android:label="CitiesFragment" />
+    <fragment
+        android:id="@+id/mainPageFragment"
+        android:name="com.example.homeworksandroid.fragments.MainPageFragment"
+        android:label="MainPageFragment" />
+    <activity
+        android:id="@+id/mainPageActivity"
+        android:name="com.example.homeworksandroid.activities.MainPageActivity"
+        android:label="activity_main_page"
+        tools:layout="@layout/activity_main_page" />
+    <activity
+        android:id="@+id/citiesActivity"
+        android:name="com.example.homeworksandroid.activities.CitiesActivity"
+        android:label="acitvity_choose_city"
+        tools:layout="@layout/acitvity_choose_city" />
+</navigation>

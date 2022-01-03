@@ -1,20 +1,13 @@
 package com.example.homeworksandroid
 
-import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.*
+import com.example.homeworksandroid.database.TABLE_NAME
 import com.example.homeworksandroid.database.TemperatureConverter
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
-
-const val TABLE_NAME = "CITIES_TABLE"
-
-@SuppressLint("ConstantLocale")
-val FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
 @Parcelize
 @Entity(tableName = TABLE_NAME)
@@ -26,7 +19,7 @@ data class CityWeather(
     var lon: String = "",
     @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<Daily>,
     var chosen: Boolean = false,
-    @ColumnInfo(name = "forecastDate") val forecastDate: String
+    @ColumnInfo(name = "forecastDate") val forecastDate: String,
 ) : Parcelable {
     private companion object : Parceler<CityWeather> {
         override fun create(parcel: Parcel): CityWeather {

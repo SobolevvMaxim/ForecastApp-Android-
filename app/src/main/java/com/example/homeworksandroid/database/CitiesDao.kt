@@ -2,7 +2,8 @@ package com.example.homeworksandroid.database
 
 import androidx.room.*
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.TABLE_NAME
+
+const val TABLE_NAME = "CITIES_TABLE"
 
 @Dao
 interface CitiesDao {
