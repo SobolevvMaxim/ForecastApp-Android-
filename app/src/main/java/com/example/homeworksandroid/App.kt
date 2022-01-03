@@ -25,6 +25,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -69,6 +71,10 @@ object AppModule {
     fun provideGetCityTag(@ApplicationContext context: Context): String {
         return context.getString(R.string.get_city_extra)
     }
+
+    @Singleton
+    @Provides
+    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     @MainCoroutineDispatcher
     @Provides

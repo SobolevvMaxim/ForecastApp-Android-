@@ -6,14 +6,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.Daily
-import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 class WeekForecastAdapter(
     private val forecast: ArrayList<Daily>,
-    private val fromDateTime: Date
+    private val fromDateTime: Date,
+    private val dateFormat: SimpleDateFormat,
 ) :
     RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
 
@@ -50,6 +52,6 @@ class WeekForecastAdapter(
             add(Calendar.DATE, position + 1)
         }
 
-        return FORMAT.format(calendar.time)
+        return dateFormat.format(calendar.time)
     }
 }

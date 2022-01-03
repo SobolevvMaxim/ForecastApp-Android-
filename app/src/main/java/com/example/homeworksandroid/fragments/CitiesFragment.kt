@@ -16,7 +16,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.MainPageActivity
 import com.example.homeworksandroid.adapters.CitiesRecyclerAdapter
@@ -26,7 +25,9 @@ import com.example.homeworksandroid.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
+import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
@@ -34,15 +35,19 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         fun create() = CitiesFragment()
     }
 
+    @Inject
+    lateinit var format: SimpleDateFormat
+
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener { city ->
             changeChosenCity(newChosenName = city.name)
 
-            val cityDate: Date = FORMAT.parse(city.forecastDate) ?: Date(1)
+            val cityDate: Date = format.parse(city.forecastDate) ?: Date(1)
 
-            // TODO: 03.01.2022 forecast deprecated fix 
-            if(!DateUtils.isToday(cityDate.time))
-                Toast.makeText(requireContext(), "Forecast is deprecated!", Toast.LENGTH_LONG).show()
+            // TODO: 03.01.2022 forecast deprecated fix
+            if (!DateUtils.isToday(cityDate.time))
+                Toast.makeText(requireContext(), "Forecast is deprecated!", Toast.LENGTH_LONG)
+                    .show()
 
             val intent = Intent(requireContext(), MainPageActivity::class.java)
             intent.putExtra(getString(R.string.get_city_extra), city)
@@ -77,6 +82,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         setRecyclerView()
+        format
     }
 
     @SuppressLint("InflateParams")

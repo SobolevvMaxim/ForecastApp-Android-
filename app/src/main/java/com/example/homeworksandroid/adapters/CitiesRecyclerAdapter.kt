@@ -12,7 +12,9 @@ import com.example.homeworksandroid.CityWeather
 import com.example.homeworksandroid.R
 import kotlinx.android.synthetic.main.city_item.view.*
 
-class CitiesRecyclerAdapter(private val onClickListener: RecyclerOnCLickListener) :
+class CitiesRecyclerAdapter(
+    private val onClickListener: RecyclerOnCLickListener,
+) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -45,7 +47,9 @@ class CitiesRecyclerAdapter(private val onClickListener: RecyclerOnCLickListener
     }
 }
 
-class RecyclerOnCLickListener(val clickListener: (newChosenCityName: CityWeather) -> Unit) {
+class RecyclerOnCLickListener(
+    val clickListener: (newChosenCityName: CityWeather) -> Unit,
+) {
     fun onClick(newChosenCityName: CityWeather) = clickListener(newChosenCityName)
 }
 

@@ -10,16 +10,18 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworksandroid.CityWeather
-import com.example.homeworksandroid.FORMAT
 import com.example.homeworksandroid.R
 import com.example.homeworksandroid.activities.CitiesActivity
 import com.example.homeworksandroid.activities.P_LOG
 import com.example.homeworksandroid.adapters.WeekForecastAdapter
 import com.example.homeworksandroid.checkNetwork
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
@@ -34,6 +36,9 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             return fragment
         }
     }
+
+    @Inject
+    lateinit var dateFormat: SimpleDateFormat
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,9 +75,9 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         forecast_recycler.layoutManager = layoutManager
-        val date: Date = FORMAT.parse(city.forecastDate) ?: Date(1)
+        val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
 
-        val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date)
+        val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
         forecast_recycler.adapter = forecastAdapter
     }
 
