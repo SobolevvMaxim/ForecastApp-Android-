@@ -10,7 +10,7 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.room.Room
-import com.example.forecast.database.AppDatabase
+import com.example.forecast.feature_forecast.data.local.AppDatabase
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
