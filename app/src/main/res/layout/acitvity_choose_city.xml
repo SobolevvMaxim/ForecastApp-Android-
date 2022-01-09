@@ -4,4 +4,4 @@
     android:id="@+id/container_cities"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.CitiesActivity" />
+    tools:context=".feature_forecast.presentation.activities.CitiesActivity" />
