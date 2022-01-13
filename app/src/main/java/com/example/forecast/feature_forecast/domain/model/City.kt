@@ -5,6 +5,7 @@ import com.example.forecast.feature_forecast.data.remote.dto.Sys
 
 data class City(
     val coord: Coord,
-    val sys: Sys,
     val id: String,
+    val name: String,
+    val country: String,
 )

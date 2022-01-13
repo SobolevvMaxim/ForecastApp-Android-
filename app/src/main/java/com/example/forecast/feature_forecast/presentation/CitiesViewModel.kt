@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
+import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
 import com.example.forecast.feature_forecast.domain.use_case.GetForecast
@@ -52,14 +53,14 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-    private fun searchForecast(city: CityWeather) {
+    private fun searchForecast(city: City) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
-                if (isDbEmpty()) city.chosen = true
-                _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
+                if (isDbEmpty()) it.chosen = true
+                _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = it))
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"

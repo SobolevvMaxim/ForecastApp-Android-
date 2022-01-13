@@ -1,18 +1,31 @@
 package com.example.forecast.feature_forecast.data.remote.dto
 
+import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.domain.model.Daily
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 data class TemperaturesDto(
     @SerializedName("daily") val dailyTemp: List<DailyTemp>,
 ) {
-    fun getTemperature(city: CityWeather) = city.apply {
+    fun toCityWeather(city: City): CityWeather {
         val result = ArrayList(dailyTemp.map {
             Daily(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
         })
-        temperatures = result
+        return CityWeather(
+            id = city.id,
+            name = city.name,
+            country = city.country,
+            lat = city.coord.lat,
+            lon = city.coord.lon,
+            temperatures = result,
+            forecastDate = SimpleDateFormat("dd.MM.yyyy",
+                Locale.getDefault()).format(Calendar.getInstance().time)
+        )
     }
 }
 

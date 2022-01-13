@@ -5,6 +5,7 @@ import com.example.forecast.feature_forecast.data.local.CitiesDao
 import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
 import com.example.forecast.feature_forecast.data.remote.services.CitiesService
 import com.example.forecast.feature_forecast.data.remote.services.TemperatureService
+import com.example.forecast.feature_forecast.domain.model.City
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -16,29 +17,28 @@ class ForecastRepository @Inject constructor(
 ): IForecastRepository {
     private var addedCities: Set<CityWeather>? = null
 
-    override suspend fun search(query: String): Result<CityWeather> {
+    override suspend fun search(query: String): Result<City> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {
                 citiesService.searchCityAsync(query = query)
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.toCityWeatherEntity(name = query)
-                    ?.toCityWeather()
+                    ?.toCity(name = query)
                     ?: throw java.lang.Exception("Empty data")
             }
         }
     }
 
     // todo correct insert CityWeather in memory
-    override suspend fun searchTemp(city: CityWeather): Result<CityWeather> {
+    override suspend fun searchTemp(city: City): Result<CityWeather> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {
-                temperatureService.searchTempAsync(lat = city.lat, lon = city.lon)
+                temperatureService.searchTempAsync(lat = city.coord.lat, lon = city.coord.lon)
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.getTemperature(city)
+                    ?.toCityWeather(city)
                     ?: throw Exception("empty data")
             }
         }
