@@ -6,12 +6,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
+import com.example.forecast.feature_forecast.domain.use_case.GetForecast
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
 class CitiesViewModel @Inject constructor(
+    private val getCityInfoUseCase: GetCityInfo,
+    private val getForecastUseCase: GetForecast,
     private val forecastSearchRepos: ForecastRepository
 ) : ViewModel() {
 
@@ -37,7 +41,7 @@ class CitiesViewModel @Inject constructor(
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            val cityWeatherResponse = forecastSearchRepos.search(text as String)
+            val cityWeatherResponse = getCityInfoUseCase(text as String)
             cityWeatherResponse.getOrNull()?.let { city ->
                 searchForecast(city)
             } ?: run {
@@ -52,7 +56,7 @@ class CitiesViewModel @Inject constructor(
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            val cityTemperatureResponse = forecastSearchRepos.searchTemp(city)
+            val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
                 if (isDbEmpty()) city.chosen = true
                 _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = city))
