@@ -9,6 +9,6 @@ class GetForecast(
 ) {
 
     suspend operator fun invoke(city: City): Result<CityWeather> {
-        return repository.searchTemp(city)
+        return repository.searchForecast(city)
     }
 }

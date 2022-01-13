@@ -38,7 +38,7 @@ class CitiesViewModel @Inject constructor(
         searchJob = null
     }
 
-    fun search(text: CharSequence) {
+    fun searchCityForecastByName(text: CharSequence) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
@@ -64,6 +64,21 @@ class CitiesViewModel @Inject constructor(
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
+                )
+            }
+        }
+    }
+
+    fun updateCityForecast(cityWeather: CityWeather) {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch(exceptionHandler) {
+            val updatedCityResponse = forecastSearchRepos.searchForecast(city = cityWeather.toCity())
+            updatedCityResponse.getOrNull()?.let {
+                it.chosen = true
+                _citiesLiveData.postValue(forecastSearchRepos.updateCityInBase(it))
+            } ?: kotlin.run {
+                _errorLiveData.postValue(
+                    updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"
                 )
             }
         }

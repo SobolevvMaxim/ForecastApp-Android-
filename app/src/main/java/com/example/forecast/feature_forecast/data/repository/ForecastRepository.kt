@@ -17,7 +17,7 @@ class ForecastRepository @Inject constructor(
 ): IForecastRepository {
     private var addedCities: Set<CityWeather>? = null
 
-    override suspend fun search(query: String): Result<City> {
+    override suspend fun searchCity(query: String): Result<City> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {
                 citiesService.searchCityAsync(query = query)
@@ -30,7 +30,7 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    override suspend fun searchTemp(city: City): Result<CityWeather> {
+    override suspend fun searchForecast(city: City): Result<CityWeather> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {
                 temperatureService.searchTempAsync(lat = city.coord.lat, lon = city.coord.lon)
@@ -56,6 +56,23 @@ class ForecastRepository @Inject constructor(
         addedCities = addedCities?.toMutableSet()?.let { cities ->
             cities.add(city)
             cities
+        } ?: setOf(city)
+    }
+
+    override suspend fun updateCityInBase(city: CityWeather): Set<CityWeather> {
+        withContext(Dispatchers.IO){
+            citiesDao.insert(city.toCityWeatherEntity())
+            updateInMemory(city)
+        }
+
+        return addedCities ?: emptySet()
+    }
+
+    private fun updateInMemory(city: CityWeather) {
+        addedCities = addedCities?.toMutableSet()?.let { cities ->
+            val temp = cities.filter { it.id != city.id }.toMutableSet()
+            temp.add(city)
+            temp.toSet()
         } ?: setOf(city)
     }
 

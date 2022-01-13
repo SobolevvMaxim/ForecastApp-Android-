@@ -42,9 +42,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         RecyclerOnCLickListener { city ->
             changeChosenCity(newChosenName = city.name)
 
-            val cityDate: Date = format.parse(city.forecastDate) ?: Date(1)
+            val cityDate: Date = getCityForecastDate(city)
 
-            // TODO: 03.01.2022 forecast deprecated fix
             if (!DateUtils.isToday(cityDate.time)) {
                 deprecatedForecastDialog(city)
             } else passCityToMainScreen(city)
@@ -55,7 +54,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         AlertDialog.Builder(requireContext()).create().apply {
             setTitle(getString(R.string.deprecated_forecast))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                // TODO: 13.01.2022
+                viewModel.updateCityForecast(city)
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
@@ -84,7 +83,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
             if (cities.isEmpty())
-                showNoticeDialog()
+                addCityDialog()
+            checkIfUpdatedCity(cities)
             updateRecyclerView(cities)
         }
 
@@ -94,15 +94,27 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         button_add_city.setOnClickListener {
-            showNoticeDialog()
+            addCityDialog()
         }
 
         setRecyclerView()
         format
     }
 
+    private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
+        if(cities.isNullOrEmpty() || citiesRecyclerAdapter.currentList.isNullOrEmpty()) return
+
+        val chosen = cities.first { el -> el.chosen }
+        val recyclerChosen = citiesRecyclerAdapter.currentList.first { el ->  el.chosen }
+
+        if (DateUtils.isToday(getCityForecastDate(chosen).time) &&
+            chosen.name == recyclerChosen.name &&
+            cities.size == citiesRecyclerAdapter.currentList.size)
+            passCityToMainScreen(chosen)
+    }
+
     @SuppressLint("InflateParams")
-    private fun showNoticeDialog() {
+    private fun addCityDialog() {
         AlertDialog.Builder(requireContext()).create().apply {
             val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.put_city_dialog, null))
@@ -115,7 +127,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
                         "Incorrect input!",
                         Toast.LENGTH_LONG
                     ).show()
-                    else -> viewModel.search(cityInput)
+                    else -> viewModel.searchCityForecastByName(cityInput)
                 }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -150,6 +162,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
     }
+
+    private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {

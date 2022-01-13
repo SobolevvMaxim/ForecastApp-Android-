@@ -3,6 +3,7 @@ package com.example.forecast.feature_forecast.domain.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.example.forecast.feature_forecast.data.local.entities.CityWeatherEntity
+import com.example.forecast.feature_forecast.data.remote.dto.Coord
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import kotlin.collections.ArrayList
@@ -66,5 +67,15 @@ data class CityWeather(
         temperatures,
         chosen,
         forecastDate
+    )
+
+    fun toCity() = City(
+        coord = Coord(
+            lat = lat,
+            lon = lon
+        ),
+        id = id,
+        name = name,
+        country = country
     )
 }
