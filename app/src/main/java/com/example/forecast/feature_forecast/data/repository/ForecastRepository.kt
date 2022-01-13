@@ -61,7 +61,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun updateCityInBase(city: CityWeather): Set<CityWeather> {
         withContext(Dispatchers.IO){
-            citiesDao.insert(city.toCityWeatherEntity())
+            citiesDao.update(city.toCityWeatherEntity())
             updateInMemory(city)
         }
 
