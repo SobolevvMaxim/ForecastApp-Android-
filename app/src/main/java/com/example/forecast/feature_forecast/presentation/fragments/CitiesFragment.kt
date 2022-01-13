@@ -45,16 +45,32 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             val cityDate: Date = format.parse(city.forecastDate) ?: Date(1)
 
             // TODO: 03.01.2022 forecast deprecated fix
-            if (!DateUtils.isToday(cityDate.time))
-                Toast.makeText(requireContext(), "Forecast is deprecated!", Toast.LENGTH_LONG)
-                    .show()
-
-            val intent = Intent(requireContext(), MainPageActivity::class.java)
-            intent.putExtra(getString(R.string.get_city_extra), city)
-
-            startActivity(intent)
+            if (!DateUtils.isToday(cityDate.time)) {
+                deprecatedForecastDialog(city)
+            } else passCityToMainScreen(city)
         }
     )
+
+    private fun deprecatedForecastDialog(city: CityWeather) {
+        AlertDialog.Builder(requireContext()).create().apply {
+            setTitle(getString(R.string.deprecated_forecast))
+            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
+                // TODO: 13.01.2022
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
+                dialog.cancel()
+                passCityToMainScreen(city)
+            }
+            show()
+        }
+    }
+
+    private fun passCityToMainScreen(city: CityWeather) {
+        val intent = Intent(requireContext(), MainPageActivity::class.java)
+        intent.putExtra(getString(R.string.get_city_extra), city)
+
+        startActivity(intent)
+    }
 
     private val viewModel by viewModels<CitiesViewModel>()
 

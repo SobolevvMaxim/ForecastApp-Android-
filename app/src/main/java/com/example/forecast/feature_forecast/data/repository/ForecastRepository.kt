@@ -30,7 +30,6 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    // todo correct insert CityWeather in memory
     override suspend fun searchTemp(city: City): Result<CityWeather> {
         return withContext(Dispatchers.IO) {
             kotlin.runCatching {

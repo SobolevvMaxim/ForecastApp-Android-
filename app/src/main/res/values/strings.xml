@@ -11,4 +11,5 @@
     <string name="dialog_title">Please put the city name</string>
     <string name="offline_mode">Offline mode</string>
     <string name="get_city_extra">CHOSEN_CITY</string>
+    <string name="deprecated_forecast">Do you want to update deprecated forecast?</string>
 </resources>
