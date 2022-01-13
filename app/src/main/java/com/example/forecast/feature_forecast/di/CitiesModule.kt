@@ -24,12 +24,10 @@ object CitiesModule {
     fun provideCitiesDao(appDatabase: AppDatabase): CitiesDao = appDatabase.citiesDao()
 
     @ActivityRetainedScoped
-    @Singleton
     @Provides
     fun provideGetCityInfoUseCase(repository: ForecastRepository): GetCityInfo = GetCityInfo(repository)
 
     @ActivityRetainedScoped
-    @Singleton
     @Provides
     fun provideGetForecastUseCase(repository: ForecastRepository): GetForecast = GetForecast(repository)
 
