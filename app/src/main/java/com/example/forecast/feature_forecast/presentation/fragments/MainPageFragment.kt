@@ -1,6 +1,5 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -9,12 +8,12 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.activities.CitiesActivity
+import com.example.forecast.checkNetwork
+import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
-import com.example.forecast.checkNetwork
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -49,11 +48,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         cityP?.let {
             Log.d(P_LOG, "onViewCreated: city $cityP")
             updateView(it)
-        } ?: addCityActivity()
+        } ?: (activity as NavigationHost).navigateTo(CitiesFragment.create(), addToBackstack = false)
 
         mainAddButton.setOnClickListener {
-            addCityActivity()
+            (activity as NavigationHost).navigateTo(CitiesFragment.create(), false)
         }
+        // TODO: 14.01.2022 fix backstack alb
     }
 
     private fun updateView(city: CityWeather) {
@@ -79,10 +79,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
         forecast_recycler.adapter = forecastAdapter
-    }
-
-    private fun addCityActivity() {
-        startActivity(Intent(context, CitiesActivity::class.java))
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
