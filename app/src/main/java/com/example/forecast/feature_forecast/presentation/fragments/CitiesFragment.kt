@@ -47,7 +47,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
             if (!DateUtils.isToday(cityDate.time)) {
                 deprecatedForecastDialog(city)
-            } else passCityToMainScreen(city)
+            } else navigateToMainFragment()
         }
     )
 
@@ -75,11 +75,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         app_bar.setNavigationOnClickListener {
-            citiesRecyclerAdapter.currentList.let { cities ->
-                cities.firstOrNull { el -> el.chosen }?.let { city ->
-                    passCityToMainScreen(city)
-                }
-            }
+            navigateToMainFragment()
         }
 
         setRecyclerView()
@@ -124,14 +120,14 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
-                passCityToMainScreen(city)
+                navigateToMainFragment()
             }
             show()
         }
     }
 
-    private fun passCityToMainScreen(city: CityWeather) {
-        (activity as NavigationHost).navigateTo(MainPageFragment.create(city = city, city_tag = getString(R.string.get_city_extra)), addToBackstack = false)
+    private fun navigateToMainFragment() {
+        (activity as NavigationHost).navigateTo(MainPageFragment.create(), addToBackstack = false)
     }
 
     private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
@@ -140,7 +136,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         val chosen = cities.first { el -> el.chosen }
 
         if (DateUtils.isToday(getCityForecastDate(chosen).time) && cities.size == citiesRecyclerAdapter.currentList.size)
-            passCityToMainScreen(chosen)
+            navigateToMainFragment()
     }
 
     private fun setRecyclerView() {
