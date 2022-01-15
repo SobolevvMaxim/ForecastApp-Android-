@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.put_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
@@ -62,7 +63,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             viewModel.getAddedCities()
         }
 
-
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
             if (cities.isEmpty())
                 addCityDialog()
@@ -80,8 +80,11 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         app_bar.setNavigationOnClickListener {
-            // (activity as NavigationHost).navigateTo(MainPageFragment.create(), false)
-            // TODO: 14.01.2022 tool bar back button
+            citiesRecyclerAdapter.currentList.let { cities ->
+                cities.firstOrNull { el -> el.chosen }?.let { city ->
+                    passCityToMainScreen(city)
+                }
+            }
         }
 
         setRecyclerView()
@@ -140,15 +143,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         if(cities.isNullOrEmpty() || citiesRecyclerAdapter.currentList.isNullOrEmpty()) return
 
         val chosen = cities.first { el -> el.chosen }
-        val recyclerChosen = citiesRecyclerAdapter.currentList.first { el ->  el.chosen }
 
-        if (DateUtils.isToday(getCityForecastDate(chosen).time) &&
-            chosen.name == recyclerChosen.name &&
-            cities.size == citiesRecyclerAdapter.currentList.size)
+        if (DateUtils.isToday(getCityForecastDate(chosen).time) && cities.size == citiesRecyclerAdapter.currentList.size)
             passCityToMainScreen(chosen)
     }
-
-
 
     private fun setRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager =
