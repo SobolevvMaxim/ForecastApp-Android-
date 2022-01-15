@@ -61,7 +61,8 @@ class MainPageViewModel @Inject constructor(
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let { resultCity ->
-                if (isDbEmpty()) resultCity.chosen = true
+                resultCity.chosen = true
+                forecastSearchRepos.writeCityToBase(city = resultCity)
                 _chosenCityLiveData.postValue(resultCity)
             } ?: run {
                 _errorLiveData.postValue(
@@ -77,6 +78,4 @@ class MainPageViewModel @Inject constructor(
             _chosenCityLiveData.postValue(chosenCity)
         }
     }
-
-    fun isDbEmpty(): Boolean = forecastSearchRepos.isDbEmpty()
 }

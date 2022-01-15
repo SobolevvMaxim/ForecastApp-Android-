@@ -62,13 +62,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             } else Toast.makeText(requireContext(), "Error in loading default city!", Toast.LENGTH_LONG).show()
         }
 
-//        val cityP: CityWeather? = requireArguments().getParcelable(getString(R.string.get_city_extra))
-//
-//        cityP?.let {
-//            Log.d(P_LOG, "onViewCreated: city $cityP")
-//            updateView(it)
-//        } ?: (activity as NavigationHost).navigateTo(CitiesFragment.create(), addToBackstack = false)
-//
         mainAddButton.setOnClickListener {
             (activity as NavigationHost).navigateTo(CitiesFragment.create(), true)
         }

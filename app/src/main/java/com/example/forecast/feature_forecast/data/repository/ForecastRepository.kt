@@ -118,7 +118,7 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
+//    fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 
-    fun isDbEmpty2(): Boolean = citiesDao.getAll().isEmpty()
+//    fun isDbEmpty2(): Boolean = citiesDao.getAll().isEmpty()
 }
