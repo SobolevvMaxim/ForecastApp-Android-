@@ -112,5 +112,11 @@ class ForecastRepository @Inject constructor(
         }
     }
 
+    override suspend fun getChosenCityFromBase(): CityWeather {
+        return withContext(Dispatchers.IO) {
+            citiesDao.getChosenCity().toCityWeather()
+        }
+    }
+
     fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
 }

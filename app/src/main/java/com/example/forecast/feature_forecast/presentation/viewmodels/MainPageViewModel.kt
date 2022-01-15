@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation
+package com.example.forecast.feature_forecast.presentation.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,23 +9,23 @@ import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
 import com.example.forecast.feature_forecast.domain.use_case.GetForecast
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class CitiesViewModel @Inject constructor(
+class MainPageViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
     private val forecastSearchRepos: ForecastRepository
-) : ViewModel() {
-
+): ViewModel() {
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
 
-    private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
-    val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
+    private val _chosenCityLiveData = MutableLiveData<CityWeather>()
+    val chosenCityLiveData get() = _chosenCityLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
     val errorLiveData: LiveData<String> get() = _errorLiveData
@@ -38,11 +38,11 @@ class CitiesViewModel @Inject constructor(
         searchJob = null
     }
 
-    fun searchCityForecastByName(text: CharSequence) {
+    fun searchDefaultForecast(defaultCityName: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            val cityWeatherResponse = getCityInfoUseCase(text as String)
+            val cityWeatherResponse = getCityInfoUseCase(defaultCityName)
             cityWeatherResponse.getOrNull()?.let { city ->
                 searchForecast(city)
             } ?: run {
@@ -58,9 +58,9 @@ class CitiesViewModel @Inject constructor(
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
-            cityTemperatureResponse.getOrNull()?.let {
-                if (isDbEmpty()) it.chosen = true
-                _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = it))
+            cityTemperatureResponse.getOrNull()?.let { resultCity ->
+                if (isDbEmpty()) resultCity.chosen = true
+                _chosenCityLiveData.postValue(resultCity)
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
@@ -69,31 +69,10 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-    fun updateCityForecast(cityWeather: CityWeather) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch(exceptionHandler) {
-            val updatedCityResponse = forecastSearchRepos.searchForecast(city = cityWeather.toCity())
-            updatedCityResponse.getOrNull()?.let {
-                it.chosen = true
-                _citiesLiveData.postValue(forecastSearchRepos.updateCityInBase(it))
-            } ?: kotlin.run {
-                _errorLiveData.postValue(
-                    updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"
-                )
-            }
-        }
-    }
-
-    fun getAddedCities() {
-        viewModelScope.launch {
-            _citiesLiveData.postValue(forecastSearchRepos.getAll())
-        }
-    }
-
-    fun changeChosenCities(lastChosenIndex: Int, newChosenIndex: Int) {
-        viewModelScope.launch {
-            forecastSearchRepos.changeChosenCityByName(lastChosenIndex, newChosenIndex)
-            _citiesLiveData.postValue(forecastSearchRepos.getAll())
+    fun getChosenFromBase() {
+        viewModelScope.launch(exceptionHandler) {
+            val chosenCity = forecastSearchRepos.getChosenCityFromBase()
+            _chosenCityLiveData.postValue(chosenCity)
         }
     }
 

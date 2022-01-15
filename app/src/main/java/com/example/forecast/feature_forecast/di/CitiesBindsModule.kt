@@ -1,7 +1,7 @@
 package com.example.forecast.feature_forecast.di
 
 import androidx.lifecycle.ViewModel
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

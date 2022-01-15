@@ -1,7 +1,6 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -10,7 +9,6 @@ import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,20 +16,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.activities.MainPageActivity
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import com.example.forecast.checkNetwork
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlinx.android.synthetic.main.choose_city_fragment.view.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
