@@ -2,6 +2,7 @@ package com.example.forecast.feature_forecast.di
 
 import androidx.lifecycle.ViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.viewmodels.MainPageViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +16,8 @@ abstract class CitiesBindsModule {
     @ActivityRetainedScoped
     @Binds
     abstract fun bindCitiesViewModel(citiesViewModel: CitiesViewModel): ViewModel
+
+    @ActivityRetainedScoped
+    @Binds
+    abstract fun bindMainPageViewModel(mainPageViewModel: MainPageViewModel): ViewModel
 }

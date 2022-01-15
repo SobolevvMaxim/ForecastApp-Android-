@@ -4,16 +4,20 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
+import com.example.forecast.feature_forecast.data.local.TABLE_NAME
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.viewmodels.MainPageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -39,21 +43,35 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     @Inject
     lateinit var dateFormat: SimpleDateFormat
 
+    private val viewModel by viewModels<MainPageViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getChosenFromBase()
 
-        val cityP: CityWeather? = requireArguments().getParcelable(getString(R.string.get_city_extra))
-
-        cityP?.let {
-            Log.d(P_LOG, "onViewCreated: city $cityP")
-            updateView(it)
-        } ?: (activity as NavigationHost).navigateTo(CitiesFragment.create(), addToBackstack = false)
-
-        mainAddButton.setOnClickListener {
-            (activity as NavigationHost).navigateTo(CitiesFragment.create(), false)
+        viewModel.chosenCityLiveData.observe(viewLifecycleOwner) { chosenCity ->
+            updateView(chosenCity)
         }
-        // TODO: 14.01.2022 fix backstack alb
+
+        viewModel.errorLiveData.observe(viewLifecycleOwner) {
+            if(it.isException()){
+                viewModel.searchDefaultForecast(getString(R.string.default_city))
+                Log.d(P_LOG, "Error:$it")
+                Toast.makeText(requireContext(), "No cities yet!", Toast.LENGTH_LONG).show()
+            } else Toast.makeText(requireContext(), "Error in loading default city!", Toast.LENGTH_LONG).show()
+        }
+
+//        val cityP: CityWeather? = requireArguments().getParcelable(getString(R.string.get_city_extra))
+//
+//        cityP?.let {
+//            Log.d(P_LOG, "onViewCreated: city $cityP")
+//            updateView(it)
+//        } ?: (activity as NavigationHost).navigateTo(CitiesFragment.create(), addToBackstack = false)
+//
+        mainAddButton.setOnClickListener {
+            (activity as NavigationHost).navigateTo(CitiesFragment.create(), true)
+        }
     }
 
     private fun updateView(city: CityWeather) {
@@ -80,6 +98,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
         forecast_recycler.adapter = forecastAdapter
     }
+
+    private fun String.isException(): Boolean = this.startsWith("java.lang")
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {

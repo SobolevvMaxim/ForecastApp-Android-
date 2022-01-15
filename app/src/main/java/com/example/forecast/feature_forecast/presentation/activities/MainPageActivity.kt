@@ -18,7 +18,7 @@ class MainPageActivity : AppCompatActivity(R.layout.activity_main_page), Navigat
         super.onCreate(savedInstanceState)
 
         if (savedInstanceState == null) {
-            navigateTo(CitiesFragment.create(), addToBackstack = false)
+            navigateTo(MainPageFragment.create(), addToBackstack = false)
         }
     }
 
