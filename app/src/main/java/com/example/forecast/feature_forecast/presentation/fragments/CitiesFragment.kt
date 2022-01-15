@@ -127,7 +127,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     }
 
     private fun navigateToMainFragment() {
-        (activity as NavigationHost).navigateTo(MainPageFragment.create(), addToBackstack = false)
+//        (activity as NavigationHost).navigateTo(MainPageFragment.create(), addToBackstack = false)
+        parentFragmentManager.popBackStack()
     }
 
     private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
