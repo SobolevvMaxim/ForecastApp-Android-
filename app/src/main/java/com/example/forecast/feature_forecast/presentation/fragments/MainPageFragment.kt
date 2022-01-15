@@ -52,6 +52,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         viewModel.chosenCityLiveData.observe(viewLifecycleOwner) { chosenCity ->
             updateView(chosenCity)
+            progress_bar_city.visibility = View.INVISIBLE
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
