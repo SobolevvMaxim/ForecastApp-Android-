@@ -8,6 +8,7 @@ import com.example.forecast.feature_forecast.data.local.entities.CityWeatherEnti
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.domain.use_case.DeleteCity
 import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
 import com.example.forecast.feature_forecast.domain.use_case.GetForecast
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class CitiesViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
+    private val deleteCityUseCase: DeleteCity,
     private val forecastSearchRepos: ForecastRepository
 ) : ViewModel() {
 
@@ -99,7 +101,8 @@ class CitiesViewModel @Inject constructor(
 
     fun deleteCity(city: CityWeather) {
         viewModelScope.launch(exceptionHandler) {
-            _citiesLiveData.postValue(forecastSearchRepos.deleteCityInBase(city))
+            val addedCities = deleteCityUseCase(city)
+            _citiesLiveData.postValue(addedCities)
         }
     }
 }
