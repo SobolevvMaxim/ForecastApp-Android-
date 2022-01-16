@@ -13,5 +13,6 @@
     <string name="city_fragment_title">Choose the city</string>
     <string name="get_city_extra">CHOSEN_CITY</string>
     <string name="deprecated_forecast">Do you want to update deprecated forecast?</string>
+    <string name="delete_city_title">Do you want to delete city: </string>
     <string name="default_city">Minsk</string>
 </resources>

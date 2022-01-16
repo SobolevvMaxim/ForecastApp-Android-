@@ -120,7 +120,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun deleteCityInBase(city: CityWeather): Set<CityWeather> {
         withContext(Dispatchers.IO) {
-            citiesDao.delete(city = city.toCityWeatherEntity())
+            citiesDao.delete(cityID = city.id)
             deleteFromMemory(city = city)
         }
 
@@ -131,6 +131,6 @@ class ForecastRepository @Inject constructor(
         addedCities = addedCities?.toMutableSet()?.let { cities ->
             cities.remove(city)
             cities
-        } ?: setOf(city)
+        }
     }
 }

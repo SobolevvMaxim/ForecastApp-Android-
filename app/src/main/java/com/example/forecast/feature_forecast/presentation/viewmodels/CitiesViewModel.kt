@@ -101,7 +101,7 @@ class CitiesViewModel @Inject constructor(
 
     fun deleteCity(city: CityWeather) {
         viewModelScope.launch(exceptionHandler) {
-            val addedCities = deleteCityUseCase(city)
+            val addedCities = forecastSearchRepos.deleteCityInBase(city)
             _citiesLiveData.postValue(addedCities)
         }
     }
