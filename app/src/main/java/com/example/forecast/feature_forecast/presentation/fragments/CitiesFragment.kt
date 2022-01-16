@@ -40,7 +40,8 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private val viewModel by viewModels<CitiesViewModel>()
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
-        RecyclerOnCLickListener { city ->
+        RecyclerOnCLickListener (
+            { city ->
             changeChosenCity(newChosenName = city.name)
 
             val cityDate: Date = getCityForecastDate(city)
@@ -48,7 +49,9 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             if (!DateUtils.isToday(cityDate.time)) {
                 deprecatedForecastDialog(city)
             } else navigateToMainFragment()
-        }
+        }, { cityToDelete ->
+            deleteCityDialog(city = cityToDelete)
+        })
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +62,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+            Log.d("DELETE", "onViewCreated: $cities")
             if (cities.isEmpty())
                 addCityDialog()
             checkIfUpdatedCity(cities)
@@ -126,14 +130,31 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
     }
 
+    private fun deleteCityDialog(city: CityWeather) {
+        AlertDialog.Builder(requireContext()).create().apply {
+            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
+            setTitle(title)
+            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
+                when(city.chosen){
+                    false -> viewModel.deleteCity(city)
+                    true -> Toast.makeText(requireContext(), "Unable to delete chosen city!", Toast.LENGTH_LONG).show()
+                }
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
+
     private fun navigateToMainFragment() {
-//        (activity as NavigationHost).navigateTo(MainPageFragment.create(), addToBackstack = false)
         parentFragmentManager.popBackStack()
     }
 
     private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
         if(cities.isNullOrEmpty() || citiesRecyclerAdapter.currentList.isNullOrEmpty()) return
 
+        Log.d("DELETE", "checkIfUpdatedCity: $cities")
         val chosen = cities.first { el -> el.chosen }
 
         if (DateUtils.isToday(getCityForecastDate(chosen).time) && cities.size == citiesRecyclerAdapter.currentList.size)

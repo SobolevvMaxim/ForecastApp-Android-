@@ -32,6 +32,10 @@ class CitiesRecyclerAdapter(
             setOnClickListener {
                 onClickListener.onClick(item)
             }
+            setOnLongClickListener {
+                onClickListener.onLongClickListener(item)
+                true
+            }
         }
     }
 
@@ -49,8 +53,11 @@ class CitiesRecyclerAdapter(
 
 class RecyclerOnCLickListener(
     val clickListener: (newChosenCityName: CityWeather) -> Unit,
+    val onLongClickListener: (cityToDelete: CityWeather) -> Unit
 ) {
     fun onClick(newChosenCityName: CityWeather) = clickListener(newChosenCityName)
+
+    fun onLongClick(selectedCity: CityWeather) = onLongClickListener(selectedCity)
 }
 
 class DiffCallback : DiffUtil.ItemCallback<CityWeather>() {

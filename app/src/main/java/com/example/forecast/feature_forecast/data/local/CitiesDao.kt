@@ -23,6 +23,6 @@ interface CitiesDao {
     @Update
     fun update(city: CityWeatherEntity)
 
-    @Delete
-    fun delete(city: CityWeatherEntity)
+    @Query("DELETE FROM $TABLE_NAME WHERE id = :cityID")
+    fun delete(cityID: String)
 }
