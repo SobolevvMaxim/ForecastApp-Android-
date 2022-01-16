@@ -51,16 +51,16 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.getChosenFromBase()
 
         viewModel.chosenCityLiveData.observe(viewLifecycleOwner) { chosenCity ->
-            updateView(chosenCity)
-            progress_bar_city.visibility = View.INVISIBLE
+            chosenCity?.let { city ->
+                updateView(city)
+                progress_bar_city.visibility = View.INVISIBLE
+            } ?: viewModel.searchDefaultForecast(getString(R.string.default_city))
+
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            if(it.isException()){
-                viewModel.searchDefaultForecast(getString(R.string.default_city))
-                Log.d(P_LOG, "Error:$it")
-                Toast.makeText(requireContext(), "No cities yet!", Toast.LENGTH_LONG).show()
-            } else Toast.makeText(requireContext(), "Error in loading default city!", Toast.LENGTH_LONG).show()
+            Log.d(P_LOG, "ERROR:$it")
+            Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
         }
 
         mainAddButton.setOnClickListener {
@@ -92,8 +92,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
         forecast_recycler.adapter = forecastAdapter
     }
-
-    private fun String.isException(): Boolean = this.startsWith("java.lang")
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {

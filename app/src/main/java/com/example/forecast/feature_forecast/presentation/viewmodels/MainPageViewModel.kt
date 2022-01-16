@@ -26,7 +26,7 @@ class MainPageViewModel @Inject constructor(
         _errorLiveData.postValue(t.toString())
     }
 
-    private val _chosenCityLiveData = MutableLiveData<CityWeather>()
+    private val _chosenCityLiveData = MutableLiveData<CityWeather?>()
     val chosenCityLiveData get() = _chosenCityLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
