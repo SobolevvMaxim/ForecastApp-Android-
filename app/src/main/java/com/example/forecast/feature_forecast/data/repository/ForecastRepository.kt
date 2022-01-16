@@ -118,7 +118,19 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-//    fun isDbEmpty(): Boolean = addedCities.isNullOrEmpty()
+    override suspend fun deleteCityInBase(city: CityWeather): Set<CityWeather> {
+        withContext(Dispatchers.IO) {
+            citiesDao.delete(city = city.toCityWeatherEntity())
+            deleteFromMemory(city = city)
+        }
 
-//    fun isDbEmpty2(): Boolean = citiesDao.getAll().isEmpty()
+        return addedCities ?: emptySet()
+    }
+
+    private fun deleteFromMemory(city: CityWeather) {
+        addedCities = addedCities?.toMutableSet()?.let { cities ->
+            cities.remove(city)
+            cities
+        } ?: setOf(city)
+    }
 }
