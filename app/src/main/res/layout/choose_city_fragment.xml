@@ -32,7 +32,7 @@
         android:text="@string/offline_mode"
         android:textColor="@color/grey"
         android:textSize="16sp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
