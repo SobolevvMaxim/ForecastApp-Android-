@@ -1,14 +1,10 @@
 package com.example.forecast.feature_forecast.presentation.adapters
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +13,16 @@ import com.example.forecast.R
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
-    private val onClickListener: RecyclerOnCLickListener,
+    private val listener: RecyclerOnCLickListener
 ) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val city: TextView = view.item_city
-//        private val chosen: ImageView = view.item_done_image
         private val temperature: TextView = view.city_temperature
 
         @SuppressLint("ResourceAsColor")
-        fun bind(item: CityWeather, onClickListener: RecyclerOnCLickListener) = with(itemView) {
+        fun bind(item: CityWeather, listener: RecyclerOnCLickListener) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"
             city.text = cityText
             val temperatureText = "${item.temperatures[0].temp}°"
@@ -40,11 +35,10 @@ class CitiesRecyclerAdapter(
             }
 
             setOnClickListener {
-                onClickListener.clickListener(item)
-//                onClickListener.onClick(item)
+                listener.clickListener(item)
             }
             setOnLongClickListener {
-                onClickListener.onLongClickListener(item)
+                listener.onLongClickListener(item)
                 true
             }
         }
@@ -58,18 +52,14 @@ class CitiesRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), onClickListener)
+        holder.bind(getItem(position), listener)
     }
 }
 
 class RecyclerOnCLickListener(
     val clickListener: (newChosenCityName: CityWeather) -> Unit,
     val onLongClickListener: (cityToDelete: CityWeather) -> Unit
-) {
-    fun onClick(newChosenCityName: CityWeather) = clickListener(newChosenCityName)
-
-    fun onLongClick(selectedCity: CityWeather) = onLongClickListener(selectedCity)
-}
+)
 
 class DiffCallback : DiffUtil.ItemCallback<CityWeather>() {
     override fun areItemsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
