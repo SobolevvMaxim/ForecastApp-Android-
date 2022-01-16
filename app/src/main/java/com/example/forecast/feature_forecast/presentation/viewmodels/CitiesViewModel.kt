@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.forecast.feature_forecast.data.local.entities.CityWeatherEntity
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
@@ -59,7 +60,6 @@ class CitiesViewModel @Inject constructor(
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
-//                if (isDbEmpty()) it.chosen = true
                 _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = it))
             } ?: run {
                 _errorLiveData.postValue(
@@ -97,5 +97,9 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-//    private fun isDbEmpty(): Boolean = forecastSearchRepos.isDbEmpty()
+    fun deleteCity(city: CityWeather) {
+        viewModelScope.launch(exceptionHandler) {
+            _citiesLiveData.postValue(forecastSearchRepos.deleteCityInBase(city))
+        }
+    }
 }
