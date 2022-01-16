@@ -15,7 +15,7 @@ interface CitiesDao {
     fun getCityForecastByName(name: String): CityWeatherEntity
 
     @Query("SELECT * FROM $TABLE_NAME WHERE chosen = 1")
-    fun getChosenCity(): CityWeatherEntity
+    fun getChosenCity(): CityWeatherEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(city: CityWeatherEntity)

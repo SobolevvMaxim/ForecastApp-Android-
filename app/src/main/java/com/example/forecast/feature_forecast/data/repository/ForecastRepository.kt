@@ -112,9 +112,9 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    override suspend fun getChosenCityFromBase(): CityWeather {
+    override suspend fun getChosenCityFromBase(): CityWeather? {
         return withContext(Dispatchers.IO) {
-            citiesDao.getChosenCity().toCityWeather()
+            citiesDao.getChosenCity()?.toCityWeather()
         }
     }
 

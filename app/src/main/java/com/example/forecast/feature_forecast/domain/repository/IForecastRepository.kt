@@ -16,5 +16,5 @@ interface IForecastRepository {
 
     suspend fun updateCityInBase(city: CityWeather): Set<CityWeather>
 
-    suspend fun getChosenCityFromBase(): CityWeather
+    suspend fun getChosenCityFromBase(): CityWeather?
 }
