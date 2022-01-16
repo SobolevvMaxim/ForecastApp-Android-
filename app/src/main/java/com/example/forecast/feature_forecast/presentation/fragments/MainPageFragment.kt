@@ -98,6 +98,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         super.onResume()
 
         if (!checkNetwork(context)) offline_mode.visibility =
-            View.INVISIBLE else offline_mode.visibility = View.VISIBLE
+            View.GONE else offline_mode.visibility = View.VISIBLE
     }
 }

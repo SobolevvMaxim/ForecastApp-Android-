@@ -1,10 +1,14 @@
 package com.example.forecast.feature_forecast.presentation.adapters
 
+import android.annotation.SuppressLint
+import android.content.res.Resources
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,18 +23,25 @@ class CitiesRecyclerAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val city: TextView = view.item_city
-        private val chosen: ImageView = view.item_done_image
-        // private val menu: ImageView = view.dots_menu // todo
+//        private val chosen: ImageView = view.item_done_image
+        private val temperature: TextView = view.city_temperature
 
+        @SuppressLint("ResourceAsColor")
         fun bind(item: CityWeather, onClickListener: RecyclerOnCLickListener) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"
             city.text = cityText
+            val temperatureText = "${item.temperatures[0].temp}°"
+            temperature.text = temperatureText
 
 
-            if (item.chosen) chosen.visibility = View.VISIBLE
+            if (item.chosen) {
+                city.setTextColor(R.color.primaryColor)
+                temperature.setTextColor(R.color.primaryColor)
+            }
 
             setOnClickListener {
-                onClickListener.onClick(item)
+                onClickListener.clickListener(item)
+//                onClickListener.onClick(item)
             }
             setOnLongClickListener {
                 onClickListener.onLongClickListener(item)

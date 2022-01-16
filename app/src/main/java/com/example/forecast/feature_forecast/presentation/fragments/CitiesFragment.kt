@@ -194,6 +194,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         super.onResume()
 
         if (!checkNetwork(context)) offline_mode_cities.visibility =
-            View.INVISIBLE else offline_mode_cities.visibility = View.VISIBLE
+            View.GONE else offline_mode_cities.visibility = View.VISIBLE
     }
 }
