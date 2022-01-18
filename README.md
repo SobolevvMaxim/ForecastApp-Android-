@@ -7,8 +7,7 @@
 - [Navigate to main activity to see week forecast]
 - [Animation between the fragments]
 ## Preview
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img.png)
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.png)
+![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img.png) ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.png)
 ## Stack
 - [Kotlin]
 - [MVVM]
