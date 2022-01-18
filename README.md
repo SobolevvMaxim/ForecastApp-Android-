@@ -14,5 +14,5 @@
 - Get city forecast by name
 - Tap the city to choose it
 - Long tap to delete the city
-- Navigate to main activity to see week forecast
+- Navigate to main screen to see week forecast
 - Animation between the fragments
