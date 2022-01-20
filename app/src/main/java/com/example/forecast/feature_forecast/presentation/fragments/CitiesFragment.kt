@@ -20,7 +20,6 @@ import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecycle
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import com.example.forecast.checkNetwork
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
@@ -65,6 +64,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             Log.d("DELETE", "onViewCreated: $cities")
             if (cities.isEmpty())
                 addCityDialog()
+            updateProgressBar(false)
             checkIfUpdatedCity(cities)
             updateRecyclerView(cities)
         }
@@ -106,7 +106,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
                         "Incorrect input!",
                         Toast.LENGTH_LONG
                     ).show()
-                    else -> viewModel.searchCityForecastByName(cityInput)
+                    else -> {
+                        viewModel.searchCityForecastByName(cityInput)
+                        updateProgressBar(true)
+                    }
                 }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -118,9 +121,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
     private fun deprecatedForecastDialog(city: CityWeather) {
         AlertDialog.Builder(requireContext()).create().apply {
-            setTitle(getString(R.string.deprecated_forecast))
+            setTitle(getString(R.string.deprecated_forecast_title))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
+                updateProgressBar(true)
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
@@ -185,6 +189,12 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
+    }
+
+    private fun updateProgressBar(visible: Boolean) {
+        if(visible)
+            loading_city_progress.visibility = View.VISIBLE
+        else loading_city_progress.visibility = View.GONE
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)

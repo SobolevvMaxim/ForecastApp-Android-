@@ -13,8 +13,8 @@ import javax.inject.Inject
 class ForecastRepository @Inject constructor(
     private val temperatureService: TemperatureService,
     private val citiesService: CitiesService,
-    private val citiesDao: CitiesDao
-): IForecastRepository {
+    private val citiesDao: CitiesDao,
+) : IForecastRepository {
     private var addedCities: Set<CityWeather>? = null
 
     override suspend fun searchCity(query: String): Result<City> {
@@ -60,7 +60,7 @@ class ForecastRepository @Inject constructor(
     }
 
     override suspend fun updateCityInBase(city: CityWeather): Set<CityWeather> {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             citiesDao.update(city.toCityWeatherEntity())
             updateInMemory(city)
         }
