@@ -64,6 +64,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             Log.d("DELETE", "onViewCreated: $cities")
             if (cities.isEmpty())
                 addCityDialog()
+            updateProgressBar(false)
             checkIfUpdatedCity(cities)
             updateRecyclerView(cities)
         }
@@ -105,7 +106,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
                         "Incorrect input!",
                         Toast.LENGTH_LONG
                     ).show()
-                    else -> viewModel.searchCityForecastByName(cityInput)
+                    else -> {
+                        viewModel.searchCityForecastByName(cityInput)
+                        updateProgressBar(true)
+                    }
                 }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
@@ -120,6 +124,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             setTitle(getString(R.string.deprecated_forecast_title))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
+                updateProgressBar(true)
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
@@ -184,6 +189,12 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
+    }
+
+    private fun updateProgressBar(visible: Boolean) {
+        if(visible)
+            loading_city_progress.visibility = View.VISIBLE
+        else loading_city_progress.visibility = View.GONE
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
