@@ -20,7 +20,6 @@ import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecycle
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import com.example.forecast.checkNetwork
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
@@ -118,7 +117,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
     private fun deprecatedForecastDialog(city: CityWeather) {
         AlertDialog.Builder(requireContext()).create().apply {
-            setTitle(getString(R.string.deprecated_forecast))
+            setTitle(getString(R.string.deprecated_forecast_title))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
             }

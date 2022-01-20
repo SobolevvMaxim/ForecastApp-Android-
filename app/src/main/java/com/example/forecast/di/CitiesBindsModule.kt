@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.di
+package com.example.forecast.di
 
 import androidx.lifecycle.ViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel

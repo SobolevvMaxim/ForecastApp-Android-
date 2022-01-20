@@ -60,7 +60,7 @@
         app:srcCompat="@drawable/ic_cr_btn"
         tools:ignore="VectorDrawableCompat"
         android:clickable="true"
-        android:contentDescription="@string/add_city"
+        android:contentDescription="@string/add_city_title"
         android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

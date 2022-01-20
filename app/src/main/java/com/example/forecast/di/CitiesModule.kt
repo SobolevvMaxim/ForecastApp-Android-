@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.di
+package com.example.forecast.di
 
 import com.example.forecast.feature_forecast.data.local.AppDatabase
 import com.example.forecast.feature_forecast.data.local.CitiesDao

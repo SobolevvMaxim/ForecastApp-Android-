@@ -20,7 +20,7 @@ class CitiesViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
     private val deleteCityUseCase: DeleteCity,
-    private val forecastSearchRepos: ForecastRepository
+    private val forecastSearchRepos: ForecastRepository,
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
@@ -74,7 +74,8 @@ class CitiesViewModel @Inject constructor(
     fun updateCityForecast(cityWeather: CityWeather) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
-            val updatedCityResponse = forecastSearchRepos.searchForecast(city = cityWeather.toCity())
+            val updatedCityResponse =
+                forecastSearchRepos.searchForecast(city = cityWeather.toCity())
             updatedCityResponse.getOrNull()?.let {
                 it.chosen = true
                 _citiesLiveData.postValue(forecastSearchRepos.updateCityInBase(it))

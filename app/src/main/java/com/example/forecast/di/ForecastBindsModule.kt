@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.di
+package com.example.forecast.di
 
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
