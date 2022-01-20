@@ -74,8 +74,7 @@ class CitiesViewModel @Inject constructor(
     fun updateCityForecast(cityWeather: CityWeather) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
-            val updatedCityResponse =
-                forecastSearchRepos.searchForecast(city = cityWeather.toCity())
+            val updatedCityResponse = getForecastUseCase(city = cityWeather.toCity())
             updatedCityResponse.getOrNull()?.let {
                 it.chosen = true
                 _citiesLiveData.postValue(forecastSearchRepos.updateCityInBase(it))
