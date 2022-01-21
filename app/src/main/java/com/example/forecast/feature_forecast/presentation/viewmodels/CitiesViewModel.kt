@@ -4,15 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.forecast.feature_forecast.data.local.entities.CityWeatherEntity
-import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
 import com.example.forecast.feature_forecast.domain.use_case.DeleteCity
 import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
 import com.example.forecast.feature_forecast.domain.use_case.GetForecast
+import com.example.forecast.feature_forecast.domain.use_case.UpdateCityForecast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,7 +23,8 @@ class CitiesViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
     private val deleteCityUseCase: DeleteCity,
-    private val forecastSearchRepos: ForecastRepository,
+    private val updateCityUseCase: UpdateCityForecast,
+    private val forecastSearchRepos: IForecastRepository,
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
@@ -77,7 +81,8 @@ class CitiesViewModel @Inject constructor(
             val updatedCityResponse = getForecastUseCase(city = cityWeather.toCity())
             updatedCityResponse.getOrNull()?.let {
                 it.chosen = true
-                _citiesLiveData.postValue(forecastSearchRepos.updateCityInBase(it))
+                val cities = updateCityUseCase(it)
+                _citiesLiveData.postValue(cities)
             } ?: kotlin.run {
                 _errorLiveData.postValue(
                     updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"
@@ -101,7 +106,7 @@ class CitiesViewModel @Inject constructor(
 
     fun deleteCity(city: CityWeather) {
         viewModelScope.launch(exceptionHandler) {
-            val addedCities = forecastSearchRepos.deleteCityInBase(city)
+            val addedCities = deleteCityUseCase(city)
             _citiesLiveData.postValue(addedCities)
         }
     }
