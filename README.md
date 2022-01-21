@@ -9,7 +9,7 @@
 - Room
 - Coroutines
 - GSON
-- Hilt
+- Hilt (Koin in another branch)
 ## Features
 - Load default city (Minsk) weather at first start
 - Get city forecast by name
