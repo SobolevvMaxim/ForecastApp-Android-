@@ -3,10 +3,8 @@ package com.example.forecast.feature_forecast.presentation.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.R
 import com.example.forecast.feature_forecast.presentation.NavigationHost
-import com.example.forecast.feature_forecast.presentation.fragments.CitiesFragment
 import com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment
 import dagger.hilt.android.AndroidEntryPoint
 
