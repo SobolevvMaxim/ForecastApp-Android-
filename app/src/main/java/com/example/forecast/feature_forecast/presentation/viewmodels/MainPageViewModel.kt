@@ -7,20 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.example.forecast.feature_forecast.data.repository.ForecastRepository
 import com.example.forecast.feature_forecast.domain.model.City
 import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
 import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
 import com.example.forecast.feature_forecast.domain.use_case.GetForecast
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainPageViewModel @Inject constructor(
+class MainPageViewModel (
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
-    private val forecastSearchRepos: ForecastRepository,
+    private val forecastSearchRepos: IForecastRepository,
 ) : ViewModel() {
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())

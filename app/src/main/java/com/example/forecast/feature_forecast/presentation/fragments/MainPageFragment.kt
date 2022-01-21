@@ -12,19 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
-import com.example.forecast.feature_forecast.data.local.TABLE_NAME
 import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainPageViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
@@ -40,10 +38,9 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
-    @Inject
-    lateinit var dateFormat: SimpleDateFormat
+    private val dateFormat: SimpleDateFormat by inject()
 
-    private val viewModel by viewModels<MainPageViewModel>()
+    private val viewModel by viewModel<MainPageViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

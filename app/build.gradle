@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
-    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -46,10 +45,17 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$vmVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$vmVersion"
 
-    // Hilt
-    def hiltVersion = "2.38.1"
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+//    // Hilt
+//    def hiltVersion = "2.38.1"
+//    implementation("com.google.dagger:hilt-android:$hiltVersion")
+//    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
+
+    // Koin
+    def koin_version = "3.1.5"
+    implementation "io.insert-koin:koin-core:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+    // Testing
+    testImplementation "io.insert-koin:koin-test:$koin_version"
 
     // GSON
     def gsonVersion = "2.9.0"

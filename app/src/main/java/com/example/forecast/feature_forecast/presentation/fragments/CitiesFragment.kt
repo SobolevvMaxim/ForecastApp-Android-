@@ -20,23 +20,21 @@ import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecycle
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import com.example.forecast.checkNetwork
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     companion object {
         fun create() = CitiesFragment()
     }
 
-    @Inject
-    lateinit var format: SimpleDateFormat
+    private val format: SimpleDateFormat by inject()
 
-    private val viewModel by viewModels<CitiesViewModel>()
+    private val viewModel by viewModel<CitiesViewModel>()
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener (

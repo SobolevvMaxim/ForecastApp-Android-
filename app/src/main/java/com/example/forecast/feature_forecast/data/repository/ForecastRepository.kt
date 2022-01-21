@@ -8,9 +8,8 @@ import com.example.forecast.feature_forecast.data.remote.services.TemperatureSer
 import com.example.forecast.feature_forecast.domain.model.City
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class ForecastRepository @Inject constructor(
+class ForecastRepository constructor(
     private val temperatureService: TemperatureService,
     private val citiesService: CitiesService,
     private val citiesDao: CitiesDao,

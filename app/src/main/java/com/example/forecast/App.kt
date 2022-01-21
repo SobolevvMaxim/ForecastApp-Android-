@@ -9,87 +9,25 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.room.Room
-import com.example.forecast.feature_forecast.data.local.AppDatabase
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.text.SimpleDateFormat
+import com.example.forecast.di.forecastApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.logger.AndroidLogger
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 import java.util.*
-import javax.inject.Qualifier
-import javax.inject.Singleton
 
-@HiltAndroidApp
-class App : Application()
-
-private const val APP_DATABASE = "APP_DATABASE"
-
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Singleton
-    @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context) =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            APP_DATABASE
-        ).build()
-
-    @Singleton
-    @Provides
-    fun providesNewsRetrofit(okHttpClient: OkHttpClient): Retrofit =
-        Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
-            .baseUrl("https://api.openweathermap.org")
-            .client(okHttpClient)
-            .build()
-
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        val interceptor = HttpLoggingInterceptor()
-        interceptor.level = HttpLoggingInterceptor.Level.BODY
-
-        return OkHttpClient.Builder().addInterceptor(interceptor).build()
+class App : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            AndroidLogger(level = Level.DEBUG)
+            androidContext(this@App)
+            modules(forecastApp)
+        }
     }
-
-    @Provides
-    fun provideGetCityTag(@ApplicationContext context: Context): String {
-        return context.getString(R.string.get_city_extra)
-    }
-
-    @Singleton
-    @Provides
-    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
-
-    @MainCoroutineDispatcher
-    @Provides
-    fun mainCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.Main
-
-    @IOCoroutineDispatcher
-    @Provides
-    fun ioCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.IO
 }
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class MainCoroutineDispatcher
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class IOCoroutineDispatcher
+const val APP_DATABASE = "APP_DATABASE"
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun checkNetwork(context: Context?): Boolean {
