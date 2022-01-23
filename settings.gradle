@@ -1,6 +1,5 @@
 rootProject.name = "HomeworksAndroid"
 include ':app'
-include ':dataa'
 include ':data'
 include ':domain'
 include ':data:api'

@@ -23,18 +23,18 @@ fun checkNetwork(context: Context?): Boolean {
     var result = false
 
     val networkRequest = builder.build()
-//    manager.registerNetworkCallback(networkRequest,
-//        object : ConnectivityManager.NetworkCallback() {
-//            override fun onAvailable(network: Network) {
-//                super.onAvailable(network)
-//                Log.i("Test", "Network Available")
-//                result = true
-//            }
-//
-//            override fun onLost(network: Network) {
-//                super.onLost(network)
-//                Log.i("Test", "Connection lost")
-//            }
-//        })
+    manager.registerNetworkCallback(networkRequest,
+        object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                super.onAvailable(network)
+                Log.i("Test", "Network Available")
+                result = true
+            }
+
+            override fun onLost(network: Network) {
+                super.onLost(network)
+                Log.i("Test", "Connection lost")
+            }
+        })
     return result
 }
