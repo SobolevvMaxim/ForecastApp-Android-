@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
-import com.example.forecast.feature_forecast.domain.model.CityWeather
+import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
@@ -27,16 +27,6 @@ import javax.inject.Inject
 class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
-
-        fun create(city: CityWeather, city_tag: String): MainPageFragment {
-            val fragment = MainPageFragment()
-            val bundle = Bundle()
-
-            bundle.putParcelable(city_tag, city)
-            fragment.arguments = bundle
-
-            return fragment
-        }
     }
 
     @Inject

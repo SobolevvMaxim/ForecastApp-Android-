@@ -5,11 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.forecast.feature_forecast.domain.model.Daily
 import com.example.forecast.R
+import com.example.forecast.domain.model.Daily
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class WeekForecastAdapter(
     private val forecast: ArrayList<Daily>,

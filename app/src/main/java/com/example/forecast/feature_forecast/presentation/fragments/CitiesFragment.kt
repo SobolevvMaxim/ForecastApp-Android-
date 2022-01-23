@@ -5,7 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
-import android.view.*
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -14,11 +14,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.forecast.feature_forecast.domain.model.CityWeather
 import com.example.forecast.R
+import com.example.forecast.checkNetwork
+import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
-import com.example.forecast.checkNetwork
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
