@@ -27,11 +27,6 @@ object AppModule {
     @Provides
     fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    @MainCoroutineDispatcher
-    @Provides
-    fun mainCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.Main
-
-    @IOCoroutineDispatcher
     @Provides
     fun ioCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.IO
 }

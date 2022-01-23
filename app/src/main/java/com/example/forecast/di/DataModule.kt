@@ -2,10 +2,10 @@ package com.example.forecast.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.forecast.data.local.AppDatabase
-import com.example.forecast.data.local.CityWeatherDao
-import com.example.forecast.data.remote.services.CitiesService
-import com.example.forecast.data.remote.services.TemperatureService
+import com.example.api.services.CitiesService
+import com.example.api.services.TemperatureService
+import com.example.db.AppDatabase
+import com.example.db.CityWeatherDao
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
