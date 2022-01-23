@@ -1,6 +1,6 @@
 package com.example.forecast.di
 
-import com.example.forecast.feature_forecast.data.remote.services.TemperatureService
+import com.example.forecast.data.remote.services.TemperatureService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

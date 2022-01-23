@@ -1,13 +1,13 @@
 package com.example.forecast.di
 
-import com.example.forecast.feature_forecast.data.local.AppDatabase
-import com.example.forecast.feature_forecast.data.local.CitiesDao
-import com.example.forecast.feature_forecast.data.remote.services.CitiesService
-import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
-import com.example.forecast.feature_forecast.domain.use_case.DeleteCity
-import com.example.forecast.feature_forecast.domain.use_case.GetCityInfo
-import com.example.forecast.feature_forecast.domain.use_case.GetForecast
-import com.example.forecast.feature_forecast.domain.use_case.UpdateCityForecast
+import com.example.forecast.data.local.AppDatabase
+import com.example.forecast.data.local.CitiesDao
+import com.example.forecast.data.remote.services.CitiesService
+import com.example.forecast.domain.repository.IForecastRepository
+import com.example.forecast.domain.use_case.DeleteCity
+import com.example.forecast.domain.use_case.GetCityInfo
+import com.example.forecast.domain.use_case.GetForecast
+import com.example.forecast.domain.use_case.UpdateCityForecast
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

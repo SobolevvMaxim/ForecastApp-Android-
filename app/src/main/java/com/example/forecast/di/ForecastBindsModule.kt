@@ -1,7 +1,7 @@
 package com.example.forecast.di
 
-import com.example.forecast.feature_forecast.data.repository.ForecastRepository
-import com.example.forecast.feature_forecast.domain.repository.IForecastRepository
+import com.example.forecast.data.repository.ForecastRepository
+import com.example.forecast.domain.repository.IForecastRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
