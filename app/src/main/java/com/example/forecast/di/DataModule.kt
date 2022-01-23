@@ -3,7 +3,7 @@ package com.example.forecast.di
 import android.content.Context
 import androidx.room.Room
 import com.example.forecast.data.local.AppDatabase
-import com.example.forecast.data.local.CitiesDao
+import com.example.forecast.data.local.CityWeatherDao
 import com.example.forecast.data.remote.services.CitiesService
 import com.example.forecast.data.remote.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -52,7 +52,7 @@ object DataModule {
     }
 
     @Provides
-    fun provideCitiesDao(appDatabase: AppDatabase): CitiesDao = appDatabase.citiesDao()
+    fun provideCitiesDao(appDatabase: AppDatabase): CityWeatherDao = appDatabase.citiesDao()
 
     @Provides
     fun provideCitiesService(retrofit: Retrofit): CitiesService =

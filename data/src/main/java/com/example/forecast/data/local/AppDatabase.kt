@@ -9,5 +9,5 @@ import com.example.forecast.data.local.entities.CityWeatherEntity
 @TypeConverters(TemperatureConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun citiesDao(): CitiesDao
+    abstract fun citiesDao(): CityWeatherDao
 }

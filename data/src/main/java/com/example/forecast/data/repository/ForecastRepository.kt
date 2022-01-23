@@ -1,6 +1,6 @@
 package com.example.forecast.data.repository
 
-import com.example.forecast.data.local.CitiesDao
+import com.example.forecast.data.local.CityWeatherDao
 import com.example.forecast.data.local.entities.toCityWeatherEntity
 import com.example.forecast.data.remote.services.CitiesService
 import com.example.forecast.data.remote.services.TemperatureService
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class ForecastRepository @Inject constructor(
     private val temperatureService: TemperatureService,
     private val citiesService: CitiesService,
-    private val citiesDao: CitiesDao,
+    private val cityWeatherDao: CityWeatherDao,
 ) : IForecastRepository {
     private var addedCities: Set<CityWeather>? = null
 
@@ -46,7 +46,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun writeCityToBase(city: CityWeather): Set<CityWeather> {
         withContext(Dispatchers.IO) {
-            citiesDao.insert(city = city.toCityWeatherEntity())
+            cityWeatherDao.insert(city = city.toCityWeatherEntity())
             insertInMemory(city = city)
         }
 
@@ -62,7 +62,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun updateCityInBase(city: CityWeather): Set<CityWeather> {
         withContext(Dispatchers.IO) {
-            citiesDao.update(city.toCityWeatherEntity())
+            cityWeatherDao.update(city.toCityWeatherEntity())
             updateInMemory(city)
         }
 
@@ -80,7 +80,7 @@ class ForecastRepository @Inject constructor(
     override suspend fun getAll(): Set<CityWeather> {
         if (addedCities == null) {
             addedCities = withContext(Dispatchers.IO) {
-                citiesDao.getAll().map { it.toCityWeather() }.toSet()
+                cityWeatherDao.getAll().map { it.toCityWeather() }.toSet()
             }
         }
 
@@ -105,7 +105,7 @@ class ForecastRepository @Inject constructor(
                 val lastChosen = it.elementAt(lastChosenIndex)
                 val newChosen = it.elementAt(newChosenIndex)
 
-                citiesDao.apply {
+                cityWeatherDao.apply {
                     update(lastChosen.toCityWeatherEntity())
                     update(newChosen.toCityWeatherEntity())
                 }
@@ -115,13 +115,13 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun getChosenCityFromBase(): CityWeather? {
         return withContext(Dispatchers.IO) {
-            citiesDao.getChosenCity()?.toCityWeather()
+            cityWeatherDao.getChosenCity()?.toCityWeather()
         }
     }
 
     override suspend fun deleteCityInBase(city: CityWeather): Set<CityWeather> {
         withContext(Dispatchers.IO) {
-            citiesDao.delete(cityID = city.id)
+            cityWeatherDao.delete(cityID = city.id)
             deleteFromMemory(city = city)
         }
 
