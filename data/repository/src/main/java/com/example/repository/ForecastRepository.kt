@@ -9,7 +9,6 @@ import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.repository.IForecastRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

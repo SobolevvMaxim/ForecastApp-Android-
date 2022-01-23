@@ -52,6 +52,7 @@ dependencies {
     implementation deps.retrofit.adapter
     implementation deps.okhttp_logging_interceptor
     testImplementation deps.junit
+    implementation deps.coroutines
     androidTestImplementation deps.junit_test
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation deps.core_ktx
