@@ -10,7 +10,7 @@ import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-abstract class ForecastBindsModule {
+abstract class DataBindsModule {
 
     @ActivityRetainedScoped
     @Binds
