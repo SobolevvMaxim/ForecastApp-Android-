@@ -1,10 +1,7 @@
 package com.example.forecast.di
 
 import com.example.forecast.domain.repository.IForecastRepository
-import com.example.forecast.domain.use_case.DeleteCity
-import com.example.forecast.domain.use_case.GetCityInfo
-import com.example.forecast.domain.use_case.GetForecast
-import com.example.forecast.domain.use_case.UpdateCityForecast
+import com.example.forecast.domain.use_case.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,4 +27,12 @@ object DomainModule {
     @ViewModelScoped
     @Provides
     fun provideUpdateCityUseCase(repository: IForecastRepository) = UpdateCityForecast(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideLoadForecastsFromBase(repository: IForecastRepository) = LoadForecastsUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
+    fun provideChangeChosenCityUse(repository: IForecastRepository) = ChangeChosenCityUseCase(repository)
 }

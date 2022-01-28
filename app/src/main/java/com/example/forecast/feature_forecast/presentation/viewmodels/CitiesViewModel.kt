@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.repository.IForecastRepository
-import com.example.forecast.domain.use_case.DeleteCity
-import com.example.forecast.domain.use_case.GetCityInfo
-import com.example.forecast.domain.use_case.GetForecast
-import com.example.forecast.domain.use_case.UpdateCityForecast
+import com.example.forecast.domain.use_case.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
@@ -25,6 +22,8 @@ class CitiesViewModel @Inject constructor(
     private val deleteCityUseCase: DeleteCity,
     private val updateCityUseCase: UpdateCityForecast,
     private val forecastSearchRepos: IForecastRepository,
+    private val loadForecastsUseCase: LoadForecastsUseCase,
+    private val changeChosenCityUseCase: ChangeChosenCityUseCase,
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
@@ -49,12 +48,12 @@ class CitiesViewModel @Inject constructor(
         searchJob?.cancel()
         searchJob = viewModelScope.launch(exceptionHandler) {
             delay(500)
-            val cityWeatherResponse = getCityInfoUseCase(text as String)
-            cityWeatherResponse.getOrNull()?.let { city ->
+            val cityInfoResponse = getCityInfoUseCase(text as String)
+            cityInfoResponse.getOrNull()?.let { city ->
                 searchForecast(city)
             } ?: run {
                 _errorLiveData.postValue(
-                    cityWeatherResponse.exceptionOrNull()?.message ?: "unexpected exception"
+                    cityInfoResponse.exceptionOrNull()?.message ?: "unexpected exception"
                 )
             }
         }
@@ -83,7 +82,7 @@ class CitiesViewModel @Inject constructor(
                 it.chosen = true
                 val cities = updateCityUseCase(it)
                 _citiesLiveData.postValue(cities)
-            } ?: kotlin.run {
+            } ?: run {
                 _errorLiveData.postValue(
                     updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"
                 )
@@ -93,14 +92,15 @@ class CitiesViewModel @Inject constructor(
 
     fun getAddedCities() {
         viewModelScope.launch {
-            _citiesLiveData.postValue(forecastSearchRepos.getAll())
+            val forecasts = loadForecastsUseCase()
+            _citiesLiveData.postValue(forecasts)
         }
     }
 
     fun changeChosenCities(lastChosenIndex: Int, newChosenIndex: Int) {
         viewModelScope.launch {
-            forecastSearchRepos.changeChosenCityByName(lastChosenIndex, newChosenIndex)
-            _citiesLiveData.postValue(forecastSearchRepos.getAll())
+            changeChosenCityUseCase(lastChosenIndex, newChosenIndex)
+            getAddedCities()
         }
     }
 
