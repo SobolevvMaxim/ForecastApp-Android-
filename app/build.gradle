@@ -43,25 +43,27 @@ dependencies {
 
     implementation deps.lifecycle.viewmodel_ktx
     implementation deps.lifecycle.livedata_ktx
+
     implementation deps.hilt.android
     kapt deps.hilt.compiler
+
     implementation deps.room.runtime
     kapt deps.room.compiler
+
     implementation deps.gson.converter
     implementation deps.retrofit.runtime
     implementation deps.retrofit.adapter
     implementation deps.okhttp_logging_interceptor
-    testImplementation deps.junit
-    implementation deps.coroutines
-    androidTestImplementation deps.junit_test
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation deps.kotlin.kotlinstd
+    implementation deps.kotlin.coroutines
+
     implementation deps.core_ktx
     implementation deps.app_compat
     implementation deps.activity.activity_ktx
     implementation deps.fragment.runtime_ktx
     implementation deps.material
     implementation deps.constraint_layout
-    implementation deps.kotlin
 }
 
 kapt {

@@ -1,6 +1,7 @@
 package com.example.forecast.domain.model
 
-data class Coord(
+
+data class Coordinates(
     val lat: String,
     val lon: String,
 )

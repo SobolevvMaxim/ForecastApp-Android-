@@ -12,7 +12,7 @@ import kotlin.math.roundToInt
 data class TemperaturesDto(
     @SerializedName("daily") val dailyTemp: List<DailyTemp>,
 ) {
-    fun toCityWeather(city: City): CityWeather {
+    fun toCityWeather(city: City, chosen: Boolean = false): CityWeather {
         val result = ArrayList(dailyTemp.map {
             Daily(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
         })
@@ -20,11 +20,12 @@ data class TemperaturesDto(
             id = city.id,
             name = city.name,
             country = city.country,
-            lat = city.coord.lat,
-            lon = city.coord.lon,
+            lat = city.coordinates.lat,
+            lon = city.coordinates.lon,
             temperatures = result,
             forecastDate = SimpleDateFormat("dd.MM.yyyy",
-                Locale.getDefault()).format(Calendar.getInstance().time)
+                Locale.getDefault()).format(Calendar.getInstance().time),
+            chosen = chosen
         )
     }
 }

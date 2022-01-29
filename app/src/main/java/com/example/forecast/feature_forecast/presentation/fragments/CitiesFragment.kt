@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
-import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlinx.android.synthetic.main.put_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -36,21 +36,21 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     @Inject
     lateinit var format: SimpleDateFormat
 
-    private val viewModel by viewModels<CitiesViewModel>()
+    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
-        RecyclerOnCLickListener (
+        RecyclerOnCLickListener(
             { city ->
-            changeChosenCity(newChosenName = city.name)
+                changeChosenCity(newChosenName = city.name)
 
-            val cityDate: Date = getCityForecastDate(city)
+                val cityDate: Date = getCityForecastDate(city)
 
-            if (!DateUtils.isToday(cityDate.time)) {
-                deprecatedForecastDialog(city)
-            } else navigateToMainFragment()
-        }, { cityToDelete ->
-            deleteCityDialog(city = cityToDelete)
-        })
+                if (!DateUtils.isToday(cityDate.time)) {
+                    deprecatedForecastDialog(city)
+                } else navigateToMainFragment()
+            }, { cityToDelete ->
+                deleteCityDialog(city = cityToDelete)
+            })
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,7 +61,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-            Log.d("DELETE", "onViewCreated: $cities")
             if (cities.isEmpty())
                 addCityDialog()
             updateProgressBar(false)
@@ -96,7 +95,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private fun addCityDialog() {
         AlertDialog.Builder(requireContext()).create().apply {
             val inflater = requireActivity().layoutInflater
-            setView(inflater.inflate(R.layout.put_city_dialog, null))
+            setView(inflater.inflate(R.layout.add_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
                 val cityInput = city_edit_text.text.toString()
 
@@ -139,9 +138,13 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             val title = "${getString(R.string.delete_city_title)} ${city.name}?"
             setTitle(title)
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                when(city.chosen){
+                when (city.chosen) {
                     false -> viewModel.deleteCity(city)
-                    true -> Toast.makeText(requireContext(), "Unable to delete chosen city!", Toast.LENGTH_LONG).show()
+                    true -> Toast.makeText(
+                        requireContext(),
+                        "Unable to delete chosen city!",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
@@ -155,14 +158,20 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         parentFragmentManager.popBackStack()
     }
 
-    private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
-        if(cities.isNullOrEmpty() || citiesRecyclerAdapter.currentList.isNullOrEmpty()) return
+    private fun checkIfUpdatedCity(updatedList: Set<CityWeather>?) {
+        citiesRecyclerAdapter.currentList.apply {
+            if (updatedList.isNullOrEmpty() || this.isNullOrEmpty()) return
 
-        Log.d("DELETE", "checkIfUpdatedCity: $cities")
-        val chosen = cities.first { el -> el.chosen }
+            Log.d("DELETE", "checkIfUpdatedCity: $updatedList")
+            val chosen = updatedList.first { el -> el.chosen }
+            val old = first { it.id == chosen.id }
 
-        if (DateUtils.isToday(getCityForecastDate(chosen).time) && cities.size == citiesRecyclerAdapter.currentList.size)
-            navigateToMainFragment()
+            if (DateUtils.isToday(getCityForecastDate(chosen).time) &&
+                updatedList.size == this.size &&
+                !DateUtils.isToday(getCityForecastDate(old).time)
+            )
+                navigateToMainFragment()
+        }
     }
 
     private fun setRecyclerView() {
@@ -179,7 +188,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         val lastChosenIndex = oldList.indexOfLast { it.chosen }
         val newChosenIndex = oldList.indexOfFirst { it.name == newChosenName }
 
-        viewModel.changeChosenCities(lastChosenIndex, newChosenIndex)
+        viewModel.changeChosenCity(lastChosenIndex, newChosenIndex)
 
         citiesRecyclerAdapter.apply {
             notifyItemChanged(lastChosenIndex)
@@ -192,7 +201,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     }
 
     private fun updateProgressBar(visible: Boolean) {
-        if(visible)
+        if (visible)
             loading_city_progress.visibility = View.VISIBLE
         else loading_city_progress.visibility = View.GONE
     }

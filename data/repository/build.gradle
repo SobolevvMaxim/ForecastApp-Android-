@@ -38,10 +38,13 @@ dependencies {
     implementation project(path: ':data:api')
     implementation project(path: ':data:db')
     implementation project(path: ':domain')
-    implementation deps.kotlin
-    implementation deps.core_ktx
-    implementation deps.coroutines
+
+    implementation deps.kotlin.kotlinstd
+    implementation deps.kotlin.coroutines
     implementation deps.retrofit.adapter
+
     implementation deps.hilt.android
     kapt deps.hilt.compiler
+
+    implementation deps.core_ktx
 }

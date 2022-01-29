@@ -1,17 +1,16 @@
-package com.example.forecast.feature_forecast.presentation.activities
+package com.example.forecast.feature_forecast.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 const val P_LOG = "PARCELABLE_LOG"
 
 @AndroidEntryPoint
-class MainPageActivity : AppCompatActivity(R.layout.activity_main_page), NavigationHost {
+class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHost {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

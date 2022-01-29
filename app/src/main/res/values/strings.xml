@@ -8,8 +8,6 @@
     <string name="default_city">Minsk</string>
 
         <!--    image descriptions-->
-    <string name="underscore_image">underscore_image</string>
-    <string name="done_image">done_image</string>
     <string name="forecast_default_image">forecast_default_image</string>
     <string name="weather_image">Weather Image</string>
 
