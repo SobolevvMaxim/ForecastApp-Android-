@@ -14,9 +14,9 @@ import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
-import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.P_LOG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -63,8 +63,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
             temperatures[0].apply {
-                todaysTemp.text = temp.toString()
-                today_sunny.text = description
+                temperature_today.text = temp.toString()
+                description_today.text = description
             }
             currentDate.text = forecastDate
             setRecyclerView(this)

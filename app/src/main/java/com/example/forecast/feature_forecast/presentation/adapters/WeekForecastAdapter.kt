@@ -19,7 +19,7 @@ class WeekForecastAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperatureTV: TextView = view.findViewById(R.id.item_temp)
-        val descriptionTV: TextView = view.findViewById(R.id.item_discription)
+        val descriptionTV: TextView = view.findViewById(R.id.item_description)
         val date: TextView = view.findViewById(R.id.item_date)
     }
 

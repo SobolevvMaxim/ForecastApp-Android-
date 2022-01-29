@@ -36,7 +36,7 @@ class ForecastRepository @Inject constructor(
     override suspend fun searchForecast(city: City): Result<CityWeather> {
         return withContext(dispatcher) {
             kotlin.runCatching {
-                temperatureService.searchTempAsync(lat = city.coord.lat, lon = city.coord.lon)
+                temperatureService.searchTempAsync(lat = city.coordinates.lat, lon = city.coordinates.lon)
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()

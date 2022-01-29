@@ -17,12 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlinx.android.synthetic.main.put_city_dialog.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -95,7 +95,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private fun addCityDialog() {
         AlertDialog.Builder(requireContext()).create().apply {
             val inflater = requireActivity().layoutInflater
-            setView(inflater.inflate(R.layout.put_city_dialog, null))
+            setView(inflater.inflate(R.layout.add_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
                 val cityInput = city_edit_text.text.toString()
 
