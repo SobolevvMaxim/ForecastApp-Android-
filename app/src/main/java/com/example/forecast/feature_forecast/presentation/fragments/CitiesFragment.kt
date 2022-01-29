@@ -158,14 +158,20 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         parentFragmentManager.popBackStack()
     }
 
-    private fun checkIfUpdatedCity(cities: Set<CityWeather>?) {
-        if (cities.isNullOrEmpty() || citiesRecyclerAdapter.currentList.isNullOrEmpty()) return
+    private fun checkIfUpdatedCity(updatedList: Set<CityWeather>?) {
+        citiesRecyclerAdapter.currentList.apply {
+            if (updatedList.isNullOrEmpty() || this.isNullOrEmpty()) return
 
-        Log.d("DELETE", "checkIfUpdatedCity: $cities")
-        val chosen = cities.first { el -> el.chosen }
+            Log.d("DELETE", "checkIfUpdatedCity: $updatedList")
+            val chosen = updatedList.first { el -> el.chosen }
+            val old = first { it.id == chosen.id }
 
-        if (DateUtils.isToday(getCityForecastDate(chosen).time) && cities.size == citiesRecyclerAdapter.currentList.size)
-            navigateToMainFragment()
+            if (DateUtils.isToday(getCityForecastDate(chosen).time) &&
+                updatedList.size == this.size &&
+                !DateUtils.isToday(getCityForecastDate(old).time)
+            )
+                navigateToMainFragment()
+        }
     }
 
     private fun setRecyclerView() {
