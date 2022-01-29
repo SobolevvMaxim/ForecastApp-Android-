@@ -40,7 +40,7 @@ class ForecastRepository @Inject constructor(
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.toCityWeather(city)
+                    ?.toCityWeather(city, chosen = addedCities.isNullOrEmpty())
                     ?: throw Exception("empty data")
             }
         }
@@ -48,6 +48,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun writeCityToBase(city: CityWeather): Set<CityWeather> {
         withContext(dispatcher) {
+            if (addedCities.isNullOrEmpty()) city.chosen = true
             cityWeatherDao.insert(city = city.toCityWeatherEntity())
             insertInMemory(city = city)
         }

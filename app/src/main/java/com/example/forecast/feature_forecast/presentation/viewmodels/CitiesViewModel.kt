@@ -30,6 +30,9 @@ class CitiesViewModel @Inject constructor(
         _errorLiveData.postValue(t.toString())
     }
 
+    private val _chosenLiveData = MutableLiveData<CityWeather?>()
+    val chosenLiveData: LiveData<CityWeather?> get() = _chosenLiveData
+
     private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
     val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
 
@@ -65,6 +68,7 @@ class CitiesViewModel @Inject constructor(
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
+                if (it.chosen) _chosenLiveData.postValue(it)
                 _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = it))
             } ?: run {
                 _errorLiveData.postValue(
@@ -97,7 +101,7 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-    fun changeChosenCities(lastChosenIndex: Int, newChosenIndex: Int) {
+    fun changeChosenCity(lastChosenIndex: Int, newChosenIndex: Int) {
         viewModelScope.launch {
             changeChosenCityUseCase(lastChosenIndex, newChosenIndex)
             getAddedCities()
@@ -108,6 +112,13 @@ class CitiesViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             val addedCities = deleteCityUseCase(city)
             _citiesLiveData.postValue(addedCities)
+        }
+    }
+
+    fun getChosenCity() {
+        viewModelScope.launch(exceptionHandler) {
+            val chosenCity = forecastSearchRepos.getChosenCityFromBase()
+            _chosenLiveData.postValue(chosenCity)
         }
     }
 }

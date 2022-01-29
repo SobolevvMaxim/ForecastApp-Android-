@@ -16,7 +16,7 @@ import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
-import com.example.forecast.feature_forecast.presentation.viewmodels.MainPageViewModel
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -32,19 +32,20 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     @Inject
     lateinit var dateFormat: SimpleDateFormat
 
-    private val viewModel by viewModels<MainPageViewModel>()
+    private val viewModel by viewModels<CitiesViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getChosenFromBase()
+        if (savedInstanceState == null) {
+            viewModel.getChosenCity()
+        }
 
-        viewModel.chosenCityLiveData.observe(viewLifecycleOwner) { chosenCity ->
-            chosenCity?.let { city ->
-                updateView(city)
+        viewModel.chosenLiveData.observe(viewLifecycleOwner) { chosen ->
+            chosen?.let {
+                updateView(it)
                 progress_bar_city.visibility = View.INVISIBLE
-            } ?: viewModel.searchDefaultForecast(getString(R.string.default_city))
-
+            } ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
@@ -78,7 +79,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         forecast_recycler.layoutManager = layoutManager
         val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
 
-        val forecastAdapter = WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
+        val forecastAdapter =
+            WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
         forecast_recycler.adapter = forecastAdapter
     }
 
