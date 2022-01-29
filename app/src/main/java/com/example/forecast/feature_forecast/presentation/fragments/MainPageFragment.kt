@@ -16,7 +16,7 @@ import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.activities.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
-import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat

@@ -19,7 +19,7 @@ import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
-import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlinx.android.synthetic.main.put_city_dialog.*

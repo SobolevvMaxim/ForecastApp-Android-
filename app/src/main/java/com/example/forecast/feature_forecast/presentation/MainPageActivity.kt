@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.activities
+package com.example.forecast.feature_forecast.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

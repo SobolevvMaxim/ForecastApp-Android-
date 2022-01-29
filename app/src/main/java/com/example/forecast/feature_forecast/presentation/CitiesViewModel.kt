@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.viewmodels
+package com.example.forecast.feature_forecast.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
