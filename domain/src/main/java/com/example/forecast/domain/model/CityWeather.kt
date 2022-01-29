@@ -12,7 +12,7 @@ data class CityWeather(
 ) {
 
     fun toCity() = City(
-        coord = Coord(
+        coordinates = Coordinates(
             lat = lat,
             lon = lon
         ),
