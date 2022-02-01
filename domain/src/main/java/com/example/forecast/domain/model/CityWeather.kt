@@ -8,7 +8,7 @@ data class CityWeather(
     var lon: String = "",
     var temperatures: ArrayList<Daily>,
     var chosen: Boolean = false,
-    val forecastDate: String,
+    var forecastDate: String,
 ) {
 
     fun toCity() = City(

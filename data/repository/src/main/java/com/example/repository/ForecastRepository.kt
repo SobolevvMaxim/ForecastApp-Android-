@@ -74,8 +74,9 @@ class ForecastRepository @Inject constructor(
 
     private fun updateInMemory(city: CityWeather) {
         addedCities = addedCities?.toMutableSet()?.let { cities ->
-            val temp = cities.filter { it.id != city.id }.toMutableSet()
-            temp.add(city)
+            val index = cities.indexOfFirst { it.id == city.id }
+            val temp = cities.filter { it.id != city.id }.toMutableList()
+            temp.add(index, city)
             temp.toSet()
         } ?: setOf(city)
     }
