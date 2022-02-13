@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
@@ -41,16 +42,18 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
             { city ->
-                changeChosenCity(newChosenName = city.name)
-
                 val cityDate: Date = getCityForecastDate(city)
 
                 if (!DateUtils.isToday(cityDate.time)) {
                     deprecatedForecastDialog(city)
-                } else navigateToMainFragment()
+                } else {
+                    changeChosenCity(city.id)
+                    navigateToMainFragment()
+                }
             }, { cityToDelete ->
                 deleteCityDialog(city = cityToDelete)
-            })
+            }),
+        "0"
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +67,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             if (cities.isEmpty())
                 addCityDialog()
             updateProgressBar(false)
-            checkIfUpdatedCity(cities)
             updateRecyclerView(cities)
         }
 
@@ -138,7 +140,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             val title = "${getString(R.string.delete_city_title)} ${city.name}?"
             setTitle(title)
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                when (city.chosen) {
+                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
                     false -> viewModel.deleteCity(city)
                     true -> Toast.makeText(
                         requireContext(),
@@ -158,42 +160,19 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
         parentFragmentManager.popBackStack()
     }
 
-    private fun checkIfUpdatedCity(updatedList: Set<CityWeather>?) {
-        citiesRecyclerAdapter.currentList.apply {
-            if (updatedList.isNullOrEmpty() || this.isNullOrEmpty()) return
-
-            Log.d("DELETE", "checkIfUpdatedCity: $updatedList")
-            val chosen = updatedList.first { el -> el.chosen }
-            val old = first { it.id == chosen.id }
-
-            if (DateUtils.isToday(getCityForecastDate(chosen).time) &&
-                updatedList.size == this.size &&
-                !DateUtils.isToday(getCityForecastDate(old).time)
-            )
-                navigateToMainFragment()
-        }
-    }
-
     private fun setRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val userRecycle: RecyclerView = cities_recyclerView
         userRecycle.layoutManager = layoutManager
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
         userRecycle.adapter = citiesRecyclerAdapter
     }
 
-    private fun changeChosenCity(newChosenName: String) {
-        val oldList = citiesRecyclerAdapter.currentList
-        val lastChosenIndex = oldList.indexOfLast { it.chosen }
-        val newChosenIndex = oldList.indexOfFirst { it.name == newChosenName }
-
-        viewModel.changeChosenCity(lastChosenIndex, newChosenIndex)
-
-        citiesRecyclerAdapter.apply {
-            notifyItemChanged(lastChosenIndex)
-            notifyItemChanged(newChosenIndex)
-        }
+    private fun changeChosenCity(id: String) {
+        (activity as ChosenCityInterface).changeChosenInBase(id)
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(id)
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {

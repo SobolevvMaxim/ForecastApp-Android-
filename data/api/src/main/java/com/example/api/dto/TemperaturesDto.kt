@@ -25,7 +25,7 @@ data class TemperaturesDto(
             temperatures = result,
             forecastDate = SimpleDateFormat("dd.MM.yyyy",
                 Locale.getDefault()).format(Calendar.getInstance().time),
-            chosen = chosen
+//            chosen = chosen
         )
     }
 }

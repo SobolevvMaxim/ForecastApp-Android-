@@ -16,7 +16,6 @@ data class CityWeatherEntity(
     var lat: String = "",
     var lon: String = "",
     @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<Daily>,
-    var chosen: Boolean = false,
     @ColumnInfo(name = "forecastDate") val forecastDate: String,
 ) {
     fun toCityWeather(): CityWeather {
@@ -27,12 +26,11 @@ data class CityWeatherEntity(
             lat = lat,
             lon = lon,
             temperatures = temperatures,
-            chosen = chosen,
             forecastDate = forecastDate
         )
     }
 }
 
 fun CityWeather.toCityWeatherEntity() = CityWeatherEntity(
-    id, name, country, lat, lon, temperatures, chosen, forecastDate
+    id, name, country, lat, lon, temperatures, forecastDate
 )

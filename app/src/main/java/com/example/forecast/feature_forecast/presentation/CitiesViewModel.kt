@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.domain.repository.IForecastRepository
 import com.example.forecast.domain.use_case.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -21,17 +20,13 @@ class CitiesViewModel @Inject constructor(
     private val getForecastUseCase: GetForecast,
     private val deleteCityUseCase: DeleteCity,
     private val updateCityUseCase: UpdateCityForecast,
-    private val forecastSearchRepos: IForecastRepository,
     private val loadForecastsUseCase: LoadForecastsUseCase,
-    private val changeChosenCityUseCase: ChangeChosenCityUseCase,
+    private val writeCityToBaseUseCase: WriteCityToBaseUseCase,
 ) : ViewModel() {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, t ->
         _errorLiveData.postValue(t.toString())
     }
-
-    private val _chosenLiveData = MutableLiveData<CityWeather?>()
-    val chosenLiveData: LiveData<CityWeather?> get() = _chosenLiveData
 
     private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
     val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
@@ -68,8 +63,8 @@ class CitiesViewModel @Inject constructor(
             delay(500)
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
-                if (it.chosen) _chosenLiveData.postValue(it)
-                _citiesLiveData.postValue(forecastSearchRepos.writeCityToBase(city = it))
+                val cities = writeCityToBaseUseCase(city = it)
+                _citiesLiveData.postValue(cities)
             } ?: run {
                 _errorLiveData.postValue(
                     cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
@@ -83,7 +78,6 @@ class CitiesViewModel @Inject constructor(
         searchJob = viewModelScope.launch(exceptionHandler) {
             val updatedCityResponse = getForecastUseCase(city = cityWeather.toCity())
             updatedCityResponse.getOrNull()?.let {
-                it.chosen = true
                 val cities = updateCityUseCase(it)
                 _citiesLiveData.postValue(cities)
             } ?: run {
@@ -101,24 +95,10 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-    fun changeChosenCity(lastChosenIndex: Int, newChosenIndex: Int) {
-        viewModelScope.launch {
-            changeChosenCityUseCase(lastChosenIndex, newChosenIndex)
-            getAddedCities()
-        }
-    }
-
     fun deleteCity(city: CityWeather) {
         viewModelScope.launch(exceptionHandler) {
             val addedCities = deleteCityUseCase(city)
             _citiesLiveData.postValue(addedCities)
-        }
-    }
-
-    fun getChosenCity() {
-        viewModelScope.launch(exceptionHandler) {
-            val chosenCity = forecastSearchRepos.getChosenCityFromBase()
-            _chosenLiveData.postValue(chosenCity)
         }
     }
 }

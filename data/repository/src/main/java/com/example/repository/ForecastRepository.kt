@@ -22,7 +22,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun searchCity(query: String): Result<City> {
         return withContext(dispatcher) {
-            kotlin.runCatching {
+            runCatching {
                 citiesService.searchCityAsync(query = query)
                     .await()
                     .takeIf { it.isSuccessful }
@@ -35,8 +35,11 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun searchForecast(city: City): Result<CityWeather> {
         return withContext(dispatcher) {
-            kotlin.runCatching {
-                temperatureService.searchTempAsync(lat = city.coordinates.lat, lon = city.coordinates.lon)
+            runCatching {
+                temperatureService.searchTempAsync(
+                    lat = city.coordinates.lat,
+                    lon = city.coordinates.lon
+                )
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
@@ -48,7 +51,6 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun writeCityToBase(city: CityWeather): Set<CityWeather> {
         withContext(dispatcher) {
-            if (addedCities.isNullOrEmpty()) city.chosen = true
             cityWeatherDao.insert(city = city.toCityWeatherEntity())
             insertInMemory(city = city)
         }
@@ -89,38 +91,6 @@ class ForecastRepository @Inject constructor(
         }
 
         return addedCities ?: emptySet()
-    }
-
-    override suspend fun changeChosenCityByName(lastChosenIndex: Int, newChosenIndex: Int) {
-        withContext(dispatcher) {
-            addedCities = addedCities?.toMutableSet()?.let { cities ->
-                cities.elementAt(lastChosenIndex).chosen = false
-                cities.elementAt(newChosenIndex).chosen = true
-                cities
-            }
-
-            changeChosenCityInBase(lastChosenIndex, newChosenIndex)
-        }
-    }
-
-    private suspend fun changeChosenCityInBase(lastChosenIndex: Int, newChosenIndex: Int) {
-        withContext(dispatcher) {
-            addedCities?.let {
-                val lastChosen = it.elementAt(lastChosenIndex)
-                val newChosen = it.elementAt(newChosenIndex)
-
-                cityWeatherDao.apply {
-                    update(lastChosen.toCityWeatherEntity())
-                    update(newChosen.toCityWeatherEntity())
-                }
-            }
-        }
-    }
-
-    override suspend fun getChosenCityFromBase(): CityWeather? {
-        return withContext(dispatcher) {
-            cityWeatherDao.getChosenCity()?.toCityWeather()
-        }
     }
 
     override suspend fun deleteCityInBase(city: CityWeather): Set<CityWeather> {

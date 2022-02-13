@@ -13,10 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.NavigationHost
-import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.P_LOG
+import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -32,20 +33,29 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     @Inject
     lateinit var dateFormat: SimpleDateFormat
 
-    private val viewModel by viewModels<CitiesViewModel>()
+    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.getChosenCity()
+            viewModel.getAddedCities()
         }
 
-        viewModel.chosenLiveData.observe(viewLifecycleOwner) { chosen ->
-            chosen?.let {
-                updateView(it)
-                progress_bar_city.visibility = View.INVISIBLE
-            } ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
+        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+            if (cities.isNullOrEmpty()) {
+                viewModel.searchCityForecastByName(getString(R.string.default_city))
+            } else {
+                val chosenCity =
+                    cities.firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
+                chosenCity?.let {
+                    updateView(it)
+                } ?: run {
+                    val firstElement = cities.toList()[0]
+                    (activity as ChosenCityInterface).changeChosenInBase(firstElement.id)
+                    updateView(firstElement)
+                }
+            }
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
@@ -59,10 +69,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun updateView(city: CityWeather) {
+        progress_bar_city.visibility = View.INVISIBLE
+
         city.apply {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
-            temperatures[0].apply {
+            temperatures[0].run {
                 temperature_today.text = temp.toString()
                 description_today.text = description
             }
@@ -70,7 +82,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             setRecyclerView(this)
         }
     }
-
 
     private fun setRecyclerView(city: CityWeather) {
         val layoutManager: RecyclerView.LayoutManager =
@@ -80,7 +91,11 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
 
         val forecastAdapter =
-            WeekForecastAdapter(city.temperatures.apply { removeFirst() }, date, dateFormat)
+            WeekForecastAdapter(
+                city.temperatures.subList(1, city.temperatures.size),
+                date,
+                dateFormat
+            )
         forecast_recycler.adapter = forecastAdapter
     }
 

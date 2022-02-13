@@ -7,7 +7,6 @@ data class CityWeather(
     var lat: String = "",
     var lon: String = "",
     var temperatures: ArrayList<Daily>,
-    var chosen: Boolean = false,
     var forecastDate: String,
 ) {
 

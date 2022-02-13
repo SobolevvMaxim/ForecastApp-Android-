@@ -25,4 +25,6 @@
     <string name="add_city_title">add_city</string>
     <string name="get_city_extra">CHOSEN_CITY</string>
     <string name="city_name">City name</string>
+    <string name="chosen_pref_key">CHOSEN_CITY</string>
+    <string name="default_chosen_id">0</string>
 </resources>
