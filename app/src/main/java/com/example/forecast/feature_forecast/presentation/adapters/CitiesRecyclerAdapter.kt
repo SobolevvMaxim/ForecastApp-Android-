@@ -10,29 +10,31 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
-    private val listener: RecyclerOnCLickListener
+    private val listener: RecyclerOnCLickListener, private var chosenID: String
 ) :
-    ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()) {
+    ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()),
+    ChosenCityInterface {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val city: TextView = view.item_city
         private val temperature: TextView = view.city_temperature
 
         @SuppressLint("ResourceAsColor")
-        fun bind(item: CityWeather, listener: RecyclerOnCLickListener) = with(itemView) {
+        fun bind(
+            item: CityWeather,
+            listener: RecyclerOnCLickListener,
+            chosenCityInterface: ChosenCityInterface
+        ) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"
             city.text = cityText
             val temperatureText = "${item.temperatures[0].temp}°"
             temperature.text = temperatureText
 
-
-            if (item.chosen) {
-                city.setTextColor(R.color.primaryColor)
-                temperature.setTextColor(R.color.primaryColor)
-            }
+            highlightIfChosenCity(itemID = item.id, chosenCityInterface)
 
             setOnClickListener {
                 listener.clickListener(item)
@@ -40,6 +42,17 @@ class CitiesRecyclerAdapter(
             setOnLongClickListener {
                 listener.onLongClickListener(item)
                 true
+            }
+        }
+
+        @SuppressLint("ResourceAsColor")
+        private fun highlightIfChosenCity(
+            itemID: String,
+            chosenCityInterface: ChosenCityInterface
+        ) {
+            if (chosenCityInterface.getChosenCityID() == itemID) {
+                city.setTextColor(R.color.primaryColor)
+                temperature.setTextColor(R.color.primaryColor)
             }
         }
     }
@@ -52,7 +65,15 @@ class CitiesRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), listener)
+        holder.bind(getItem(position), listener, this)
+    }
+
+    override fun changeChosenInBase(newChosenIndex: String) {
+        chosenID = newChosenIndex
+    }
+
+    override fun getChosenCityID(): String {
+        return chosenID
     }
 }
 

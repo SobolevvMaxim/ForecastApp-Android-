@@ -22,12 +22,6 @@ interface CityWeatherDao {
     fun getCityForecastByName(name: String): CityWeatherEntity
 
     /**
-     * @return current chosen city from base
-     */
-    @Query("SELECT * FROM $TABLE_NAME WHERE chosen = 1")
-    fun getChosenCity(): CityWeatherEntity?
-
-    /**
      * insert city in base (OnConflict = REPLACE)
      * @param city city to insert
      */

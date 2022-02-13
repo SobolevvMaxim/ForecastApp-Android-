@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WeekForecastAdapter(
-    private val forecast: ArrayList<Daily>,
+    private val forecast: List<Daily>,
     private val fromDateTime: Date,
     private val dateFormat: SimpleDateFormat,
 ) :
