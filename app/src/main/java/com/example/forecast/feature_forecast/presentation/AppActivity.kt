@@ -47,7 +47,6 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
             apply()
         }
         Log.d("CHOSEN", "changeChosenInBase: $newChosenIndex")
-        Toast.makeText(this, "New chosen city index: $newChosenIndex", Toast.LENGTH_SHORT).show()
     }
 
     override fun getChosenCityID(): String {
@@ -55,7 +54,6 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
         val defaultValue = resources.getString(R.string.default_chosen_id)
         val chosenIndex = sharedPref.getString(getString(R.string.chosen_pref_key), defaultValue)
         Log.d("CHOSEN", "getChosenCItyID: $chosenIndex")
-        Toast.makeText(this, "Current chosen: $chosenIndex", Toast.LENGTH_SHORT).show()
         return chosenIndex!!
     }
 }

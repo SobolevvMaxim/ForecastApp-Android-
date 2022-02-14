@@ -126,9 +126,11 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
                 updateProgressBar(true)
+                Toast.makeText(context, "Updating forecast...", Toast.LENGTH_SHORT).show()
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
+                changeChosenCity(city.id)
                 navigateToMainFragment()
             }
             show()
