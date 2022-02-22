@@ -16,12 +16,12 @@ const val P_LOG = "PARCELABLE_LOG"
 
 @AndroidEntryPoint
 class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
-    ChosenCityInterface, LeftSwipeNavigation {
+    ChosenCityInterface, RightSwipeNavigation {
 
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
             applicationContext,
-            SwipeListener(leftSwipeNavigation = this)
+            SwipeListener(rightSwipeNavigation = this)
         )
     }
 
@@ -38,7 +38,7 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
         return super.onTouchEvent(event)
     }
 
-    override fun onLeftSwipe() {
+    override fun onRightSwipe() {
         navigateToCitiesFragment()
     }
 
@@ -61,13 +61,13 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
 
     private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
         val transaction = supportFragmentManager.beginTransaction()
-            .setCustomAnimations(
-                R.anim.slide_in,
-                R.anim.fade_out,
-                R.anim.fade_in,
-                R.anim.slide_out
-            )
-            .replace(R.id.container_main, fragment)
+//            .setCustomAnimations(
+//                R.anim.slide_in,
+//                R.anim.fade_out,
+//                R.anim.fade_in,
+//                R.anim.slide_out
+//            )
+            .add(R.id.container_main, fragment)
 
         if (addToBackstack) {
             transaction.addToBackStack(null)

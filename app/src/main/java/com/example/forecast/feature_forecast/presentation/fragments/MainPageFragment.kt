@@ -63,6 +63,10 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
         }
 
+        menu_button.setOnClickListener {
+            (activity as NavigationHost).navigateToCitiesFragment()
+        }
+
         mainAddButton.setOnClickListener {
             (activity as NavigationHost).navigateToCitiesFragment()
         }

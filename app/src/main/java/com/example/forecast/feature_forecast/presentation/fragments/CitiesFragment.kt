@@ -29,7 +29,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNavigation {
+class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
@@ -40,7 +40,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
             requireActivity().applicationContext,
-            SwipeListener(rightSwipeNavigation = this)
+            SwipeListener(leftSwipeNavigation = this)
         )
     }
 
@@ -84,10 +84,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
 
         button_add_city.setOnClickListener {
             addCityDialog()
-        }
-
-        app_bar.setNavigationOnClickListener {
-            navigateToMainFragment()
         }
 
         setRecyclerView()
@@ -169,13 +165,13 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
         parentFragmentManager.popBackStack()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val userRecycle: RecyclerView = cities_recyclerView
         userRecycle.layoutManager = layoutManager
         userRecycle.setOnTouchListener { _, p1 ->
-            app_bar.performClick()
             mDetector.onTouchEvent(p1)
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
@@ -193,9 +189,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
     }
 
     private fun updateProgressBar(visible: Boolean) {
-        if (visible)
-            loading_city_progress.visibility = View.VISIBLE
-        else loading_city_progress.visibility = View.GONE
+        when (visible) {
+            true -> loading_city_progress.visibility = View.VISIBLE
+            false -> loading_city_progress.visibility = View.GONE
+        }
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
@@ -208,7 +205,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
             View.GONE else offline_mode_cities.visibility = View.VISIBLE
     }
 
-    override fun onRightSwipe() {
+    override fun onLeftSwipe() {
         navigateToMainFragment()
     }
 }
