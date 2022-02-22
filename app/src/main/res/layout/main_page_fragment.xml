@@ -5,6 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading_city_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cities_recyclerView">
+
+    </com.google.android.material.progressindicator.LinearProgressIndicator>
+
     <TextView
         android:id="@+id/offline_mode"
         android:layout_width="match_parent"

@@ -71,19 +71,12 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-            if (cities.isEmpty())
-                addCityDialog()
-            updateProgressBar(false)
             updateRecyclerView(cities)
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
             Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
             Log.d("MY_ERROR", "error: $error")
-        }
-
-        button_add_city.setOnClickListener {
-            addCityDialog()
         }
 
         setRecyclerView()
@@ -96,39 +89,11 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
         setHasOptionsMenu(true)
     }
 
-    @SuppressLint("InflateParams")
-    private fun addCityDialog() {
-        AlertDialog.Builder(requireContext()).create().apply {
-            val inflater = requireActivity().layoutInflater
-            setView(inflater.inflate(R.layout.add_city_dialog, null))
-            setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
-                val cityInput = city_edit_text.text.toString()
-
-                when (cityInput.trimmedLength()) {
-                    in 0..3 -> Toast.makeText(
-                        requireContext(),
-                        "Incorrect input!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    else -> {
-                        viewModel.searchCityForecastByName(cityInput)
-                        updateProgressBar(true)
-                    }
-                }
-            }
-            setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-            show()
-        }
-    }
-
     private fun deprecatedForecastDialog(city: CityWeather) {
         AlertDialog.Builder(requireContext()).create().apply {
             setTitle(getString(R.string.deprecated_forecast_title))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
-                updateProgressBar(true)
                 Toast.makeText(context, "Updating forecast...", Toast.LENGTH_SHORT).show()
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
@@ -186,13 +151,6 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
-    }
-
-    private fun updateProgressBar(visible: Boolean) {
-        when (visible) {
-            true -> loading_city_progress.visibility = View.VISIBLE
-            false -> loading_city_progress.visibility = View.GONE
-        }
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)

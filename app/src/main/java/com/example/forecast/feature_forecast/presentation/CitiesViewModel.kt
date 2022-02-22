@@ -90,6 +90,7 @@ class CitiesViewModel @Inject constructor(
 
     fun getAddedCities() {
         viewModelScope.launch {
+            delay(500)
             val forecasts = loadForecastsUseCase()
             _citiesLiveData.postValue(forecasts)
         }

@@ -1,11 +1,14 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.text.trimmedLength
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +22,7 @@ import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,9 +49,11 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
             if (cities.isNullOrEmpty()) {
                 viewModel.searchCityForecastByName(getString(R.string.default_city))
+                updateProgressBar(visible = true)
             } else {
-                val chosenCity =
-                    cities.firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
+                val chosenCity = cities
+                    .firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
+
                 chosenCity?.let {
                     updateView(it)
                 } ?: run {
@@ -68,11 +74,46 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         mainAddButton.setOnClickListener {
-            (activity as NavigationHost).navigateToCitiesFragment()
+            addCityDialog()
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun addCityDialog() {
+        AlertDialog.Builder(requireContext()).create().apply {
+            val inflater = requireActivity().layoutInflater
+            setView(inflater.inflate(R.layout.add_city_dialog, null))
+            setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
+                val cityInput = city_edit_text.text.toString()
+
+                when (cityInput.trimmedLength()) {
+                    in 0..3 -> Toast.makeText(
+                        requireContext(),
+                        "Incorrect input!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    else -> {
+                        viewModel.searchCityForecastByName(cityInput)
+                        updateProgressBar(true)
+                    }
+                }
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
+
+    private fun updateProgressBar(visible: Boolean) {
+        when (visible) {
+            true -> loading_city_progress.visibility = View.VISIBLE
+            false -> loading_city_progress.visibility = View.GONE
         }
     }
 
     private fun updateView(city: CityWeather) {
+        updateProgressBar(false)
         progress_bar_city.visibility = View.INVISIBLE
 
         city.apply {
