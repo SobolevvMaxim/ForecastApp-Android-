@@ -114,17 +114,7 @@
         app:layout_constraintStart_toStartOf="@+id/temperature_today"
         app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_city"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/forecast_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    <LinearLayout-->
+    <!--    <LinearLayout-->
 <!--        android:id="@+id/llmain"-->
 <!--        android:layout_width="0dp"-->
 <!--        android:layout_height="wrap_content"-->

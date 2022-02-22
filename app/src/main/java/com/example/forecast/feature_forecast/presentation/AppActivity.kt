@@ -42,13 +42,13 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
         navigateToCitiesFragment()
     }
 
-    override fun changeChosenInBase(newChosenIndex: String) {
+    override fun changeChosenInBase(newChosenID: String) {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
-            putString(getString(R.string.chosen_pref_key), newChosenIndex)
+            putString(getString(R.string.chosen_pref_key), newChosenID)
             apply()
         }
-        Log.d("CHOSEN", "changeChosenInBase: $newChosenIndex")
+        Log.d("CHOSEN", "changeChosenInBase: $newChosenID")
     }
 
     override fun getChosenCityID(): String {

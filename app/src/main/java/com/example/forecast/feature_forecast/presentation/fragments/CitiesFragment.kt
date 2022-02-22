@@ -145,6 +145,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
     }
 
     private fun changeChosenCity(id: String) {
+        viewModel.getCityByID(id)
         (activity as ChosenCityInterface).changeChosenInBase(id)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(id)
     }

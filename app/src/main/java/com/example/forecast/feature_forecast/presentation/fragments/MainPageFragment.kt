@@ -42,25 +42,39 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getAddedCities()
+        
+        val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
+
         if (savedInstanceState == null) {
-            viewModel.getAddedCities()
+            viewModel.getCityByID(cityID = chosenCityID)
         }
 
-        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-            if (cities.isNullOrEmpty()) {
-                viewModel.searchCityForecastByName(getString(R.string.default_city))
-                updateProgressBar(visible = true)
-            } else {
-                val chosenCity = cities
-                    .firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
+//        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+//            if (cities.isNullOrEmpty()) {
+//                viewModel.searchCityForecastByName(getString(R.string.default_city))
+//                updateProgressBar(visible = true)
+//            } else {
+//                val chosenCity = cities
+//                    .firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
+//
+//                chosenCity?.let {
+//                    updateView(it)
+//                } ?: run {
+//                    val firstElement = cities.toList()[0]
+//                    (activity as ChosenCityInterface).changeChosenInBase(firstElement.id)
+//                    updateView(firstElement)
+//                }
+//            }
+//        }
 
-                chosenCity?.let {
-                    updateView(it)
-                } ?: run {
-                    val firstElement = cities.toList()[0]
-                    (activity as ChosenCityInterface).changeChosenInBase(firstElement.id)
-                    updateView(firstElement)
-                }
+        viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
+            city?.let {
+                updateView(it)
+                (activity as ChosenCityInterface).changeChosenInBase(it.id)
+            } ?: run {
+                updateProgressBar(true)
+                viewModel.searchCityForecastByName(getString(R.string.default_city))
             }
         }
 
@@ -114,7 +128,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun updateView(city: CityWeather) {
         updateProgressBar(false)
-        progress_bar_city.visibility = View.INVISIBLE
 
         city.apply {
             val cityInfoText = "$name, $country"

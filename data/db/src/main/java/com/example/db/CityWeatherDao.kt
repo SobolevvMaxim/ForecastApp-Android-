@@ -41,4 +41,12 @@ interface CityWeatherDao {
      */
     @Query("DELETE FROM $TABLE_NAME WHERE id = :cityID")
     fun delete(cityID: String)
+
+    /**
+     * get city from base by id
+     * @param cityID id of the city to get
+     * @return city wether entity from base
+     */
+    @Query("SELECT * FROM $TABLE_NAME WHERE id = :cityID")
+    fun getCityByID(cityID: String): CityWeatherEntity
 }

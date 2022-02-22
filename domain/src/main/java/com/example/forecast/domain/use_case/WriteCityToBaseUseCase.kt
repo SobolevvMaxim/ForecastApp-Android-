@@ -7,6 +7,6 @@ class WriteCityToBaseUseCase(
     val repository: IForecastRepository
 ) {
 
-    suspend operator fun invoke(city: CityWeather): Set<CityWeather> =
+    suspend operator fun invoke(city: CityWeather) =
         repository.writeCityToBase(city)
 }
