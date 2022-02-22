@@ -64,7 +64,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         mainAddButton.setOnClickListener {
-            (activity as NavigationHost).navigateTo(CitiesFragment.create(), true)
+            (activity as NavigationHost).navigateToCitiesFragment()
         }
     }
 

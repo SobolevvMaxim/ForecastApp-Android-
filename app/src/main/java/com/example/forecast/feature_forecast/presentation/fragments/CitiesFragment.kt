@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
+import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.*
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,13 +29,20 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
+class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
 
     @Inject
     lateinit var format: SimpleDateFormat
+
+    private val mDetector: GestureDetectorCompat by lazy {
+        GestureDetectorCompat(
+            requireActivity().applicationContext,
+            SwipeListener(rightSwipeNavigation = this)
+        )
+    }
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
@@ -167,6 +174,10 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         val userRecycle: RecyclerView = cities_recyclerView
         userRecycle.layoutManager = layoutManager
+        userRecycle.setOnTouchListener { _, p1 ->
+            app_bar.performClick()
+            mDetector.onTouchEvent(p1)
+        }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
         userRecycle.adapter = citiesRecyclerAdapter
@@ -195,5 +206,9 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment) {
 
         if (!checkNetwork(context)) offline_mode_cities.visibility =
             View.GONE else offline_mode_cities.visibility = View.VISIBLE
+    }
+
+    override fun onRightSwipe() {
+        navigateToMainFragment()
     }
 }
