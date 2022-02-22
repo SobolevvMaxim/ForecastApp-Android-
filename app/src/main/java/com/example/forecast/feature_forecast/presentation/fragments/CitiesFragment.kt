@@ -136,6 +136,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
+                changeChosenCity(city.id)
                 navigateToMainFragment()
             }
             show()
