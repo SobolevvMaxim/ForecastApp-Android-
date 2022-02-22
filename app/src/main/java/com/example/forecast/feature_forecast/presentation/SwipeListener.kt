@@ -5,7 +5,8 @@ import android.view.MotionEvent
 import kotlin.math.abs
 
 class SwipeListener(
-    private val swipeNavigation: SwipeNavigation
+    private val leftSwipeNavigation: LeftSwipeNavigation? = null,
+    private val rightSwipeNavigation: RightSwipeNavigation? = null,
 ) : GestureDetector.SimpleOnGestureListener() {
     private val threshold = 100
 
@@ -24,9 +25,9 @@ class SwipeListener(
         val diffX: Float = event2.x - event1.x
         if (abs(diffX) > abs(diffY) && abs(diffX) > threshold && abs(velocityX) > threshold) {
             if (diffX < 0) {
-                swipeNavigation.onLeftSwipe()
+                leftSwipeNavigation?.onLeftSwipe()
             } else {
-                swipeNavigation.onRightSwipe()
+                rightSwipeNavigation?.onRightSwipe()
             }
             result = true
 
@@ -36,8 +37,10 @@ class SwipeListener(
     }
 }
 
-interface SwipeNavigation {
+interface LeftSwipeNavigation {
     fun onLeftSwipe()
+}
 
+interface RightSwipeNavigation {
     fun onRightSwipe()
 }

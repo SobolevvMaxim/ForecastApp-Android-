@@ -16,12 +16,12 @@ const val P_LOG = "PARCELABLE_LOG"
 
 @AndroidEntryPoint
 class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
-    ChosenCityInterface, SwipeNavigation {
+    ChosenCityInterface, LeftSwipeNavigation {
 
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
-            this,
-            SwipeListener(this)
+            applicationContext,
+            SwipeListener(leftSwipeNavigation = this)
         )
     }
 
@@ -40,11 +40,6 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
 
     override fun onLeftSwipe() {
         navigateToCitiesFragment()
-    }
-
-    override fun onRightSwipe() {
-        // TODO: Correct swipe to main fragment from cities fragment
-//        navigateToMainFragment()
     }
 
     override fun changeChosenInBase(newChosenIndex: String) {
