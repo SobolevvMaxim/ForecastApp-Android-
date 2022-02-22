@@ -95,6 +95,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
                 Toast.makeText(context, "Updating forecast...", Toast.LENGTH_SHORT).show()
+                navigateToMainFragment()
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()

@@ -68,7 +68,6 @@ class CitiesViewModel @Inject constructor(
             val cityTemperatureResponse = getForecastUseCase(city)
             cityTemperatureResponse.getOrNull()?.let {
                 writeCityToBaseUseCase(city = it)
-
                 _chosenLiveData.postValue(it)
             } ?: run {
                 _errorLiveData.postValue(
@@ -85,7 +84,6 @@ class CitiesViewModel @Inject constructor(
             updatedCityResponse.getOrNull()?.let {
                 updateCityUseCase(it)
                 _chosenLiveData.postValue(it)
-//                _citiesLiveData.postValue(cities)
             } ?: run {
                 _errorLiveData.postValue(
                     updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"

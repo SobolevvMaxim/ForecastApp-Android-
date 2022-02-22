@@ -16,5 +16,5 @@ interface IForecastRepository {
 
     suspend fun getAll(): Set<CityWeather>
 
-    suspend fun getCityByID(cityID: String): CityWeather
+    suspend fun getCityByID(cityID: String): CityWeather?
 }

@@ -100,9 +100,9 @@ class ForecastRepository @Inject constructor(
         return addedCities ?: emptySet()
     }
 
-    override suspend fun getCityByID(cityID: String): CityWeather =
+    override suspend fun getCityByID(cityID: String): CityWeather? =
         withContext(dispatcher) {
-            cityWeatherDao.getCityByID(cityID).toCityWeather()
+            cityWeatherDao.getCityByID(cityID)?.toCityWeather()
         }
 
 

@@ -7,6 +7,6 @@ class GetCityByIDUseCase(
     private val repository: IForecastRepository,
 ) {
 
-    suspend operator fun invoke(cityID: String): CityWeather =
+    suspend operator fun invoke(cityID: String): CityWeather? =
         repository.getCityByID(cityID)
 }

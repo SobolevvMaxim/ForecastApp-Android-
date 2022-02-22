@@ -43,30 +43,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.getAddedCities()
-        
+
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
 
         if (savedInstanceState == null) {
             viewModel.getCityByID(cityID = chosenCityID)
         }
-
-//        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-//            if (cities.isNullOrEmpty()) {
-//                viewModel.searchCityForecastByName(getString(R.string.default_city))
-//                updateProgressBar(visible = true)
-//            } else {
-//                val chosenCity = cities
-//                    .firstOrNull { it.id == (activity as ChosenCityInterface).getChosenCityID() }
-//
-//                chosenCity?.let {
-//                    updateView(it)
-//                } ?: run {
-//                    val firstElement = cities.toList()[0]
-//                    (activity as ChosenCityInterface).changeChosenInBase(firstElement.id)
-//                    updateView(firstElement)
-//                }
-//            }
-//        }
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
             city?.let {

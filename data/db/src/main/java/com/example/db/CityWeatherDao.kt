@@ -48,5 +48,5 @@ interface CityWeatherDao {
      * @return city wether entity from base
      */
     @Query("SELECT * FROM $TABLE_NAME WHERE id = :cityID")
-    fun getCityByID(cityID: String): CityWeatherEntity
+    fun getCityByID(cityID: String): CityWeatherEntity?
 }
