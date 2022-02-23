@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.example.forecast.R
 import com.example.forecast.feature_forecast.presentation.fragments.CitiesFragment
 import com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment
@@ -61,6 +62,7 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
 
     private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
         val transaction = supportFragmentManager.beginTransaction()
+            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //            .setCustomAnimations(
 //                R.anim.slide_in,
 //                R.anim.fade_out,
