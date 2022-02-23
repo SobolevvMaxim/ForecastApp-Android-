@@ -28,4 +28,5 @@
     <string name="chosen_pref_key">CHOSEN_CITY</string>
     <string name="default_chosen_id">0</string>
     <string name="menu_button_description">Menu</string>
+    <string name="location_description">Location</string>
 </resources>

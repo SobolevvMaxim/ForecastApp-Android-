@@ -115,7 +115,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
             temperatures[0].run {
-                temperature_today.text = temp.toString()
+                val temperature = "$temp°"
+                temperature_today.text = temperature
                 description_today.text = description
             }
             currentDate.text = forecastDate
@@ -125,16 +126,20 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun setRecyclerView(city: CityWeather) {
         val layoutManager: RecyclerView.LayoutManager =
-            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
         forecast_recycler.layoutManager = layoutManager
         val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
 
+        val calendar = Calendar.getInstance()
+
+        calendar.time = date
+        val todayDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
         val forecastAdapter =
             WeekForecastAdapter(
                 city.temperatures.subList(1, city.temperatures.size),
-                date,
-                dateFormat
+                todayDayOfWeek
             )
         forecast_recycler.adapter = forecastAdapter
     }

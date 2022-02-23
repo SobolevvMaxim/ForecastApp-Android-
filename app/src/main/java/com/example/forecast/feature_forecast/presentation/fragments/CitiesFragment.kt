@@ -138,7 +138,9 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
         val userRecycle: RecyclerView = cities_recyclerView
         userRecycle.layoutManager = layoutManager
         userRecycle.setOnTouchListener { _, p1 ->
-            mDetector.onTouchEvent(p1)
+            p1?.let {
+                mDetector.onTouchEvent(it)
+            } ?: false
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 

@@ -12,15 +12,15 @@ import java.util.*
 
 class WeekForecastAdapter(
     private val forecast: List<Daily>,
-    private val fromDateTime: Date,
-    private val dateFormat: SimpleDateFormat,
+    private val startDayIndex: Int,
 ) :
     RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
+    private val dayOfWeeks = listOf("Понедельник", "Втоорник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье")
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperatureTV: TextView = view.findViewById(R.id.item_temp)
         val descriptionTV: TextView = view.findViewById(R.id.item_description)
-        val date: TextView = view.findViewById(R.id.item_date)
+        val date: TextView = view.findViewById(R.id.week_day)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,7 +33,8 @@ class WeekForecastAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         forecast[position].let {
             holder.apply {
-                temperatureTV.text = it.temp.toString()
+                val temperature = "${it.temp}°"
+                temperatureTV.text = temperature
                 descriptionTV.text = it.description
                 date.text = getItemDate(position)
             }
@@ -43,13 +44,6 @@ class WeekForecastAdapter(
     override fun getItemCount(): Int = forecast.size
 
     private fun getItemDate(position: Int): String {
-        val calendar = Calendar.getInstance()
-
-        calendar.apply {
-            time = fromDateTime
-            add(Calendar.DATE, position + 1)
-        }
-
-        return dateFormat.format(calendar.time)
+        return dayOfWeeks[(startDayIndex + position - 1) % 7]
     }
 }
