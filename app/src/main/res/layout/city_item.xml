@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/item_city"
-        style="@style/Widget.Forecast.TextView.Default"
+        style="@style/Widget.Forecast.TextView.Default.CitiesFragment"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -16,14 +16,13 @@
 
     <TextView
         android:id="@+id/city_temperature"
-        style="@style/Widget.Forecast.TextView.Default"
+        style="@style/Widget.Forecast.TextView.Default.CitiesFragment.Titles"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
         android:layout_weight="2"
         android:gravity="end"
-        android:text="@string/default_temperature"
-        android:textSize="20sp" />
+        android:text="@string/default_temperature" />
 
 </LinearLayout>

@@ -7,8 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.domain.model.Daily
-import java.text.SimpleDateFormat
-import java.util.*
 
 class WeekForecastAdapter(
     private val forecast: List<Daily>,

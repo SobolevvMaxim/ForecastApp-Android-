@@ -49,6 +49,3 @@ interface RightSwipeNavigation {
     fun onRightSwipe()
 }
 
-interface DetectorInterface {
-    fun getDetector(): GestureDetectorCompat
-}

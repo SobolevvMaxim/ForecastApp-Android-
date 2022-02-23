@@ -31,29 +31,18 @@
         android:id="@+id/top_info"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
+        android:layout_margin="11dp"
         android:background="#72151515"
-        android:paddingTop="11dp"
-        android:paddingBottom="11dp"
+        android:padding="11dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_button">
 
         <TextView
             android:id="@+id/currentCity"
+            style="@style/Widget.Forecast.TextView.Default"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:layout_marginStart="195dp"
-            android:layout_marginLeft="195dp"
-            android:layout_marginEnd="194dp"
-            android:layout_marginRight="194dp"
-            android:fontFamily="@font/roboto"
-            android:text="Text"
-            android:textColor="#FFFFFF"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,11 +52,8 @@
             android:id="@+id/currentDate"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
-            android:fontFamily="@font/roboto"
+            style="@style/Widget.Forecast.TextView.Small"
             android:gravity="center"
-            android:text="11.09.2002"
-            android:textColor="@color/white"
-            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/currentCity" />
@@ -88,10 +74,8 @@
             android:id="@+id/temperature_today"
             android:layout_width="wrap_content"
             android:layout_height="66dp"
-            android:fontFamily="@font/roboto"
+            style="@style/Widget.Forecast.TextView.Default"
             android:gravity="center"
-            android:text="11"
-            android:textColor="@color/white"
             android:textSize="50sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -102,10 +86,7 @@
             android:id="@+id/description_today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
-            android:text="sunny"
-            android:textColor="@color/white"
-            android:textSize="12sp"
+            style="@style/Widget.Forecast.TextView.Small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
@@ -123,7 +104,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_menu_24"
-        tools:ignore="TouchTargetSizeCheck" />
+        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <ImageButton
         android:id="@+id/mainAddButton"
@@ -136,24 +117,7 @@
         android:contentDescription="@string/weather_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/llmain"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="21dp"-->
-    <!--        android:layout_marginLeft="21dp"-->
-    <!--        android:layout_marginEnd="21dp"-->
-    <!--        android:layout_marginRight="21dp"-->
-    <!--        android:layout_marginBottom="150dp"-->
-    <!--        android:divider="@drawable/separtor"-->
-    <!--        android:dividerPadding="3dp"-->
-    <!--        android:orientation="horizontal"-->
-    <!--        android:showDividers="middle"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent">-->
+        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forecast_recycler"
@@ -162,10 +126,10 @@
         android:layout_margin="11dp"
         android:background="#72151515"
         android:orientation="horizontal"
+        android:padding="11dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/top_info" />
-    <!--    </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
