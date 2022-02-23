@@ -30,6 +30,10 @@ object DomainModule {
 
     @ViewModelScoped
     @Provides
+    fun provideGetCityUseCase(repository: IForecastRepository) = GetCityByIDUseCase(repository)
+
+    @ViewModelScoped
+    @Provides
     fun provideLoadForecastsFromBase(repository: IForecastRepository) =
         LoadForecastsUseCase(repository)
 

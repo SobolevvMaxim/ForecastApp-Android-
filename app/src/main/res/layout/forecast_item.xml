@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="106dp"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
     android:layout_margin="8dp"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     app:cardElevation="8dp">
 
     <TextView
-        android:id="@+id/item_date"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:id="@+id/week_day"
         style="@style/Widget.Forecast.TextView.Small"
-        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center|start"
         android:lineSpacingExtra="18sp"
         android:text="@string/date_default"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,36 +22,39 @@
 
     <ImageView
         android:id="@+id/item_image"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:contentDescription="@string/forecast_default_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_date"
+        app:layout_constraintTop_toBottomOf="@+id/week_day"
         app:srcCompat="@drawable/image2" />
 
     <TextView
-        android:id="@+id/item_temp"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        android:text="@string/default_main_temperature"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/item_image" />
-
-    <TextView
         android:id="@+id/item_description"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
         style="@style/Widget.Forecast.TextView.Small"
-        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center|start"
+        android:paddingLeft="20dp"
         android:text="@string/description_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_temp" />
+
+    <TextView
+        android:id="@+id/item_temp"
+        style="@style/Widget.Forecast.TextView.Default"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center|end"
+        android:text="@string/default_main_temperature"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_image" />
 
 </LinearLayout>

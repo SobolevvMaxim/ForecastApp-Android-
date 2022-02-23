@@ -3,132 +3,133 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/back">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading_city_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cities_recyclerView">
+
+    </com.google.android.material.progressindicator.LinearProgressIndicator>
 
     <TextView
         android:id="@+id/offline_mode"
+        style="@style/Widget.Forecast.TextView.OfflineMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Widget.Forecast.TextView.OfflineMode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/currentCity"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/roboto"
-        android:textColor="#000000"
-        android:textSize="24sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="11dp"
+        android:background="#72151515"
+        android:padding="11dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/menu_button">
 
-    <TextView
-        android:id="@+id/currentDate"
+        <TextView
+            android:id="@+id/currentCity"
+            style="@style/Widget.Forecast.TextView.Default"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/currentDate"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            style="@style/Widget.Forecast.TextView.Small"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentCity" />
+
+        <View
+            android:id="@+id/big_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/image2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentDate" />
+
+        <TextView
+            android:id="@+id/temperature_today"
+            android:layout_width="wrap_content"
+            android:layout_height="66dp"
+            style="@style/Widget.Forecast.TextView.Default"
+            android:gravity="center"
+            android:textSize="50sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/big_image"
+            app:lineHeight="32dp" />
+
+        <TextView
+            android:id="@+id/description_today"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Forecast.TextView.Small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/menu_button"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="72dp"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        android:textColor="@color/grey"
-        android:textSize="12sp"
+        android:layout_marginTop="20dp"
+        android:background="#00FFFFFF"
+        android:contentDescription="@string/menu_button_description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_menu_24"
+        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <ImageButton
         android:id="@+id/mainAddButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/ic_cancel_24px_outlined"
+        android:background="@drawable/ic_baseline_add_24"
         android:contentDescription="@string/weather_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/currentCity" />
-
-    <View
-        android:id="@+id/big_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="92dp"
-        android:background="@drawable/image2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
-
-    <TextView
-        android:id="@+id/temperature_today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textSize="50sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/big_image"
-        app:lineHeight="32dp" />
-
-    <TextView
-        android:id="@+id/description_today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:textColor="@color/grey"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/temperature_today"
-        app:layout_constraintStart_toStartOf="@+id/temperature_today"
-        app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar_city"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/forecast_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/llmain"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="21dp"-->
-<!--        android:layout_marginLeft="21dp"-->
-<!--        android:layout_marginEnd="21dp"-->
-<!--        android:layout_marginRight="21dp"-->
-<!--        android:layout_marginBottom="150dp"-->
-<!--        android:divider="@drawable/separtor"-->
-<!--        android:dividerPadding="3dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:showDividers="middle"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent">-->
+        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forecast_recycler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginLeft="21dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp"
-        android:layout_marginBottom="150dp"
+        android:layout_margin="11dp"
+        android:background="#72151515"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="11dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-<!--    </LinearLayout>-->
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_info" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

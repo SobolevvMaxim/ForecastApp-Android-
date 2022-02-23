@@ -5,11 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.text.trimmedLength
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,14 +23,13 @@ import com.example.forecast.feature_forecast.presentation.*
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNavigation {
+class CitiesFragment : Fragment(), LeftSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
@@ -40,7 +40,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
             requireActivity().applicationContext,
-            SwipeListener(rightSwipeNavigation = this)
+            SwipeListener(leftSwipeNavigation = this)
         )
     }
 
@@ -63,6 +63,19 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
         "0"
     )
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.choose_city_fragment, container, false).apply {
+            setOnTouchListener { _, p1 ->
+                location_image.performClick()
+                mDetector.onTouchEvent(p1)
+            }
+        }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -71,23 +84,12 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-            if (cities.isEmpty())
-                addCityDialog()
-            updateProgressBar(false)
             updateRecyclerView(cities)
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
             Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
             Log.d("MY_ERROR", "error: $error")
-        }
-
-        button_add_city.setOnClickListener {
-            addCityDialog()
-        }
-
-        app_bar.setNavigationOnClickListener {
-            navigateToMainFragment()
         }
 
         setRecyclerView()
@@ -100,40 +102,13 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
         setHasOptionsMenu(true)
     }
 
-    @SuppressLint("InflateParams")
-    private fun addCityDialog() {
-        AlertDialog.Builder(requireContext()).create().apply {
-            val inflater = requireActivity().layoutInflater
-            setView(inflater.inflate(R.layout.add_city_dialog, null))
-            setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
-                val cityInput = city_edit_text.text.toString()
-
-                when (cityInput.trimmedLength()) {
-                    in 0..3 -> Toast.makeText(
-                        requireContext(),
-                        "Incorrect input!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    else -> {
-                        viewModel.searchCityForecastByName(cityInput)
-                        updateProgressBar(true)
-                    }
-                }
-            }
-            setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
-                dialog.cancel()
-            }
-            show()
-        }
-    }
-
     private fun deprecatedForecastDialog(city: CityWeather) {
         AlertDialog.Builder(requireContext()).create().apply {
             setTitle(getString(R.string.deprecated_forecast_title))
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 viewModel.updateCityForecast(city)
-                updateProgressBar(true)
                 Toast.makeText(context, "Updating forecast...", Toast.LENGTH_SHORT).show()
+                navigateToMainFragment()
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
@@ -169,33 +144,30 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
         parentFragmentManager.popBackStack()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
-        val layoutManager: RecyclerView.LayoutManager =
+        val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        val userRecycle: RecyclerView = cities_recyclerView
-        userRecycle.layoutManager = layoutManager
-        userRecycle.setOnTouchListener { _, p1 ->
-            app_bar.performClick()
-            mDetector.onTouchEvent(p1)
+
+        cities_recyclerView.apply {
+            layoutManager = recyclerManager
+            setOnTouchListener { _, p1 ->
+                mDetector.onTouchEvent(p1)
+            }
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
-        userRecycle.adapter = citiesRecyclerAdapter
+        cities_recyclerView.adapter = citiesRecyclerAdapter
     }
 
     private fun changeChosenCity(id: String) {
+        viewModel.getCityByID(id)
         (activity as ChosenCityInterface).changeChosenInBase(id)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(id)
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
-    }
-
-    private fun updateProgressBar(visible: Boolean) {
-        if (visible)
-            loading_city_progress.visibility = View.VISIBLE
-        else loading_city_progress.visibility = View.GONE
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
@@ -208,7 +180,7 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), RightSwipeNaviga
             View.GONE else offline_mode_cities.visibility = View.VISIBLE
     }
 
-    override fun onRightSwipe() {
+    override fun onLeftSwipe() {
         navigateToMainFragment()
     }
 }

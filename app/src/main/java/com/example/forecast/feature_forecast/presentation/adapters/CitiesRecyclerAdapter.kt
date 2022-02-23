@@ -68,8 +68,8 @@ class CitiesRecyclerAdapter(
         holder.bind(getItem(position), listener, this)
     }
 
-    override fun changeChosenInBase(newChosenIndex: String) {
-        chosenID = newChosenIndex
+    override fun changeChosenInBase(newChosenID: String) {
+        chosenID = newChosenID
     }
 
     override fun getChosenCityID(): String {

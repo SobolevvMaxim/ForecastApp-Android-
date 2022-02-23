@@ -8,11 +8,13 @@ interface IForecastRepository {
 
     suspend fun searchForecast(city: City): Result<CityWeather>
 
-    suspend fun writeCityToBase(city: CityWeather): Set<CityWeather>
+    suspend fun writeCityToBase(city: CityWeather)
 
     suspend fun updateCityInBase(city: CityWeather): Set<CityWeather>
 
     suspend fun deleteCityInBase(city: CityWeather): Set<CityWeather>
 
     suspend fun getAll(): Set<CityWeather>
+
+    suspend fun getCityByID(cityID: String): CityWeather?
 }
