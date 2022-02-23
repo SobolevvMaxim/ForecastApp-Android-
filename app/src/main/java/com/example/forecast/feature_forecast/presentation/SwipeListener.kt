@@ -15,11 +15,13 @@ class SwipeListener(
     }
 
     override fun onFling(
-        event1: MotionEvent,
-        event2: MotionEvent,
+        event1: MotionEvent?,
+        event2: MotionEvent?,
         velocityX: Float,
         velocityY: Float
     ): Boolean {
+        if (event1 == null || event2 == null) return false
+
         var result = false
         val diffY: Float = event1.y - event1.y
         val diffX: Float = event2.x - event1.x
