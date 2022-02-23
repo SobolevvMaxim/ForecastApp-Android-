@@ -168,7 +168,8 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
         val forecastAdapter =
             WeekForecastAdapter(
                 city.temperatures.subList(1, city.temperatures.size),
-                todayDayOfWeek
+                todayDayOfWeek,
+                resources.getStringArray(R.array.days).toList()
             )
         forecast_recycler.adapter = forecastAdapter
     }

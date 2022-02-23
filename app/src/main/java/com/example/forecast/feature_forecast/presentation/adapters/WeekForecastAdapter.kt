@@ -13,9 +13,9 @@ import java.util.*
 class WeekForecastAdapter(
     private val forecast: List<Daily>,
     private val startDayIndex: Int,
+    private val dayOfWeeks: List<String>,
 ) :
     RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
-    private val dayOfWeeks = listOf("Понедельник", "Втоорник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье") // TODO: do as resource
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperatureTV: TextView = view.findViewById(R.id.item_temp)
