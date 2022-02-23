@@ -17,14 +17,7 @@ const val P_LOG = "PARCELABLE_LOG"
 
 @AndroidEntryPoint
 class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
-    ChosenCityInterface, RightSwipeNavigation {
-
-    private val mDetector: GestureDetectorCompat by lazy {
-        GestureDetectorCompat(
-            applicationContext,
-            SwipeListener(rightSwipeNavigation = this)
-        )
-    }
+    ChosenCityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +25,6 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
         if (savedInstanceState == null) {
             navigateToMainFragment()
         }
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        mDetector.onTouchEvent(event)
-        return super.onTouchEvent(event)
-    }
-
-    override fun onRightSwipe() {
-        navigateToCitiesFragment()
     }
 
     override fun changeChosenInBase(newChosenID: String) {
@@ -57,7 +41,7 @@ class MainPageActivity : AppCompatActivity(R.layout.main_activity), NavigationHo
         val defaultValue = resources.getString(R.string.default_chosen_id)
         val chosenIndex = sharedPref.getString(getString(R.string.chosen_pref_key), defaultValue)
         Log.d("CHOSEN", "getChosenCItyID: $chosenIndex")
-        return chosenIndex!!
+        return chosenIndex ?: "0"
     }
 
     private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {

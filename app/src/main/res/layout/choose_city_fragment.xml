@@ -9,16 +9,18 @@
     android:background="#FFFFFF">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/location_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="20dp"
+        android:clickable="true"
         android:contentDescription="@string/location_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_baseline_add_location_24" />
+        app:srcCompat="@drawable/ic_baseline_add_location_24"
+        tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
         android:id="@+id/textView"
@@ -30,7 +32,7 @@
         android:fontFamily="@font/roboto"
         android:text="Добавленные города"
         android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/location_image"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -41,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/location_image" />
 
 
     <TextView

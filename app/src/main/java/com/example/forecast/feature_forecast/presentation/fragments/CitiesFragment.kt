@@ -5,11 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.text.trimmedLength
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -22,14 +23,13 @@ import com.example.forecast.feature_forecast.presentation.*
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigation {
+class CitiesFragment : Fragment(), LeftSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
@@ -62,6 +62,19 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
             }),
         "0"
     )
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.choose_city_fragment, container, false).apply {
+            setOnTouchListener { _, p1 ->
+                location_image.performClick()
+                mDetector.onTouchEvent(p1)
+            }
+        }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -133,18 +146,18 @@ class CitiesFragment : Fragment(R.layout.choose_city_fragment), LeftSwipeNavigat
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
-        val layoutManager: RecyclerView.LayoutManager =
+        val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        val userRecycle: RecyclerView = cities_recyclerView
-        userRecycle.layoutManager = layoutManager
-        userRecycle.setOnTouchListener { _, p1 ->
-            p1?.let {
-                mDetector.onTouchEvent(it)
-            } ?: false
+
+        cities_recyclerView.apply {
+            layoutManager = recyclerManager
+            setOnTouchListener { _, p1 ->
+                mDetector.onTouchEvent(p1)
+            }
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
-        userRecycle.adapter = citiesRecyclerAdapter
+        cities_recyclerView.adapter = citiesRecyclerAdapter
     }
 
     private fun changeChosenCity(id: String) {

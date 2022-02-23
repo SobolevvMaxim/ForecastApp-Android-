@@ -2,6 +2,7 @@ package com.example.forecast.feature_forecast.presentation
 
 import android.view.GestureDetector
 import android.view.MotionEvent
+import androidx.core.view.GestureDetectorCompat
 import kotlin.math.abs
 
 class SwipeListener(
@@ -20,9 +21,10 @@ class SwipeListener(
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-        if (event1 == null || event2 == null) return false
-
         var result = false
+
+        if (event1 == null || event2 == null) return result
+
         val diffY: Float = event1.y - event1.y
         val diffX: Float = event2.x - event1.x
         if (abs(diffX) > abs(diffY) && abs(diffX) > threshold && abs(velocityX) > threshold) {
@@ -45,4 +47,8 @@ interface LeftSwipeNavigation {
 
 interface RightSwipeNavigation {
     fun onRightSwipe()
+}
+
+interface DetectorInterface {
+    fun getDetector(): GestureDetectorCompat
 }
