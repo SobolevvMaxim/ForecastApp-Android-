@@ -33,7 +33,7 @@ data class TemperaturesDto(
             dailyTemperatures = daily,
             hourlyTemperatures = hourly,
             forecastDate = SimpleDateFormat(
-                "dd.MM.yyyy",
+                "dd.MM.yyyy 'at' HH:mm",
                 Locale.getDefault()
             ).format(Calendar.getInstance().time),
         )

@@ -25,7 +25,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy 'at' HH:mm", Locale.getDefault())
 
     @Provides
     fun ioCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.IO
