@@ -19,22 +19,44 @@ data class CityWeatherEntity(
     var lon: String = "",
     @TypeConverters(DailyTemperatureConverter::class) var dailyTemperatures: ArrayList<Daily>,
     @TypeConverters(HourlyTemperatureConverter::class) var hourlyTemperatures: ArrayList<Hourly>,
+    val sunrise: String,
+    val sunset: String,
+    val feels_like: Double,
+    val humidity: Int,
+    val uvi: Double,
     @ColumnInfo(name = "forecastDate") val forecastDate: String,
 ) {
     fun toCityWeather(): CityWeather {
         return CityWeather(
-            id = id,
-            name = name,
-            country = country,
-            lat = lat,
-            lon = lon,
-            dailyTemperatures = dailyTemperatures,
-            hourlyTemperatures = hourlyTemperatures,
-            forecastDate = forecastDate
+            id,
+            name,
+            country,
+            lat,
+            lon,
+            dailyTemperatures,
+            hourlyTemperatures,
+            sunrise,
+            sunset,
+            feels_like,
+            humidity,
+            uvi,
+            forecastDate
         )
     }
 }
 
 fun CityWeather.toCityWeatherEntity() = CityWeatherEntity(
-    id, name, country, lat, lon, dailyTemperatures, hourlyTemperatures,  forecastDate
+    id,
+    name,
+    country,
+    lat,
+    lon,
+    dailyTemperatures,
+    hourlyTemperatures,
+    sunrise,
+    sunset,
+    feels_like,
+    humidity,
+    uvi,
+    forecastDate
 )

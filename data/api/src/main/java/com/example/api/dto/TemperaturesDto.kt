@@ -13,6 +13,7 @@ import kotlin.math.roundToInt
 data class TemperaturesDto(
     @SerializedName("hourly") val hourlyTemp: List<HourlyTemp>,
     @SerializedName("daily") val dailyTemp: List<DailyTemp>,
+    @SerializedName("current") val current: Current,
 ) {
     fun toCityWeather(city: City): CityWeather {
         val daily = ArrayList(
@@ -32,6 +33,11 @@ data class TemperaturesDto(
             lon = city.coordinates.lon,
             dailyTemperatures = daily,
             hourlyTemperatures = hourly,
+            sunrise = current.sunrise,
+            sunset = current.sunset,
+            feels_like = current.feels_like,
+            humidity = current.humidity,
+            uvi = current.uvi,
             forecastDate = SimpleDateFormat(
                 "dd.MM.yyyy 'at' HH:mm",
                 Locale.getDefault()
@@ -41,6 +47,14 @@ data class TemperaturesDto(
         return cityWeather
     }
 }
+
+data class Current(
+    val sunrise: String,
+    val sunset: String,
+    val feels_like: Double,
+    val humidity: Int,
+    val uvi: Double
+)
 
 data class DailyTemp(
     val temp: Temp,

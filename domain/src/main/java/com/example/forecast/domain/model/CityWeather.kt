@@ -8,6 +8,11 @@ data class CityWeather(
     var lon: String = "",
     var dailyTemperatures: ArrayList<Daily>,
     var hourlyTemperatures: ArrayList<Hourly>,
+    val sunrise: String,
+    val sunset: String,
+    val feels_like: Double,
+    val humidity: Int,
+    val uvi: Double,
     var forecastDate: String,
 ) {
 

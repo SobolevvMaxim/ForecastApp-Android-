@@ -73,12 +73,13 @@
         app:layout_constraintTop_toBottomOf="@+id/top_screen">
 
         <LinearLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/top_info"
+                android:id="@+id/main_info"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_margin="11dp"
@@ -158,7 +159,7 @@
                 android:padding="11dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/top_info"/>
+                app:layout_constraintTop_toBottomOf="@+id/main_info" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/daily_forecast_recycler"
@@ -174,8 +175,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
 
             <LinearLayout
+                android:id="@+id/forecast_info"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="180dp"
                 android:layout_margin="11dp"
                 android:layout_weight="1"
                 android:background="#72151515"
