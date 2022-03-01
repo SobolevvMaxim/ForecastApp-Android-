@@ -2,7 +2,6 @@ package com.example.forecast.feature_forecast.presentation
 
 import android.view.GestureDetector
 import android.view.MotionEvent
-import androidx.core.view.GestureDetectorCompat
 import kotlin.math.abs
 
 class SwipeListener(

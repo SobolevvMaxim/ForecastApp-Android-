@@ -6,13 +6,12 @@ import com.example.forecast.domain.model.Daily
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 data class TemperaturesDto(
     @SerializedName("daily") val dailyTemp: List<DailyTemp>,
 ) {
-    fun toCityWeather(city: City, chosen: Boolean = false): CityWeather {
+    fun toCityWeather(city: City): CityWeather {
         val result = ArrayList(dailyTemp.map {
             Daily(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
         })
@@ -25,7 +24,6 @@ data class TemperaturesDto(
             temperatures = result,
             forecastDate = SimpleDateFormat("dd.MM.yyyy",
                 Locale.getDefault()).format(Calendar.getInstance().time),
-//            chosen = chosen
         )
     }
 }

@@ -43,7 +43,7 @@ class ForecastRepository @Inject constructor(
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.toCityWeather(city, chosen = addedCities.isNullOrEmpty())
+                    ?.toCityWeather(city)
                     ?: throw Exception("empty data")
             }
         }
