@@ -3,6 +3,7 @@ package com.example.forecast.feature_forecast.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
@@ -19,6 +20,7 @@ class WeekForecastAdapter(
         val temperatureTV: TextView = view.findViewById(R.id.item_temp)
         val descriptionTV: TextView = view.findViewById(R.id.item_description)
         val date: TextView = view.findViewById(R.id.week_day)
+        val image: ImageView = view.findViewById(R.id.item_image)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -33,6 +35,12 @@ class WeekForecastAdapter(
             holder.apply {
                 val temperature = "${it.temp}°"
                 temperatureTV.text = temperature
+                when (it.description) {
+                    "Rain" -> image.setImageResource(R.drawable.forecast_rain_icon)
+                    "Snow" -> image.setImageResource(R.drawable.forecast_snow_icon)
+                    "Clear" -> image.setImageResource(R.drawable.forecast_sun_icon)
+                    else -> image.setImageResource(R.drawable.forecast_clouds_icon)
+                }
                 descriptionTV.text = it.description
                 date.text = getItemDate(position)
             }
