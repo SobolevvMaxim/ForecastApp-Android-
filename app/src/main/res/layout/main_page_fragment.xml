@@ -177,7 +177,7 @@
             <LinearLayout
                 android:id="@+id/forecast_info"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="250dp"
                 android:layout_margin="11dp"
                 android:layout_weight="1"
                 android:background="#72151515"
@@ -227,7 +227,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/dusk_image"
+                        android:id="@+id/sunset_image"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="dusk"
@@ -235,7 +235,7 @@
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
-                        android:id="@+id/dusk_title"
+                        android:id="@+id/sunset_title"
                         style="@style/Widget.Forecast.TextView.Default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -243,10 +243,10 @@
                         android:layout_marginLeft="11dp"
                         android:layout_weight="1"
                         android:gravity="start|left"
-                        android:text="@string/dusk_title" />
+                        android:text="@string/sunset_title" />
 
                     <TextView
-                        android:id="@+id/dusk_value"
+                        android:id="@+id/sunset_value"
                         style="@style/Widget.Forecast.TextView.Default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -262,7 +262,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:id="@+id/dawn_image"
+                        android:id="@+id/sunrise_image"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="uvindex"
@@ -270,7 +270,7 @@
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
-                        android:id="@+id/dawn_title"
+                        android:id="@+id/sunrise_title"
                         style="@style/Widget.Forecast.TextView.Default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -278,10 +278,10 @@
                         android:layout_marginLeft="11dp"
                         android:layout_weight="1"
                         android:gravity="start|left"
-                        android:text="@string/dawn_title" />
+                        android:text="@string/sunrise_title" />
 
                     <TextView
-                        android:id="@+id/dawn_value"
+                        android:id="@+id/sunrise_value"
                         style="@style/Widget.Forecast.TextView.Default"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

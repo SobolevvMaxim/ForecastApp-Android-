@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
+import com.example.forecast.di.DateFormat
+import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
@@ -36,7 +38,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     @Inject
+    @DateFormat
     lateinit var dateFormat: SimpleDateFormat
+
+    @Inject
+    @TimeFormat
+    lateinit var timeFormat: SimpleDateFormat
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
@@ -131,7 +138,13 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 temperature_today.text = temperature
                 description_today.text = description
             }
+            uvindex_value.text = uvi.toString()
+            sunrise_value.text = getTime(city.sunrise)
+            sunset_value.text = getTime(city.sunset)
             currentDate.text = forecastDate
+            val humidityValue = "$humidity%"
+            humidity_value.text = humidityValue
+
             setDailyRecyclerView(this)
             setHourlyRecyclerView(this)
         }
@@ -177,6 +190,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             )
         hourly_forecast_recycler.adapter = forecastAdapter
     }
+
+    fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {

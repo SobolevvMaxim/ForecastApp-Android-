@@ -8,8 +8,8 @@
     <string name="default_city">Минск</string>
     <string name="added_cities">Добавленные города</string>
     <string name="uvi_title">УФ-индекс</string>
-    <string name="dusk_title">Закат</string>
-    <string name="dawn_title">Рассвет</string>
+    <string name="sunset_title">Закат</string>
+    <string name="sunrise_title">Рассвет</string>
     <string name="humidity_title">Влажность</string>
     <string name="feels_like_title">Ощущается как</string>
 
