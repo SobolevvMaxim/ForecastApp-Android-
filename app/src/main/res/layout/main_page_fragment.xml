@@ -27,92 +27,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/top_info"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="11dp"
-        android:background="#72151515"
-        android:padding="11dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menu_button">
-
-        <TextView
-            android:id="@+id/currentCity"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/currentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            style="@style/Widget.Forecast.TextView.Small"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currentCity" />
-
-        <ImageView
-            android:id="@+id/big_image"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/today_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/currentDate"
-            tools:ignore="ImageContrastCheck" />
-
-        <TextView
-            android:id="@+id/temperature_today"
-            android:layout_width="wrap_content"
-            android:layout_height="66dp"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:gravity="center"
-            android:textSize="50sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/big_image"
-            app:lineHeight="32dp" />
-
-        <TextView
-            android:id="@+id/description_today"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Widget.Forecast.TextView.Small"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <ImageButton
         android:id="@+id/menu_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
         android:background="#00FFFFFF"
         android:contentDescription="@string/menu_button_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_menu_24"
-        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
+        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck"
+        android:layout_marginStart="16dp" />
 
     <ImageButton
         android:id="@+id/mainAddButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/ic_baseline_add_24"
         android:contentDescription="@string/weather_image"
@@ -120,29 +53,113 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/hourly_forecast_recycler"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="11dp"
-        android:background="#72151515"
-        android:orientation="horizontal"
-        android:padding="11dp"
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_info" />
+        app:layout_constraintTop_toBottomOf="@+id/menu_button">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/daily_forecast_recycler"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="11dp"
-        android:background="#72151515"
-        android:orientation="vertical"
-        android:padding="11dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/top_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="11dp"
+                android:background="#72151515"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mainAddButton">
+
+                <TextView
+                    android:id="@+id/currentCity"
+                    style="@style/Widget.Forecast.TextView.Default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/currentDate"
+                    style="@style/Widget.Forecast.TextView.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currentCity" />
+
+                <ImageView
+                    android:id="@+id/big_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:contentDescription="@string/today_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currentDate"
+                    tools:ignore="ImageContrastCheck" />
+
+                <TextView
+                    android:id="@+id/temperature_today"
+                    style="@style/Widget.Forecast.TextView.Default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="66dp"
+                    android:gravity="center"
+                    android:textSize="50sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/big_image"
+                    app:lineHeight="32dp" />
+
+                <TextView
+                    android:id="@+id/description_today"
+                    style="@style/Widget.Forecast.TextView.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourly_forecast_recycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="11dp"
+                android:background="#72151515"
+                android:orientation="horizontal"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_info">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/daily_forecast_recycler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="11dp"
+                android:background="#72151515"
+                android:orientation="vertical"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
