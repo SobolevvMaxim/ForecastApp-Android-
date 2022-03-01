@@ -71,6 +71,7 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
             city?.let {
+                Log.d("HOUR", "onViewCreated: get city: $it")
                 updateView(it)
                 (activity as ChosenCityInterface).changeChosenInBase(it.id)
             } ?: run {
@@ -137,7 +138,7 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
         city.apply {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
-            temperatures[0].run {
+            dailyTemperatures[0].run {
                 when (description) {
                     "Rain" -> big_image.setImageResource(R.drawable.forecast_rain_icon)
                     "Snow" -> big_image.setImageResource(R.drawable.forecast_snow_icon)
@@ -173,7 +174,7 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
 
         val forecastAdapter =
             WeekForecastAdapter(
-                city.temperatures.subList(1, city.temperatures.size),
+                city.dailyTemperatures.subList(1, city.dailyTemperatures.size),
                 todayDayOfWeek,
                 resources.getStringArray(R.array.days).toList()
             )
