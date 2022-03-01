@@ -4,14 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
-import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.*
+import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.CitiesViewModel
+import com.example.forecast.feature_forecast.presentation.NavigationHost
+import com.example.forecast.feature_forecast.presentation.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +30,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainPageFragment : Fragment(), RightSwipeNavigation {
+class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     companion object {
         fun create() = MainPageFragment()
     }
@@ -38,26 +38,7 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
     @Inject
     lateinit var dateFormat: SimpleDateFormat
 
-    private val mDetector: GestureDetectorCompat by lazy {
-        GestureDetectorCompat(
-            requireActivity().applicationContext,
-            SwipeListener(rightSwipeNavigation = this)
-        )
-    }
-
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.main_page_fragment, container, false).apply {
-            setOnTouchListener { _, p1 ->
-                big_image.performClick()
-                mDetector.onTouchEvent(p1)
-            }
-        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -160,13 +141,7 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        daily_forecast_recycler.apply {
-            layoutManager = recyclerManager
-            setOnTouchListener { _, p1 ->
-                big_image.performClick()
-                mDetector.onTouchEvent(p1)
-            }
-        }
+        daily_forecast_recycler.layoutManager = recyclerManager
 
         val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
         val calendar = Calendar.getInstance()
@@ -209,9 +184,5 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
 
         if (!checkNetwork(context)) offline_mode.visibility =
             View.GONE else offline_mode.visibility = View.VISIBLE
-    }
-
-    override fun onRightSwipe() {
-        showCitiesFragment()
     }
 }

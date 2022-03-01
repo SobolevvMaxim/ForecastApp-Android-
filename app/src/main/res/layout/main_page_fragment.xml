@@ -63,15 +63,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/menu_button">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/top_info"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_margin="11dp"
+                android:layout_weight="1"
                 android:background="#72151515"
                 android:padding="11dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -135,9 +137,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hourly_forecast_recycler"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_margin="11dp"
+                android:layout_weight="1"
                 android:background="#72151515"
                 android:orientation="horizontal"
                 android:padding="11dp"
@@ -149,9 +152,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/daily_forecast_recycler"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
                 android:layout_margin="11dp"
+                android:layout_weight="1"
                 android:background="#72151515"
                 android:orientation="vertical"
                 android:padding="11dp"
@@ -159,7 +163,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
