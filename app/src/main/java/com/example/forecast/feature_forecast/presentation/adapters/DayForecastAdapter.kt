@@ -7,25 +7,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.domain.model.Daily
+import com.example.forecast.domain.model.Hourly
 
-class WeekForecastAdapter(
-    private val forecast: List<Daily>,
-    private val startDayIndex: Int,
-    private val dayOfWeeks: List<String>,
+class DayForecastAdapter(
+    private val forecast: List<Hourly>,
+    private val startTime: Int,
 ) :
-    RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
+    RecyclerView.Adapter<DayForecastAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val temperatureTV: TextView = view.findViewById(R.id.daily_temp)
-        val descriptionTV: TextView = view.findViewById(R.id.daily_description)
-        val date: TextView = view.findViewById(R.id.daily_date)
-        val image: ImageView = view.findViewById(R.id.daily_image)
+        val temperatureTV: TextView = view.findViewById(R.id.hourly_temp)
+        val date: TextView = view.findViewById(R.id.hourly_date)
+        val image: ImageView = view.findViewById(R.id.hourly_image)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.daily_forecast_item, parent, false)
+            .inflate(R.layout.hourly_forecast_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -41,15 +39,14 @@ class WeekForecastAdapter(
                     "Clear" -> image.setImageResource(R.drawable.forecast_sun_icon)
                     else -> image.setImageResource(R.drawable.forecast_clouds_icon)
                 }
-                descriptionTV.text = it.description
-                date.text = getItemDate(position)
+                date.text = getItemTime(position)
             }
         }
     }
 
     override fun getItemCount(): Int = forecast.size
 
-    private fun getItemDate(position: Int): String {
-        return dayOfWeeks[(startDayIndex + position - 1) % 7]
+    private fun getItemTime(position: Int): String {
+        return "${(startTime + position) % 24}:00"
     }
 }

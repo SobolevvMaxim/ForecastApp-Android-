@@ -20,6 +20,7 @@ import com.example.forecast.R
 import com.example.forecast.checkNetwork
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.*
+import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
@@ -150,15 +151,16 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
                 description_today.text = description
             }
             currentDate.text = forecastDate
-            setRecyclerView(this)
+            setDailyRecyclerView(this)
+            setHourlyRecyclerView(this)
         }
     }
 
-    private fun setRecyclerView(city: CityWeather) {
+    private fun setDailyRecyclerView(city: CityWeather) {
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
-        forecast_recycler.apply {
+        daily_forecast_recycler.apply {
             layoutManager = recyclerManager
             setOnTouchListener { _, p1 ->
                 big_image.performClick()
@@ -178,7 +180,27 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
                 todayDayOfWeek,
                 resources.getStringArray(R.array.days).toList()
             )
-        forecast_recycler.adapter = forecastAdapter
+        daily_forecast_recycler.adapter = forecastAdapter
+    }
+
+    private fun setHourlyRecyclerView(city: CityWeather) {
+        val recyclerManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+
+        hourly_forecast_recycler.layoutManager = recyclerManager
+
+        val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
+        val calendar = Calendar.getInstance()
+
+        calendar.time = date
+        val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+
+        val forecastAdapter =
+            DayForecastAdapter(
+                city.hourlyTemperatures,
+                hourOfDay,
+            )
+        hourly_forecast_recycler.adapter = forecastAdapter
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
