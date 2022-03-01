@@ -138,6 +138,12 @@ class MainPageFragment : Fragment(), RightSwipeNavigation {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
             temperatures[0].run {
+                when (description) {
+                    "Rain" -> big_image.setImageResource(R.drawable.forecast_rain_icon)
+                    "Snow" -> big_image.setImageResource(R.drawable.forecast_snow_icon)
+                    "Clear" -> big_image.setImageResource(R.drawable.forecast_sun_icon)
+                    else -> big_image.setImageResource(R.drawable.forecast_clouds_icon)
+                }
                 val temperature = "$temp°"
                 temperature_today.text = temperature
                 description_today.text = description
