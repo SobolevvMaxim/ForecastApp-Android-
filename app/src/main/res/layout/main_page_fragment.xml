@@ -78,13 +78,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/main_info"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
                 android:layout_margin="11dp"
                 android:layout_weight="1"
                 android:background="#72151515"
+                android:orientation="vertical"
                 android:padding="11dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,8 +94,9 @@
                 <TextView
                     android:id="@+id/currentCity"
                     style="@style/Widget.Forecast.TextView.Default"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
+                    android:gravity="center_horizontal"
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +105,7 @@
                 <TextView
                     android:id="@+id/currentDate"
                     style="@style/Widget.Forecast.TextView.Small"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +119,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal"
                     android:contentDescription="@string/today_description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -126,7 +129,7 @@
                 <TextView
                     android:id="@+id/temperature_today"
                     style="@style/Widget.Forecast.TextView.Default"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="66dp"
                     android:gravity="center"
                     android:textSize="50sp"
@@ -138,12 +141,13 @@
                 <TextView
                     android:id="@+id/description_today"
                     style="@style/Widget.Forecast.TextView.Small"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/hourly_forecast_recycler"

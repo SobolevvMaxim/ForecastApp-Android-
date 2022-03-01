@@ -191,7 +191,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         hourly_forecast_recycler.adapter = forecastAdapter
     }
 
-    fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
+    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {
