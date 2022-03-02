@@ -19,6 +19,7 @@
             style="@style/Widget.Forecast.TextView.OfflineMode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#72151515"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

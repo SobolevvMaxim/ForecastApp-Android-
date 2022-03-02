@@ -1,12 +1,16 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.Fragment
@@ -14,7 +18,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.checkNetwork
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
@@ -49,6 +52,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        checkNetwork(context)
 
         viewModel.getAddedCities()
 
@@ -193,13 +198,47 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         hourly_forecast_recycler.adapter = forecastAdapter
     }
 
-    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
+    private fun checkNetwork(context: Context?) {
+        val manager: ConnectivityManager =
+            context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val builder = NetworkRequest.Builder()
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onResume() {
-        super.onResume()
+            builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
 
-        if (!checkNetwork(context)) offline_mode.visibility =
-            View.GONE else offline_mode.visibility = View.VISIBLE
+            val networkRequest = builder.build()
+            manager.registerNetworkCallback(networkRequest,
+                object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        super.onAvailable(network)
+                        Log.i("Test", "Network Available")
+                        onChangeNetworkState(true)
+                    }
+
+                    override fun onUnavailable() {
+                        super.onUnavailable()
+                        Log.i("Test", "No Connection")
+                        onChangeNetworkState(false)
+                    }
+
+                    override fun onLost(network: Network) {
+                        super.onLost(network)
+                        onChangeNetworkState(false)
+                    }
+                })
+
+        }
     }
+
+    fun onChangeNetworkState(available: Boolean) {
+        activity?.runOnUiThread {
+            when (available) {
+                true -> offline_mode.visibility = View.GONE
+                false -> offline_mode.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 }

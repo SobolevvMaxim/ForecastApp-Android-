@@ -15,7 +15,7 @@
         android:permission=""
         android:theme="@style/Theme.Forecast">
 
-        <activity android:name="com.example.forecast.feature_forecast.presentation.MainPageActivity"
+        <activity android:name="com.example.forecast.feature_forecast.presentation.AppActivity"
             android:exported="true"
             android:launchMode="standard">
             <intent-filter>

@@ -1,7 +1,6 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
@@ -17,7 +15,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.checkNetwork
 import com.example.forecast.di.DateFormat
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
@@ -176,14 +173,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     }
 
     private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    override fun onResume() {
-        super.onResume()
-
-        if (!checkNetwork(context)) offline_mode_cities.visibility =
-            View.GONE else offline_mode_cities.visibility = View.VISIBLE
-    }
 
     override fun onLeftSwipe() {
         navigateToMainFragment()
