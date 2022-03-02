@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.example.forecast.domain.model.Daily
 
 
-class TemperatureConverter {
+class DailyTemperatureConverter {
 
     @TypeConverter
     fun fromTemperatures(temperatures: ArrayList<Daily>): String =

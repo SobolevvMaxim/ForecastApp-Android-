@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.example.db.entities.CityWeatherEntity
 
 @Database(entities = [CityWeatherEntity::class], version = 1)
-@TypeConverters(TemperatureConverter::class)
+@TypeConverters(DailyTemperatureConverter::class, HourlyTemperatureConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun citiesDao(): CityWeatherDao

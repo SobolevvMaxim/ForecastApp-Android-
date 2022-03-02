@@ -31,7 +31,7 @@ class CitiesRecyclerAdapter(
         ) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"
             city.text = cityText
-            val temperatureText = "${item.temperatures[0].temp}°"
+            val temperatureText = "${item.dailyTemperatures[0].temp}°"
             temperature.text = temperatureText
 
             highlightIfChosenCity(itemID = item.id, chosenCityInterface)
