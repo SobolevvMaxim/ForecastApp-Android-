@@ -34,7 +34,7 @@
     <style name="Widget.Forecast.TextView.OfflineMode" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/grey</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:visibility">gone</item>
         <item name="android:text">@string/offline_mode</item>
         <item name="android:gravity">center</item>

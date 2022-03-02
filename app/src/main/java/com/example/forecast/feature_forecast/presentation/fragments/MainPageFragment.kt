@@ -1,29 +1,33 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.checkNetwork
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
@@ -50,6 +54,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        checkNetwork(context)
+
         viewModel.getAddedCities()
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
@@ -61,6 +67,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
             city?.let {
                 Log.d("HOUR", "onViewCreated: get city: $it")
+                checkToUpdate(it)
                 updateView(it)
                 (activity as ChosenCityInterface).changeChosenInBase(it.id)
             } ?: run {
@@ -83,6 +90,22 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
+    private fun checkToUpdate(city: CityWeather) {
+        val cityDate = Calendar.getInstance()
+        val currentDate = Calendar.getInstance()
+
+        cityDate.apply {
+            time = getCityForecastDate(city)
+            add(Calendar.HOUR, 1)
+        }
+
+        if (cityDate.time.before(currentDate.time) && networkAvailable()) {
+            viewModel.updateCityForecast(city)
+            updateProgressBar(true)
+            Log.d("UPDATE", "Updating forecast...")
+        }
+    }
+
     @SuppressLint("InflateParams")
     private fun addCityDialog() {
         AlertDialog.Builder(requireContext()).create().apply {
@@ -98,8 +121,17 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                         Toast.LENGTH_LONG
                     ).show()
                     else -> {
-                        viewModel.searchCityForecastByName(cityInput)
-                        updateProgressBar(true)
+                        when (networkAvailable()) {
+                            true -> {
+                                viewModel.searchCityForecastByName(cityInput)
+                                updateProgressBar(true)
+                            }
+                            false -> Toast.makeText(
+                                context,
+                                "Network unavailable now!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -113,7 +145,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     private fun updateProgressBar(visible: Boolean) {
         when (visible) {
             true -> loading_city_progress.visibility = View.VISIBLE
-            false -> loading_city_progress.visibility = View.GONE
+            false -> loading_city_progress.visibility = View.INVISIBLE
         }
     }
 
@@ -193,13 +225,50 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         hourly_forecast_recycler.adapter = forecastAdapter
     }
 
-    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
+    private fun checkNetwork(context: Context?) {
+        val manager: ConnectivityManager =
+            context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val builder = NetworkRequest.Builder()
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    override fun onResume() {
-        super.onResume()
+            builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
 
-        if (!checkNetwork(context)) offline_mode.visibility =
-            View.GONE else offline_mode.visibility = View.VISIBLE
+            val networkRequest = builder.build()
+            manager.registerNetworkCallback(networkRequest,
+                object : ConnectivityManager.NetworkCallback() {
+                    override fun onAvailable(network: Network) {
+                        super.onAvailable(network)
+                        onChangeNetworkState(true)
+                    }
+
+                    override fun onUnavailable() {
+                        super.onUnavailable()
+                        onChangeNetworkState(false)
+                    }
+
+                    override fun onLost(network: Network) {
+                        super.onLost(network)
+                        onChangeNetworkState(false)
+                    }
+                })
+
+        }
     }
+
+    fun onChangeNetworkState(available: Boolean) {
+        activity?.runOnUiThread {
+            when (available) {
+                true -> offline_mode.visibility = View.GONE
+                false -> offline_mode.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun networkAvailable(): Boolean = !offline_mode.isVisible
+
+    private fun getCityForecastDate(city: CityWeather) =
+        dateFormat.parse(city.forecastDate) ?: Date(1)
+
+    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 }

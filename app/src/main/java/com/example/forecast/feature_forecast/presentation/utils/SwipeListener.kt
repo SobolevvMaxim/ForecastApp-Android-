@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation
+package com.example.forecast.feature_forecast.presentation.utils
 
 import android.view.GestureDetector
 import android.view.MotionEvent

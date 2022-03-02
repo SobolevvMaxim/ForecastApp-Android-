@@ -3,7 +3,7 @@
     <string name="description_default">Sunny</string>
     <string name="date_default">01.01.2000</string>
     <string name="city_default_view">City, NN</string>
-    <string name="default_temperature">10°</string>
+    <string name="default_temperature">00°</string>
     <string name="default_main_temperature">25°</string>
     <string name="default_city">Минск</string>
     <string name="added_cities">Добавленные города</string>
@@ -12,6 +12,7 @@
     <string name="sunrise_title">Рассвет</string>
     <string name="humidity_title">Влажность</string>
     <string name="feels_like_title">Ощущается как</string>
+    <string name="no_value">- -</string>
 
         <!--    image descriptions-->
     <string name="forecast_default_image">forecast_default_image</string>
