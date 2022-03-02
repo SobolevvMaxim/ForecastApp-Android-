@@ -6,9 +6,10 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/background_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/background_description"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
