@@ -1,8 +1,8 @@
 # ForecastApp-Android-
 [Download apk](https://github.com/SobolevvMaxim/ForecastApp-Android-/blob/master/apk/app-forecast.apk)
 ## Preview
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.png) ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_2.png)
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_3.png)
+![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.jpg) ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_2.jpg)
+![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_3.jpg)
 ## Stack
 - Kotlin
 - MVVM
