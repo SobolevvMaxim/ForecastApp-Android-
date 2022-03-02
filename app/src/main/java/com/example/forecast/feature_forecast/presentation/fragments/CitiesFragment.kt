@@ -2,7 +2,6 @@ package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +16,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
-import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
+import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import java.text.SimpleDateFormat
@@ -51,14 +50,8 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
             { city ->
-                val cityDate: Date = getCityForecastDate(city)
-
-                if (!DateUtils.isToday(cityDate.time)) {
-                    deprecatedForecastDialog(city)
-                } else {
-                    changeChosenCity(city.id)
-                    navigateToMainFragment()
-                }
+                changeChosenCity(city.id)
+                navigateToMainFragment()
             }, { cityToDelete ->
                 deleteCityDialog(city = cityToDelete)
             }),
@@ -102,23 +95,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         super.onCreate(savedInstanceState)
 
         setHasOptionsMenu(true)
-    }
-
-    private fun deprecatedForecastDialog(city: CityWeather) {
-        AlertDialog.Builder(requireContext()).create().apply {
-            setTitle(getString(R.string.deprecated_forecast_title))
-            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                viewModel.updateCityForecast(city)
-                Toast.makeText(context, "Updating forecast...", Toast.LENGTH_SHORT).show()
-                navigateToMainFragment()
-            }
-            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
-                dialog.cancel()
-                changeChosenCity(city.id)
-                navigateToMainFragment()
-            }
-            show()
-        }
     }
 
     private fun deleteCityDialog(city: CityWeather) {

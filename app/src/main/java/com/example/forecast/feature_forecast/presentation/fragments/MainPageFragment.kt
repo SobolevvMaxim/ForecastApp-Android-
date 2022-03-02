@@ -66,6 +66,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
             city?.let {
                 Log.d("HOUR", "onViewCreated: get city: $it")
+                checkToUpdate(it)
                 updateView(it)
                 (activity as ChosenCityInterface).changeChosenInBase(it.id)
             } ?: run {
@@ -85,6 +86,22 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         mainAddButton.setOnClickListener {
             addCityDialog()
+        }
+    }
+
+    private fun checkToUpdate(city: CityWeather) {
+        val cityDate = Calendar.getInstance()
+        val currentDate = Calendar.getInstance()
+
+        cityDate.apply {
+            time = getCityForecastDate(city)
+            add(Calendar.HOUR, 1)
+        }
+
+        if (cityDate.time.before(currentDate.time)) {
+            viewModel.updateCityForecast(city)
+            updateProgressBar(true)
+            Log.d("UPDATE", "Updating forecast...")
         }
     }
 
@@ -212,13 +229,11 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
-                        Log.i("Test", "Network Available")
                         onChangeNetworkState(true)
                     }
 
                     override fun onUnavailable() {
                         super.onUnavailable()
-                        Log.i("Test", "No Connection")
                         onChangeNetworkState(false)
                     }
 
@@ -239,6 +254,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             }
         }
     }
+
+    private fun getCityForecastDate(city: CityWeather) = dateFormat.parse(city.forecastDate) ?: Date(1)
 
     private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 }
