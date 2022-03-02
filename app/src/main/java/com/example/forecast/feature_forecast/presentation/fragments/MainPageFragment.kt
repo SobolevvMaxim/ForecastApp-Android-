@@ -65,6 +65,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
+            swipe_layout.isRefreshing = false
             city?.let {
                 Log.d("HOUR", "onViewCreated: get city: $it")
                 checkToUpdate(it)
@@ -88,6 +89,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         mainAddButton.setOnClickListener {
             addCityDialog()
         }
+
+        swipe_layout.setOnRefreshListener {
+            currentCity.text?.let {
+                viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
+            }
+        }
     }
 
     private fun checkToUpdate(city: CityWeather) {
@@ -100,10 +107,14 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         if (cityDate.time.before(currentDate.time) && networkAvailable()) {
-            viewModel.updateCityForecast(city)
-            updateProgressBar(true)
-            Log.d("UPDATE", "Updating forecast...")
+            updateCityForecast(city)
         }
+    }
+
+    private fun updateCityForecast(city: CityWeather) {
+        viewModel.updateCityForecast(city)
+        updateProgressBar(true)
+        Log.d("UPDATE", "Updating forecast...")
     }
 
     @SuppressLint("InflateParams")

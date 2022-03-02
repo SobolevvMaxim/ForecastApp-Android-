@@ -25,4 +25,17 @@ data class CityWeather(
         name = name,
         country = country
     )
+
+    override fun equals(other: Any?): Boolean {
+        if (other is CityWeather) {
+            return other.id == this.id
+        }
+        return (other == this)
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        return result
+    }
 }

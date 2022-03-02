@@ -64,6 +64,7 @@ dependencies {
     implementation deps.fragment.runtime_ktx
     implementation deps.material
     implementation deps.constraint_layout
+    implementation deps.refresh_layout
 }
 
 kapt {

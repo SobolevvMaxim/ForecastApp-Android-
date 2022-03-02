@@ -19,6 +19,7 @@ versions.retrofit = "2.9.0"
 versions.retrofit_coroutines = "0.9.2"
 versions.interceptor = "4.9.0"
 versions.room = "2.3.0"
+versions.swiperefresh = "1.1.0"
 versions.gson = "2.9.0"
 versions.hilt = "2.38.1"
 versions.junit = "4.13.2"
@@ -43,6 +44,8 @@ deps.app_compat = "androidx.appcompat:appcompat:$versions.appcompat"
 deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.constraint_layout"
 
 deps.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
+
+deps.refresh_layout = "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swiperefresh"
 
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.gradle"
 deps.kotlin_gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin_gradle"
