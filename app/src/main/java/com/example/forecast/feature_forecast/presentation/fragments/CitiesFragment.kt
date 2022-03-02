@@ -1,6 +1,5 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -122,7 +121,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         parentFragmentManager.popBackStack()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private fun setRecyclerView() {
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -130,6 +128,7 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         cities_recyclerView.apply {
             layoutManager = recyclerManager
             setOnTouchListener { _, p1 ->
+                location_image.performClick()
                 mDetector.onTouchEvent(p1)
             }
         }

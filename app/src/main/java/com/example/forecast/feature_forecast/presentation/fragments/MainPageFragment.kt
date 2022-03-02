@@ -265,7 +265,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
-    fun networkAvailable(): Boolean = !offline_mode.isVisible
+    private fun networkAvailable(): Boolean = !offline_mode.isVisible
 
     private fun getCityForecastDate(city: CityWeather) =
         dateFormat.parse(city.forecastDate) ?: Date(1)
