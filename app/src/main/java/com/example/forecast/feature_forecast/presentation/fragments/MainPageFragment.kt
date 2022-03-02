@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -98,7 +99,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             add(Calendar.HOUR, 1)
         }
 
-        if (cityDate.time.before(currentDate.time)) {
+        if (cityDate.time.before(currentDate.time) && networkAvailable()) {
             viewModel.updateCityForecast(city)
             updateProgressBar(true)
             Log.d("UPDATE", "Updating forecast...")
@@ -120,8 +121,17 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                         Toast.LENGTH_LONG
                     ).show()
                     else -> {
-                        viewModel.searchCityForecastByName(cityInput)
-                        updateProgressBar(true)
+                        when (networkAvailable()) {
+                            true -> {
+                                viewModel.searchCityForecastByName(cityInput)
+                                updateProgressBar(true)
+                            }
+                            false -> Toast.makeText(
+                                context,
+                                "Network unavailable now!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -255,7 +265,10 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
-    private fun getCityForecastDate(city: CityWeather) = dateFormat.parse(city.forecastDate) ?: Date(1)
+    fun networkAvailable(): Boolean = !offline_mode.isVisible
+
+    private fun getCityForecastDate(city: CityWeather) =
+        dateFormat.parse(city.forecastDate) ?: Date(1)
 
     private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 }

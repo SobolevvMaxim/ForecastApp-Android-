@@ -98,6 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:gravity="center_horizontal"
+                    android:text="@string/no_value"
                     android:textSize="24sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -109,6 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="32dp"
                     android:gravity="center"
+                    android:text="@string/date_default"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/currentCity" />
@@ -125,6 +127,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/currentDate"
+                    app:srcCompat="@drawable/forecast_clouds_icon"
                     tools:ignore="ImageContrastCheck" />
 
                 <TextView
@@ -133,6 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="66dp"
                     android:gravity="center"
+                    android:text="@string/default_temperature"
                     android:textSize="50sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -222,7 +226,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right|end"
-                        android:text="0.84" />
+                        android:text="@string/no_value" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -257,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right|end"
-                        android:text="08:23" />
+                        android:text="@string/no_value" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -292,7 +296,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right|end"
-                        android:text="18:56" />
+                        android:text="@string/no_value" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -327,7 +331,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="right|end"
-                        android:text="50%" />
+                        android:text="@string/no_value" />
                 </LinearLayout>
             </LinearLayout>
 
