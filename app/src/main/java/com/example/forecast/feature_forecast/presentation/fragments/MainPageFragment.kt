@@ -21,12 +21,12 @@ import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.NavigationHost
 import com.example.forecast.feature_forecast.presentation.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.main_page_fragment.*

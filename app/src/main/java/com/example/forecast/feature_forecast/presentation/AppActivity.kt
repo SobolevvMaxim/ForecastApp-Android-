@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.forecast.R
 import com.example.forecast.feature_forecast.presentation.fragments.CitiesFragment
 import com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 
 const val P_LOG = "PARCELABLE_LOG"

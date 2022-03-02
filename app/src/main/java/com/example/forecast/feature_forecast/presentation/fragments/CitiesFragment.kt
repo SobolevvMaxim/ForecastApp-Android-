@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.LeftSwipeNavigation
-import com.example.forecast.feature_forecast.presentation.SwipeListener
+import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
+import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import dagger.hilt.android.AndroidEntryPoint
