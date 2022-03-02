@@ -152,7 +152,9 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun setDailyRecyclerView(city: CityWeather) {
         val recyclerManager: RecyclerView.LayoutManager =
-            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+            object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
+                override fun canScrollVertically(): Boolean = false
+            }
 
         daily_forecast_recycler.layoutManager = recyclerManager
 
