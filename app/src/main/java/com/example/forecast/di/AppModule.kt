@@ -23,9 +23,15 @@ object AppModule {
         return context.getString(R.string.get_city_extra)
     }
 
+    @DateFormat
     @Singleton
     @Provides
-    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    fun provideDateFormat() = SimpleDateFormat("dd.MM.yyyy 'at' HH:mm", Locale.getDefault())
+
+    @TimeFormat
+    @Singleton
+    @Provides
+    fun provideTimeFormat() = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     @Provides
     fun ioCoroutineDispatcherProvider(): CoroutineDispatcher = Dispatchers.IO
@@ -33,8 +39,8 @@ object AppModule {
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class MainCoroutineDispatcher
+annotation class DateFormat
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class IOCoroutineDispatcher
+annotation class TimeFormat

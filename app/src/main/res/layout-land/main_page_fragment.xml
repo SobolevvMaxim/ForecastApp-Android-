@@ -1,123 +1,353 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/offline_mode"
+    <ImageView
+        android:id="@+id/background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.Forecast.TextView.OfflineMode"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/currentCity"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/roboto"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/currentDate"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="72dp"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        android:textColor="@color/grey"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/mainAddButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginRight="17dp"
-        android:background="@drawable/ic_cancel_24px_outlined"
-        android:contentDescription="@string/weather_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/currentCity" />
-
-    <View
-        android:id="@+id/big_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/image2"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/background_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/top_screen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_alignParentLeft="true" />
+        app:srcCompat="@drawable/back" />
 
-    <TextView
-        android:id="@+id/temperature_today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:gravity="center"
-        android:textColor="#000000"
-        android:textSize="50sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/big_image"
-        app:lineHeight="32dp" />
-
-    <TextView
-        android:id="@+id/description_today"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto"
-        android:textColor="@color/grey"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/temperature_today"
-        app:layout_constraintStart_toStartOf="@+id/temperature_today"
-        app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar_city"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/llmain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/llmain"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_screen"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginLeft="21dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp"
-        android:divider="@drawable/separtor"
-        android:dividerPadding="3dp"
-        android:orientation="horizontal"
-        android:showDividers="middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/offline_mode"
+            style="@style/Widget.Forecast.TextView.OfflineMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#72151515"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/loading_city_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </com.google.android.material.progressindicator.LinearProgressIndicator>
+
+        <ImageButton
+            android:id="@+id/menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="12dp"
+            android:background="#00FFFFFF"
+            android:contentDescription="@string/menu_button_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loading_city_progress"
+            app:srcCompat="@drawable/ic_baseline_menu_24"
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/mainAddButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/ic_baseline_add_24"
+            android:contentDescription="@string/weather_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/loading_city_progress"
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_screen">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/forecast_recycler"
+        <LinearLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal" />
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/main_info"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="11dp"
+                android:layout_weight="1"
+                android:background="#72151515"
+                android:orientation="vertical"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mainAddButton">
+
+                <TextView
+                    android:id="@+id/currentCity"
+                    style="@style/Widget.Forecast.TextView.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/no_value"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/currentDate"
+                    style="@style/Widget.Forecast.TextView.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:text="@string/date_default"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currentCity" />
+
+                <ImageView
+                    android:id="@+id/big_image"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal"
+                    android:contentDescription="@string/today_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/currentDate"
+                    app:srcCompat="@drawable/forecast_clouds_icon"
+                    tools:ignore="ImageContrastCheck" />
+
+                <TextView
+                    android:id="@+id/temperature_today"
+                    style="@style/Widget.Forecast.TextView.Default"
+                    android:layout_width="match_parent"
+                    android:layout_height="66dp"
+                    android:gravity="center"
+                    android:text="@string/default_temperature"
+                    android:textSize="50sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/big_image"
+                    app:lineHeight="32dp" />
+
+                <TextView
+                    android:id="@+id/description_today"
+                    style="@style/Widget.Forecast.TextView.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/hourly_forecast_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginStart="11dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginEnd="11dp"
+                android:layout_marginRight="11dp"
+                android:layout_weight="1"
+                android:background="#72151515"
+                android:orientation="horizontal"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/main_info" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/daily_forecast_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="11dp"
+                android:layout_weight="1"
+                android:background="#72151515"
+                android:orientation="vertical"
+                android:padding="11dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
+
+            <LinearLayout
+                android:id="@+id/forecast_info"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="11dp"
+                android:layout_weight="1"
+                android:background="#72151515"
+                android:orientation="vertical"
+                android:padding="11dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/uvindex_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="uvindex"
+                        app:srcCompat="@drawable/forecast_uvindex_icon"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <TextView
+                        android:id="@+id/uvindex"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginLeft="11dp"
+                        android:layout_weight="1"
+                        android:gravity="start|left"
+                        android:text="@string/uvi_title" />
+
+                    <TextView
+                        android:id="@+id/uvindex_value"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right|end"
+                        android:text="@string/no_value" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/sunset_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="dusk"
+                        app:srcCompat="@drawable/forecast_sunset_icon"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <TextView
+                        android:id="@+id/sunset_title"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginLeft="11dp"
+                        android:layout_weight="1"
+                        android:gravity="start|left"
+                        android:text="@string/sunset_title" />
+
+                    <TextView
+                        android:id="@+id/sunset_value"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right|end"
+                        android:text="@string/no_value" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/sunrise_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="uvindex"
+                        app:srcCompat="@drawable/forecast_sunrise_icon"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <TextView
+                        android:id="@+id/sunrise_title"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginLeft="11dp"
+                        android:layout_weight="1"
+                        android:gravity="start|left"
+                        android:text="@string/sunrise_title" />
+
+                    <TextView
+                        android:id="@+id/sunrise_value"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right|end"
+                        android:text="@string/no_value" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/humidity_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:contentDescription="humidity"
+                        app:srcCompat="@drawable/forecast_humidity_icon"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <TextView
+                        android:id="@+id/humidity_title"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="11dp"
+                        android:layout_marginLeft="11dp"
+                        android:layout_weight="1"
+                        android:gravity="start|left"
+                        android:text="@string/humidity_title" />
+
+                    <TextView
+                        android:id="@+id/humidity_value"
+                        style="@style/Widget.Forecast.TextView.Default"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right|end"
+                        android:text="@string/no_value" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

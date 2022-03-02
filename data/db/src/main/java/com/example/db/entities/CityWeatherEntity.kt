@@ -4,9 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.db.TemperatureConverter
+import com.example.db.DailyTemperatureConverter
+import com.example.db.HourlyTemperatureConverter
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily
+import com.example.forecast.domain.model.Hourly
 
 @Entity(tableName = com.example.db.TABLE_NAME)
 data class CityWeatherEntity(
@@ -15,22 +17,46 @@ data class CityWeatherEntity(
     @ColumnInfo(name = "country") val country: String,
     var lat: String = "",
     var lon: String = "",
-    @TypeConverters(TemperatureConverter::class) var temperatures: ArrayList<Daily>,
+    @TypeConverters(DailyTemperatureConverter::class) var dailyTemperatures: ArrayList<Daily>,
+    @TypeConverters(HourlyTemperatureConverter::class) var hourlyTemperatures: ArrayList<Hourly>,
+    val sunrise: String,
+    val sunset: String,
+    val feels_like: Double,
+    val humidity: Int,
+    val uvi: Double,
     @ColumnInfo(name = "forecastDate") val forecastDate: String,
 ) {
     fun toCityWeather(): CityWeather {
         return CityWeather(
-            id = id,
-            name = name,
-            country = country,
-            lat = lat,
-            lon = lon,
-            temperatures = temperatures,
-            forecastDate = forecastDate
+            id,
+            name,
+            country,
+            lat,
+            lon,
+            dailyTemperatures,
+            hourlyTemperatures,
+            sunrise,
+            sunset,
+            feels_like,
+            humidity,
+            uvi,
+            forecastDate
         )
     }
 }
 
 fun CityWeather.toCityWeatherEntity() = CityWeatherEntity(
-    id, name, country, lat, lon, temperatures, forecastDate
+    id,
+    name,
+    country,
+    lat,
+    lon,
+    dailyTemperatures,
+    hourlyTemperatures,
+    sunrise,
+    sunset,
+    feels_like,
+    humidity,
+    uvi,
+    forecastDate
 )

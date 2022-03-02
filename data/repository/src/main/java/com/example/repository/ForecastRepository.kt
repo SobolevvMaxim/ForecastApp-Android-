@@ -43,19 +43,17 @@ class ForecastRepository @Inject constructor(
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.toCityWeather(city, chosen = addedCities.isNullOrEmpty())
+                    ?.toCityWeather(city)
                     ?: throw Exception("empty data")
             }
         }
     }
 
-    override suspend fun writeCityToBase(city: CityWeather): Set<CityWeather> {
+    override suspend fun writeCityToBase(city: CityWeather) {
         withContext(dispatcher) {
             cityWeatherDao.insert(city = city.toCityWeatherEntity())
             insertInMemory(city = city)
         }
-
-        return addedCities ?: emptySet()
     }
 
     private fun insertInMemory(city: CityWeather) {
@@ -101,6 +99,12 @@ class ForecastRepository @Inject constructor(
 
         return addedCities ?: emptySet()
     }
+
+    override suspend fun getCityByID(cityID: String): CityWeather? =
+        withContext(dispatcher) {
+            cityWeatherDao.getCityByID(cityID)?.toCityWeather()
+        }
+
 
     private fun deleteFromMemory(city: CityWeather) {
         addedCities = addedCities?.toMutableSet()?.let { cities ->

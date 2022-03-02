@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
@@ -31,7 +31,7 @@ class CitiesRecyclerAdapter(
         ) = with(itemView) {
             val cityText = "${item.name}, ${item.country}"
             city.text = cityText
-            val temperatureText = "${item.temperatures[0].temp}°"
+            val temperatureText = "${item.dailyTemperatures[0].temp}°"
             temperature.text = temperatureText
 
             highlightIfChosenCity(itemID = item.id, chosenCityInterface)
@@ -68,8 +68,8 @@ class CitiesRecyclerAdapter(
         holder.bind(getItem(position), listener, this)
     }
 
-    override fun changeChosenInBase(newChosenIndex: String) {
-        chosenID = newChosenIndex
+    override fun changeChosenInBase(newChosenID: String) {
+        chosenID = newChosenID
     }
 
     override fun getChosenCityID(): String {

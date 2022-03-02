@@ -6,7 +6,13 @@ data class CityWeather(
     val country: String,
     var lat: String = "",
     var lon: String = "",
-    var temperatures: ArrayList<Daily>,
+    var dailyTemperatures: ArrayList<Daily>,
+    var hourlyTemperatures: ArrayList<Hourly>,
+    val sunrise: String,
+    val sunset: String,
+    val feels_like: Double,
+    val humidity: Int,
+    val uvi: Double,
     var forecastDate: String,
 ) {
 

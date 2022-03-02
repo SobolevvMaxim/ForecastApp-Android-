@@ -3,9 +3,16 @@
     <string name="description_default">Sunny</string>
     <string name="date_default">01.01.2000</string>
     <string name="city_default_view">City, NN</string>
-    <string name="default_temperature">10°</string>
-    <string name="default_main_temperature">25</string>
-    <string name="default_city">Minsk</string>
+    <string name="default_temperature">00°</string>
+    <string name="default_main_temperature">25°</string>
+    <string name="default_city">Минск</string>
+    <string name="added_cities">Добавленные города</string>
+    <string name="uvi_title">УФ-индекс</string>
+    <string name="sunset_title">Закат</string>
+    <string name="sunrise_title">Рассвет</string>
+    <string name="humidity_title">Влажность</string>
+    <string name="feels_like_title">Ощущается как</string>
+    <string name="no_value">- -</string>
 
         <!--    image descriptions-->
     <string name="forecast_default_image">forecast_default_image</string>
@@ -19,12 +26,14 @@
         <!--    app constants-->
     <string name="app_name">Forecast_Sobolev</string>
     <string name="offline_mode">Offline mode</string>
-    <string name="city_fragment_title">Choose the city</string>
 
         <!--    other-->
-    <string name="add_city_title">add_city</string>
     <string name="get_city_extra">CHOSEN_CITY</string>
     <string name="city_name">City name</string>
     <string name="chosen_pref_key">CHOSEN_CITY</string>
     <string name="default_chosen_id">0</string>
+    <string name="menu_button_description">Menu</string>
+    <string name="location_description">Location</string>
+    <string name="today_description">Today Description View</string>
+    <string name="background_description">background</string>
 </resources>
