@@ -200,7 +200,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="uvindex"
-                        app:srcCompat="@drawable/forecast_sun_icon"
+                        app:srcCompat="@drawable/forecast_uvindex_icon"
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
@@ -235,7 +235,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="dusk"
-                        app:srcCompat="@drawable/forecast_sun_icon"
+                        app:srcCompat="@drawable/forecast_sunset_icon"
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
@@ -270,7 +270,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="uvindex"
-                        app:srcCompat="@drawable/forecast_sun_icon"
+                        app:srcCompat="@drawable/forecast_sunrise_icon"
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
@@ -305,7 +305,7 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:contentDescription="humidity"
-                        app:srcCompat="@drawable/forecast_sun_icon"
+                        app:srcCompat="@drawable/forecast_humidity_icon"
                         tools:ignore="ImageContrastCheck" />
 
                     <TextView
