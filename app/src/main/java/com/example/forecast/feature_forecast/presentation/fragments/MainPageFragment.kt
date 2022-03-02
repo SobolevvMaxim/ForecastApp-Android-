@@ -135,7 +135,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     private fun updateProgressBar(visible: Boolean) {
         when (visible) {
             true -> loading_city_progress.visibility = View.VISIBLE
-            false -> loading_city_progress.visibility = View.GONE
+            false -> loading_city_progress.visibility = View.INVISIBLE
         }
     }
 
