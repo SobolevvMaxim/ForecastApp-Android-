@@ -24,7 +24,6 @@ import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -146,8 +145,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     private fun updateRecyclerView(cities: Set<CityWeather>) {
         citiesRecyclerAdapter.submitList(cities.toList())
     }
-
-    private fun getCityForecastDate(city: CityWeather) = format.parse(city.forecastDate) ?: Date(1)
 
     override fun onLeftSwipe() {
         navigateToMainFragment()

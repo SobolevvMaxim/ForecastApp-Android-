@@ -35,4 +35,5 @@
     <string name="menu_button_description">Menu</string>
     <string name="location_description">Location</string>
     <string name="today_description">Today Description View</string>
+    <string name="background_description">background</string>
 </resources>
