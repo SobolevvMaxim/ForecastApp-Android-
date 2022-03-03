@@ -13,6 +13,9 @@
     <string name="humidity_title">Влажность</string>
     <string name="feels_like_title">Ощущается как</string>
     <string name="no_value">- -</string>
+    <string name="main_log">MAIN_LOG</string>
+    <string name="network_unavailable">Network unavailable now!</string>
+    <string name="incorrect_input">Incorrect input!</string>
 
         <!--    image descriptions-->
     <string name="forecast_default_image">forecast_default_image</string>
@@ -22,6 +25,10 @@
     <string name="add_city_dialog_title">Please put the city name</string>
     <string name="deprecated_forecast_title">Do you want to update deprecated forecast?</string>
     <string name="delete_city_title">Do you want to delete city: </string>
+
+    <!--        dialog buttons-->
+    <string name="positive_button">OK</string>
+    <string name="negative_button">Cancel</string>
 
         <!--    app constants-->
     <string name="app_name">Forecast_Sobolev</string>

@@ -13,8 +13,6 @@ import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterf
 import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 
-const val P_LOG = "PARCELABLE_LOG"
-
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
     ChosenCityInterface {
@@ -33,18 +31,19 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
             putString(getString(R.string.chosen_pref_key), newChosenID)
             apply()
         }
-        Log.d("CHOSEN", "changeChosenInBase: $newChosenID")
+        Log.d(getString(R.string.main_log), "Changing chosen in base (AppActivity): $newChosenID")
     }
 
     override fun getChosenCityID(): String {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
         val defaultValue = resources.getString(R.string.default_chosen_id)
         val chosenIndex = sharedPref.getString(getString(R.string.chosen_pref_key), defaultValue)
-        Log.d("CHOSEN", "getChosenCItyID: $chosenIndex")
+        Log.d(getString(R.string.main_log), "Getting chosen from base (AppActivity): $chosenIndex")
         return chosenIndex ?: "0"
     }
 
     private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
+        Log.d(getString(R.string.main_log), "Navigating to :$fragment")
         val transaction = supportFragmentManager.beginTransaction()
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
 //            .setCustomAnimations(
@@ -69,6 +68,4 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
     override fun navigateToCitiesFragment() {
         navigateTo(CitiesFragment.create(), addToBackstack = true)
     }
-
-
 }

@@ -73,16 +73,18 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.getAddedCities()
+            viewModel.getAddedCities(post = true)
+            Log.d(getString(R.string.main_log), "Loading cities from base...")
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
+            Log.d(getString(R.string.main_log), "Observe cities: $cities")
             updateRecyclerView(cities)
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
             Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
-            Log.d("MY_ERROR", "error: $error")
+            Log.d(getString(R.string.main_log), "Observe error: $error")
         }
 
         setRecyclerView()
@@ -101,7 +103,10 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
             setTitle(title)
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
-                    false -> viewModel.deleteCity(city)
+                    false -> {
+                        viewModel.deleteCity(city)
+                        Log.d(getString(R.string.main_log), "Deleting city: $city")
+                    }
                     true -> Toast.makeText(
                         requireContext(),
                         "Unable to delete chosen city!",
@@ -121,6 +126,7 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     }
 
     private fun setRecyclerView() {
+        Log.d(getString(R.string.main_log), "Setting cities recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
@@ -137,12 +143,14 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     }
 
     private fun changeChosenCity(id: String) {
+        Log.d(getString(R.string.main_log), "Changing chosen from cities fragment (new chosen id: $id)")
         viewModel.getCityByID(id)
         (activity as ChosenCityInterface).changeChosenInBase(id)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(id)
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
+        Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
         citiesRecyclerAdapter.submitList(cities.toList())
     }
 
