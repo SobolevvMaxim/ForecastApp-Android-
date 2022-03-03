@@ -73,7 +73,7 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.getAddedCities()
+            viewModel.getAddedCities(post = true)
             Log.d(getString(R.string.main_log), "Loading cities from base...")
         }
 

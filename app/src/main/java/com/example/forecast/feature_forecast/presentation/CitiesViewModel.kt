@@ -92,11 +92,12 @@ class CitiesViewModel @Inject constructor(
         }
     }
 
-    fun getAddedCities() {
+    fun getAddedCities(post: Boolean) {
         viewModelScope.launch {
             delay(500)
             val forecasts = loadForecastsUseCase()
-            _citiesLiveData.postValue(forecasts)
+            if (post)
+                _citiesLiveData.postValue(forecasts)
         }
     }
 
