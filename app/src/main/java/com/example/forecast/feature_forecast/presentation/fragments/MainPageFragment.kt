@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
@@ -59,8 +58,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             onChangeNetworkState(false)
 
         setNetworkListener(context)
-
-        viewModel.getAddedCities()
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
 
@@ -164,9 +161,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             }
             setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.negative_button)) { dialog, _ ->
                 dialog.cancel()
-            }
-            setOnDismissListener {
-                hideKeyboard()
             }
             show()
         }
@@ -309,14 +303,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 true -> offline_mode.visibility = View.GONE
                 false -> offline_mode.visibility = View.VISIBLE
             }
-        }
-    }
-
-    private fun hideKeyboard() {
-        activity?.currentFocus?.let { view ->
-            val imm =
-                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
 

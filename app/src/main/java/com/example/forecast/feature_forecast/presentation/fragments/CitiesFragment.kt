@@ -155,7 +155,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     }
 
     override fun onLeftSwipe() {
-        Log.d(getString(R.string.main_log), "Navigating to main fragment...")
         navigateToMainFragment()
     }
 }
