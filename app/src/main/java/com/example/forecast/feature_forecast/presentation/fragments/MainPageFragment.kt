@@ -24,7 +24,6 @@ import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
-import com.example.forecast.feature_forecast.presentation.P_LOG
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
@@ -72,7 +71,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
             swipe_layout.isRefreshing = false
             city?.let {
-                Log.d("HOUR", "onViewCreated: get city: $it")
+                Log.d(getString(R.string.main_log), "Observe city: $it")
                 checkToUpdate(it)
                 updateView(it)
                 (activity as ChosenCityInterface).changeChosenInBase(it.id)
@@ -83,7 +82,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            Log.d(P_LOG, "ERROR:$it")
+            Log.d(getString(R.string.main_log), "Observe error:$it")
             Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
         }
 
@@ -100,12 +99,13 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 if (!networkAvailable()) {
                     Toast.makeText(
                         context,
-                        "Network unavailable now!",
+                        getString(R.string.network_unavailable),
                         Toast.LENGTH_SHORT
                     ).show()
                     swipe_layout.isRefreshing = false
                     return@setOnRefreshListener
                 }
+                Log.d(getString(R.string.main_log), "Updating city: $it")
                 viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
             }
         }
@@ -121,6 +121,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         if (cityDate.time.before(currentDate.time) && networkAvailable()) {
+            Log.d(getString(R.string.main_log), "AutoUpdating city: $city")
             updateCityForecast(city)
         }
     }
@@ -128,7 +129,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     private fun updateCityForecast(city: CityWeather) {
         viewModel.updateCityForecast(city)
         updateProgressBar(true)
-        Log.d("UPDATE", "Updating forecast...")
+        Log.d(getString(R.string.main_log), "Updating forecast...")
     }
 
     @SuppressLint("InflateParams")
@@ -136,31 +137,32 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         AlertDialog.Builder(requireContext()).create().apply {
             val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.add_city_dialog, null))
-            setButton(AlertDialog.BUTTON_POSITIVE, "OK") { _, _ ->
+            setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.positive_button)) { _, _ ->
                 val cityInput = city_edit_text.text.toString()
 
                 when (cityInput.trimmedLength()) {
                     in 0..3 -> Toast.makeText(
                         requireContext(),
-                        "Incorrect input!",
+                        getString(R.string.incorrect_input),
                         Toast.LENGTH_LONG
                     ).show()
                     else -> {
                         when (networkAvailable()) {
                             true -> {
+                                Log.d(getString(R.string.main_log), "Searching city: $cityInput")
                                 viewModel.searchCityForecastByName(cityInput)
                                 updateProgressBar(true)
                             }
                             false -> Toast.makeText(
                                 context,
-                                "Network unavailable now!",
+                                getString(R.string.network_unavailable),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
                 }
             }
-            setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel") { dialog, _ ->
+            setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.negative_button)) { dialog, _ ->
                 dialog.cancel()
             }
             setOnDismissListener {
@@ -178,11 +180,13 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun showCitiesFragment() {
+        Log.d(getString(R.string.main_log), "Showing cities fragment...")
         (activity as NavigationHost).navigateToCitiesFragment()
     }
 
     private fun updateView(city: CityWeather) {
         updateProgressBar(false)
+        Log.d(getString(R.string.main_log), "Updating view...")
 
         city.apply {
             val cityInfoText = "$name, $country"
@@ -211,6 +215,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun setDailyRecyclerView(city: CityWeather) {
+        Log.d(getString(R.string.main_log), "Setting daily recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
                 override fun canScrollVertically(): Boolean = false
@@ -234,6 +239,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun setHourlyRecyclerView(city: CityWeather) {
+        Log.d(getString(R.string.main_log), "Setting hourly recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
@@ -268,23 +274,26 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
                         onChangeNetworkState(true)
+                        Log.d(getString(R.string.main_log), "Network available!")
                     }
 
                     override fun onUnavailable() {
                         super.onUnavailable()
                         onChangeNetworkState(false)
+                        Log.d(getString(R.string.main_log), "Network unavailable!")
                     }
 
                     override fun onLost(network: Network) {
                         super.onLost(network)
                         onChangeNetworkState(false)
+                        Log.d(getString(R.string.main_log), "Network lost!")
                     }
                 })
 
         }
     }
 
-    fun isConnected(): Boolean {
+    private fun isConnected(): Boolean {
         try {
             val command = "ping -c 1 google.com"
             return Runtime.getRuntime().exec(command).waitFor() == 0

@@ -38,4 +38,8 @@ data class CityWeather(
         result = 31 * result + name.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "id: $id name: $name date: $forecastDate"
+    }
 }
