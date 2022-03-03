@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -212,11 +213,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 }
                 val temperature = "$temp°"
                 temperature_today.text = temperature
-                description_today.text = description
             }
             uvindex_value.text = uvi.toString()
             sunrise_value.text = getTime(city.sunrise)
             sunset_value.text = getTime(city.sunset)
+            val feelsLikeValue = "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
+            feels_like_view.text = feelsLikeValue
             currentDate.text = forecastDate
             val humidityValue = "$humidity%"
             humidity_value.text = humidityValue

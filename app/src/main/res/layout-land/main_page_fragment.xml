@@ -164,14 +164,13 @@
                         app:lineHeight="32dp" />
 
                     <TextView
-                        android:id="@+id/description_today"
-                        style="@style/Widget.Forecast.TextView.Small"
+                        android:id="@+id/feels_like_view"
+                        style="@style/Widget.Forecast.TextView.Default"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/temperature_today" />
+                        android:gravity="center"
+                        android:text="@string/no_value" />
+
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
