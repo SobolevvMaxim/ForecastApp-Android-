@@ -139,32 +139,48 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.positive_button)) { _, _ ->
                 val cityInput = city_edit_text.text.toString()
 
-                when (cityInput.trimmedLength()) {
-                    in 0..3 -> Toast.makeText(
-                        requireContext(),
-                        getString(R.string.incorrect_input),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    else -> {
-                        when (networkAvailable()) {
-                            true -> {
-                                Log.d(getString(R.string.main_log), "Searching city: $cityInput")
-                                viewModel.searchCityForecastByName(cityInput)
-                                updateProgressBar(true)
-                            }
-                            false -> Toast.makeText(
-                                context,
-                                getString(R.string.network_unavailable),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
+                if (!checkCityInput(cityInput))
+                    return@setButton
+
+                Log.d(getString(R.string.main_log), "Searching city: $cityInput")
+                viewModel.searchCityForecastByName(cityInput)
+                updateProgressBar(true)
             }
-            setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.negative_button)) { dialog, _ ->
+            setButton(
+                AlertDialog.BUTTON_NEGATIVE,
+                getString(R.string.negative_button)
+            ) { dialog, _ ->
                 dialog.cancel()
             }
             show()
+        }
+    }
+
+    private fun checkCityInput(cityInput: String): Boolean {
+        return when (cityInput.trimmedLength()) {
+            in 0..3 -> {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.incorrect_input),
+                    Toast.LENGTH_LONG
+                ).show()
+                false
+            }
+            else -> {
+                return when (networkAvailable()) {
+                    true -> {
+                        true
+                    }
+                    false -> {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.network_unavailable),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        false
+                    }
+                }
+            }
         }
     }
 
