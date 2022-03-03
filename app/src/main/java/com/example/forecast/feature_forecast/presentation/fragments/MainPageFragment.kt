@@ -59,6 +59,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         setNetworkListener(context)
 
+        viewModel.getAddedCities() // at start if you search a forecast repository data is empty
+
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
 
         if (savedInstanceState == null) {
