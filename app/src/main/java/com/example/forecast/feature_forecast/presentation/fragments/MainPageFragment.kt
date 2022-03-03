@@ -94,6 +94,15 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         swipe_layout.setOnRefreshListener {
             currentCity.text?.let {
+                if (!networkAvailable()) {
+                    Toast.makeText(
+                        context,
+                        "Network unavailable now!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    swipe_layout.isRefreshing = false
+                    return@setOnRefreshListener
+                }
                 viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
             }
         }
@@ -283,7 +292,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun hideKeyboard() {
         activity?.currentFocus?.let { view ->
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            val imm =
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
