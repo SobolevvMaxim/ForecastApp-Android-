@@ -56,7 +56,10 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkNetwork(context)
+        if (!isConnected())
+            onChangeNetworkState(false)
+
+        setNetworkListener(context)
 
         viewModel.getAddedCities()
 
@@ -250,7 +253,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         hourly_forecast_recycler.adapter = forecastAdapter
     }
 
-    private fun checkNetwork(context: Context?) {
+    private fun setNetworkListener(context: Context?) {
         val manager: ConnectivityManager =
             context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -279,6 +282,16 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 })
 
         }
+    }
+
+    fun isConnected(): Boolean {
+        try {
+            val command = "ping -c 1 google.com"
+            return Runtime.getRuntime().exec(command).waitFor() == 0
+        } catch (e: Exception) {
+
+        }
+        return false
     }
 
     fun onChangeNetworkState(available: Boolean) {
