@@ -1,4 +1,4 @@
-package com.example.forecast.di
+package com.example.repository.di
 
 import com.example.forecast.domain.repository.IForecastRepository
 import com.example.repository.ForecastRepository
