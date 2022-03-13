@@ -1,23 +1,24 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.extensions.DateUtils.getCityForecastDate
+import com.example.extensions.DateUtils.getTime
+import com.example.extensions.NetworkUtils.isConnected
+import com.example.extensions.NetworkUtils.onChangeNetworkState
+import com.example.extensions.NetworkUtils.setNetworkListener
+import com.example.extensions.UIUtils.networkCheckByUI
+import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
@@ -44,21 +45,41 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     @Inject
     @DateFormat
-    lateinit var dateFormat: SimpleDateFormat
+    lateinit var mainDateFormat: SimpleDateFormat
 
     @Inject
     @TimeFormat
-    lateinit var timeFormat: SimpleDateFormat
+    lateinit var mainTimeFormat: SimpleDateFormat
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+
+    private val cityObserver = Observer<CityWeather?> { city ->
+        swipe_layout.isRefreshing = false
+        city?.let {
+            Log.d(getString(R.string.main_log), "Observe city: $it")
+            checkToUpdate(it)
+            updateView(it)
+            (activity as ChosenCityInterface).changeChosenInBase(it.id)
+        } ?: run {
+            loading_city_progress.updateProgressBar(true)
+            viewModel.searchCityForecastByName(getString(R.string.default_city))
+        }
+    }
+
+    private val errorObserver = Observer<String> {
+
+        Log.d(getString(R.string.main_log), "Observe error:$it")
+        Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (!isConnected())
-            onChangeNetworkState(false)
+            onChangeNetworkState(false, offline_mode)
 
-        setNetworkListener(context)
+        setupListeners()
 
         viewModel.getAddedCities(post = false) // at start if you search a forecast repository data is empty
 
@@ -68,23 +89,12 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             viewModel.getCityByID(cityID = chosenCityID)
         }
 
-        viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
-            swipe_layout.isRefreshing = false
-            city?.let {
-                Log.d(getString(R.string.main_log), "Observe city: $it")
-                checkToUpdate(it)
-                updateView(it)
-                (activity as ChosenCityInterface).changeChosenInBase(it.id)
-            } ?: run {
-                updateProgressBar(true)
-                viewModel.searchCityForecastByName(getString(R.string.default_city))
-            }
-        }
+        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
+    }
 
-        viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            Log.d(getString(R.string.main_log), "Observe error:$it")
-            Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
-        }
+    private fun setupListeners() {
+        setNetworkListener(context, offline_mode)
 
         menu_button.setOnClickListener {
             showCitiesFragment()
@@ -95,19 +105,23 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         swipe_layout.setOnRefreshListener {
-            currentCity.text?.let {
-                if (!networkAvailable()) {
-                    Toast.makeText(
-                        context,
-                        getString(R.string.network_unavailable),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    swipe_layout.isRefreshing = false
-                    return@setOnRefreshListener
-                }
-                Log.d(getString(R.string.main_log), "Updating city: $it")
-                viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
+            onRefreshListener()
+        }
+    }
+
+    private fun onRefreshListener() {
+        currentCity.text?.let {
+            if (!offline_mode.networkCheckByUI()) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.network_unavailable),
+                    Toast.LENGTH_SHORT
+                ).show()
+                swipe_layout.isRefreshing = false
+                return@onRefreshListener
             }
+            Log.d(getString(R.string.main_log), "Updating city: $it")
+            viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
         }
     }
 
@@ -116,11 +130,11 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         val currentDate = Calendar.getInstance()
 
         cityDate.apply {
-            time = getCityForecastDate(city)
+            time = mainDateFormat.getCityForecastDate(city)
             add(Calendar.HOUR, 1)
         }
 
-        if (cityDate.time.before(currentDate.time) && networkAvailable()) {
+        if (cityDate.time.before(currentDate.time) && offline_mode.networkCheckByUI()) {
             Log.d(getString(R.string.main_log), "AutoUpdating city: $city")
             updateCityForecast(city)
         }
@@ -128,7 +142,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun updateCityForecast(city: CityWeather) {
         viewModel.updateCityForecast(city)
-        updateProgressBar(true)
+        loading_city_progress.updateProgressBar(true)
         Log.d(getString(R.string.main_log), "Updating forecast...")
     }
 
@@ -145,7 +159,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
                 Log.d(getString(R.string.main_log), "Searching city: $cityInput")
                 viewModel.searchCityForecastByName(cityInput)
-                updateProgressBar(true)
+                loading_city_progress.updateProgressBar(true)
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
@@ -168,7 +182,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
                 false
             }
             else -> {
-                return when (networkAvailable()) {
+                return when (offline_mode.networkCheckByUI()) {
                     true -> {
                         true
                     }
@@ -185,39 +199,28 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
     }
 
-    private fun updateProgressBar(visible: Boolean) {
-        when (visible) {
-            true -> loading_city_progress.visibility = View.VISIBLE
-            false -> loading_city_progress.visibility = View.INVISIBLE
-        }
-    }
-
     private fun showCitiesFragment() {
         Log.d(getString(R.string.main_log), "Showing cities fragment...")
         (activity as NavigationHost).navigateToCitiesFragment()
     }
 
     private fun updateView(city: CityWeather) {
-        updateProgressBar(false)
+        loading_city_progress.updateProgressBar(false)
         Log.d(getString(R.string.main_log), "Updating view...")
 
         city.apply {
             val cityInfoText = "$name, $country"
             currentCity.text = cityInfoText
             dailyTemperatures[0].run {
-                when (description) {
-                    "Rain" -> big_image.setImageResource(R.drawable.forecast_rain_icon)
-                    "Snow" -> big_image.setImageResource(R.drawable.forecast_snow_icon)
-                    "Clear" -> big_image.setImageResource(R.drawable.forecast_sun_icon)
-                    else -> big_image.setImageResource(R.drawable.forecast_clouds_icon)
-                }
+                setForecastImage(description)
                 val temperature = "$temp°"
                 temperature_today.text = temperature
             }
             uvindex_value.text = uvi.toString()
-            sunrise_value.text = getTime(city.sunrise)
-            sunset_value.text = getTime(city.sunset)
-            val feelsLikeValue = "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
+            sunrise_value.text = mainTimeFormat.getTime(city.sunrise)
+            sunset_value.text = mainTimeFormat.getTime(city.sunset)
+            val feelsLikeValue =
+                "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
             feels_like_view.text = feelsLikeValue
             currentDate.text = forecastDate
             val humidityValue = "$humidity%"
@@ -225,6 +228,15 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
             setDailyRecyclerView(this)
             setHourlyRecyclerView(this)
+        }
+    }
+
+    private fun setForecastImage(description: String) {
+        when (description) {
+            "Rain" -> big_image.setImageResource(R.drawable.forecast_rain_icon)
+            "Snow" -> big_image.setImageResource(R.drawable.forecast_snow_icon)
+            "Clear" -> big_image.setImageResource(R.drawable.forecast_sun_icon)
+            else -> big_image.setImageResource(R.drawable.forecast_clouds_icon)
         }
     }
 
@@ -237,7 +249,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         daily_forecast_recycler.layoutManager = recyclerManager
 
-        val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
+        val date: Date = mainDateFormat.parse(city.forecastDate) ?: Date(1)
         val calendar = Calendar.getInstance()
 
         calendar.time = date
@@ -259,7 +271,7 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         hourly_forecast_recycler.layoutManager = recyclerManager
 
-        val date: Date = dateFormat.parse(city.forecastDate) ?: Date(1)
+        val date: Date = mainDateFormat.parse(city.forecastDate) ?: Date(1)
         val calendar = Calendar.getInstance()
 
         calendar.time = date
@@ -272,64 +284,4 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             )
         hourly_forecast_recycler.adapter = forecastAdapter
     }
-
-    private fun setNetworkListener(context: Context?) {
-        val manager: ConnectivityManager =
-            context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val builder = NetworkRequest.Builder()
-
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-
-            val networkRequest = builder.build()
-            manager.registerNetworkCallback(networkRequest,
-                object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        super.onAvailable(network)
-                        onChangeNetworkState(true)
-                        Log.d(getString(R.string.main_log), "Network available!")
-                    }
-
-                    override fun onUnavailable() {
-                        super.onUnavailable()
-                        onChangeNetworkState(false)
-                        Log.d(getString(R.string.main_log), "Network unavailable!")
-                    }
-
-                    override fun onLost(network: Network) {
-                        super.onLost(network)
-                        onChangeNetworkState(false)
-                        Log.d(getString(R.string.main_log), "Network lost!")
-                    }
-                })
-
-        }
-    }
-
-    private fun isConnected(): Boolean {
-        try {
-            val command = "ping -c 1 google.com"
-            return Runtime.getRuntime().exec(command).waitFor() == 0
-        } catch (e: Exception) {
-
-        }
-        return false
-    }
-
-    fun onChangeNetworkState(available: Boolean) {
-        activity?.runOnUiThread {
-            when (available) {
-                true -> offline_mode.visibility = View.GONE
-                false -> offline_mode.visibility = View.VISIBLE
-            }
-        }
-    }
-
-    private fun networkAvailable(): Boolean = !offline_mode.isVisible
-
-    private fun getCityForecastDate(city: CityWeather) =
-        dateFormat.parse(city.forecastDate) ?: Date(1)
-
-    private fun getTime(time: String): String = timeFormat.format(Date(time.toLong()))
 }

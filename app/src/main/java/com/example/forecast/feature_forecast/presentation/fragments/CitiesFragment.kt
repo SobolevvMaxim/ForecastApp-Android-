@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.di.DateFormat
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
@@ -23,18 +22,12 @@ import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigat
 import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import java.text.SimpleDateFormat
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CitiesFragment : Fragment(), LeftSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
-
-    @Inject
-    @DateFormat
-    lateinit var format: SimpleDateFormat
 
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
@@ -88,7 +81,6 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         }
 
         setRecyclerView()
-        format
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,11 +134,11 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         cities_recyclerView.adapter = citiesRecyclerAdapter
     }
 
-    private fun changeChosenCity(id: String) {
-        Log.d(getString(R.string.main_log), "Changing chosen from cities fragment (new chosen id: $id)")
-        viewModel.getCityByID(id)
-        (activity as ChosenCityInterface).changeChosenInBase(id)
-        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(id)
+    private fun changeChosenCity(newChosenID: String) {
+        Log.d(getString(R.string.main_log), "Changing chosen from cities fragment (new chosen id: $newChosenID)")
+        viewModel.getCityByID(newChosenID)
+        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
