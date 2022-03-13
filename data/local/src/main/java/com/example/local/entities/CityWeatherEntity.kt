@@ -1,16 +1,16 @@
-package com.example.db.entities
+package com.example.local.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.db.DailyTemperatureConverter
-import com.example.db.HourlyTemperatureConverter
+import com.example.local.DailyTemperatureConverter
+import com.example.local.HourlyTemperatureConverter
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
 
-@Entity(tableName = com.example.db.TABLE_NAME)
+@Entity(tableName = com.example.local.TABLE_NAME)
 data class CityWeatherEntity(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "name") val name: String,

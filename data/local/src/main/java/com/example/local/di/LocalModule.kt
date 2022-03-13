@@ -1,9 +1,9 @@
-package com.example.forecast.di
+package com.example.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.db.AppDatabase
-import com.example.db.CityWeatherDao
+import com.example.local.AppDatabase
+import com.example.local.CityWeatherDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +28,4 @@ object DataModule {
 
     @Provides
     fun provideCitiesDao(appDatabase: AppDatabase): CityWeatherDao = appDatabase.citiesDao()
-
-
 }

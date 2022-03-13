@@ -1,7 +1,7 @@
-package com.example.api.di
+package com.example.remote.di
 
-import com.example.api.services.CitiesService
-import com.example.api.services.TemperatureService
+import com.example.remote.services.CitiesService
+import com.example.remote.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
