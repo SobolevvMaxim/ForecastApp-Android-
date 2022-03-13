@@ -1,6 +1,6 @@
-package com.example.api.services
+package com.example.remote.services
 
-import com.example.api.dto.TemperaturesDto
+import com.example.remote.dto.TemperaturesDto
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET

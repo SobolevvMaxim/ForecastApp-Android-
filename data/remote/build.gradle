@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -36,5 +37,9 @@ dependencies {
     implementation deps.gson.converter
     implementation deps.retrofit.runtime
     implementation deps.retrofit.adapter
+    implementation deps.okhttp_logging_interceptor
     implementation deps.kotlin.kotlinstd
+
+    implementation deps.hilt.android
+    kapt deps.hilt.compiler
 }

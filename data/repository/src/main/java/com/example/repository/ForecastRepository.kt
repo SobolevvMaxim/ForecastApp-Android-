@@ -1,9 +1,9 @@
 package com.example.repository
 
-import com.example.api.services.CitiesService
-import com.example.api.services.TemperatureService
-import com.example.db.CityWeatherDao
-import com.example.db.entities.toCityWeatherEntity
+import com.example.remote.services.CitiesService
+import com.example.remote.services.TemperatureService
+import com.example.local.CityWeatherDao
+import com.example.local.entities.toCityWeatherEntity
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.repository.IForecastRepository

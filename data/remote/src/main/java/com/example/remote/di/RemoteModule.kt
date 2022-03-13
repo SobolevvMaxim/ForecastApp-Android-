@@ -1,16 +1,11 @@
-package com.example.forecast.di
+package com.example.remote.di
 
-import android.content.Context
-import androidx.room.Room
-import com.example.api.services.CitiesService
-import com.example.api.services.TemperatureService
-import com.example.db.AppDatabase
-import com.example.db.CityWeatherDao
+import com.example.remote.services.CitiesService
+import com.example.remote.services.TemperatureService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,20 +13,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-const val APP_DATABASE = "APP_DATABASE"
-
 @Module
 @InstallIn(SingletonComponent::class)
-object DataModule {
-
-    @Singleton
-    @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context) =
-        Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            APP_DATABASE
-        ).build()
+object RemoteModule {
 
     @Singleton
     @Provides
@@ -50,9 +34,6 @@ object DataModule {
 
         return OkHttpClient.Builder().addInterceptor(interceptor).build()
     }
-
-    @Provides
-    fun provideCitiesDao(appDatabase: AppDatabase): CityWeatherDao = appDatabase.citiesDao()
 
     @Provides
     fun provideCitiesService(retrofit: Retrofit): CitiesService =

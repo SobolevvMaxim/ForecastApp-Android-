@@ -1,4 +1,4 @@
-package com.example.api.dto
+package com.example.remote.dto
 
 import android.util.Log
 import com.example.forecast.domain.model.City

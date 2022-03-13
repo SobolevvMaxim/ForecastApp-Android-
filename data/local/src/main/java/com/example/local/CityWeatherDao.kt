@@ -1,7 +1,7 @@
-package com.example.db
+package com.example.local
 
 import androidx.room.*
-import com.example.db.entities.CityWeatherEntity
+import com.example.local.entities.CityWeatherEntity
 
 const val TABLE_NAME = "CITIES_TABLE"
 

@@ -1,4 +1,4 @@
-package com.example.api.dto
+package com.example.remote.dto
 
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.Coordinates

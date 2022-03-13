@@ -53,26 +53,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (!isConnected())
-            onChangeNetworkState(false)
-
-        setupListeners()
-
-        viewModel.getAddedCities(post = false) // at start if you search a forecast repository data is empty
-
-        val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
-
-        if (savedInstanceState == null) {
-            viewModel.getCityByID(cityID = chosenCityID)
-        }
-
-        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
-        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
-    }
-
     private val cityObserver = Observer<CityWeather?> { city ->
         swipe_layout.isRefreshing = false
         city?.let {
@@ -93,20 +73,24 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     }
 
-    private fun onRefreshListener() {
-        currentCity.text?.let {
-            if (!networkCheckByUI()) {
-                Toast.makeText(
-                    context,
-                    getString(R.string.network_unavailable),
-                    Toast.LENGTH_SHORT
-                ).show()
-                swipe_layout.isRefreshing = false
-                return@onRefreshListener
-            }
-            Log.d(getString(R.string.main_log), "Updating city: $it")
-            viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (!isConnected())
+            onChangeNetworkState(false)
+
+        setupListeners()
+
+        viewModel.getAddedCities(post = false) // at start if you search a forecast repository data is empty
+
+        val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
+
+        if (savedInstanceState == null) {
+            viewModel.getCityByID(cityID = chosenCityID)
         }
+
+        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
     }
 
     private fun setupListeners() {
@@ -122,6 +106,22 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
+        }
+    }
+
+    private fun onRefreshListener() {
+        currentCity.text?.let {
+            if (!networkCheckByUI()) {
+                Toast.makeText(
+                    context,
+                    getString(R.string.network_unavailable),
+                    Toast.LENGTH_SHORT
+                ).show()
+                swipe_layout.isRefreshing = false
+                return@onRefreshListener
+            }
+            Log.d(getString(R.string.main_log), "Updating city: $it")
+            viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
         }
     }
 
