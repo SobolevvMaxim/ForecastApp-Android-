@@ -16,6 +16,7 @@ import androidx.core.text.trimmedLength
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
@@ -68,30 +69,28 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             viewModel.getCityByID(cityID = chosenCityID)
         }
 
-        setupCityObserver()
-        setupErrorObserver()
+        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
     }
 
-    private fun setupCityObserver() {
-        viewModel.chosenLiveData.observe(viewLifecycleOwner) { city ->
-            swipe_layout.isRefreshing = false
-            city?.let {
-                Log.d(getString(R.string.main_log), "Observe city: $it")
-                checkToUpdate(it)
-                updateView(it)
-                (activity as ChosenCityInterface).changeChosenInBase(it.id)
-            } ?: run {
-                updateProgressBar(true)
-                viewModel.searchCityForecastByName(getString(R.string.default_city))
-            }
+    private val cityObserver = Observer<CityWeather?> { city ->
+        swipe_layout.isRefreshing = false
+        city?.let {
+            Log.d(getString(R.string.main_log), "Observe city: $it")
+            checkToUpdate(it)
+            updateView(it)
+            (activity as ChosenCityInterface).changeChosenInBase(it.id)
+        } ?: run {
+            updateProgressBar(true)
+            viewModel.searchCityForecastByName(getString(R.string.default_city))
         }
     }
 
-    private fun setupErrorObserver() {
-        viewModel.errorLiveData.observe(viewLifecycleOwner) {
-            Log.d(getString(R.string.main_log), "Observe error:$it")
-            Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
-        }
+    private val errorObserver = Observer<String> {
+
+        Log.d(getString(R.string.main_log), "Observe error:$it")
+        Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
+
     }
 
     private fun onRefreshListener() {
@@ -227,7 +226,8 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
             uvindex_value.text = uvi.toString()
             sunrise_value.text = getTime(city.sunrise)
             sunset_value.text = getTime(city.sunset)
-            val feelsLikeValue = "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
+            val feelsLikeValue =
+                "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
             feels_like_view.text = feelsLikeValue
             currentDate.text = forecastDate
             val humidityValue = "$humidity%"
