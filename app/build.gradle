@@ -38,8 +38,8 @@ android {
 dependencies {
     implementation project(path: ':domain')
     implementation project(path: ':data:repository')
-    implementation project(path: ':data:api')
-    implementation project(path: ':data:db')
+    implementation project(path: ':data:remote')
+    implementation project(path: ':data:local')
 
     implementation deps.lifecycle.viewmodel_ktx
     implementation deps.lifecycle.livedata_ktx
