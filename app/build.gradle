@@ -40,6 +40,7 @@ dependencies {
     implementation project(path: ':data:repository')
     implementation project(path: ':data:remote')
     implementation project(path: ':data:local')
+    implementation project(path: ':common:extensions')
 
     implementation deps.lifecycle.viewmodel_ktx
     implementation deps.lifecycle.livedata_ktx
