@@ -1,4 +1,4 @@
-package com.example.forecast.base
+package com.example.forecast.feature_forecast.presentation.base
 
 import android.util.Log
 import android.widget.Toast

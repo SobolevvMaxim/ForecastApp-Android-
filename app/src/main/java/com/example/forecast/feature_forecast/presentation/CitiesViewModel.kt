@@ -2,8 +2,8 @@ package com.example.forecast.feature_forecast.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.forecast.base.BaseViewModel
-import com.example.forecast.base.Event
+import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
+import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
@@ -78,7 +78,6 @@ class CitiesViewModel @Inject constructor(
                 }
             )
         }
-
     }
 
     fun deleteCity(city: CityWeather) {

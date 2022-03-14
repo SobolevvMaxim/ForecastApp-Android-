@@ -21,8 +21,8 @@ import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
-import com.example.forecast.base.BaseFragment
-import com.example.forecast.base.Event
+import com.example.forecast.feature_forecast.presentation.base.BaseFragment
+import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
@@ -94,8 +94,6 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
             onChangeNetworkState(false, offline_mode)
 
         setupListeners()
-
-        viewModel.getAddedCities(post = false) // at start if you search a forecast repository data is empty
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
 
