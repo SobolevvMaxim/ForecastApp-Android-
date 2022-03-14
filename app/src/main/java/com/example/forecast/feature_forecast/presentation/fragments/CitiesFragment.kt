@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
+import com.example.forecast.base.Event
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
@@ -71,13 +72,11 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         }
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-            Log.d(getString(R.string.main_log), "Observe cities: $cities")
-            updateRecyclerView(cities)
-        }
-
-        viewModel.errorLiveData.observe(viewLifecycleOwner) { error ->
-            Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show()
-            Log.d(getString(R.string.main_log), "Observe error: $error")
+            when (cities) {
+                is Event.Loading -> {}
+                is Event.Success<Set<CityWeather>> -> cities.data?.let { updateRecyclerView(it) }
+                is Event.Error -> Toast.makeText(context, "Error: ${cities.throwable}", Toast.LENGTH_SHORT).show()
+            }
         }
 
         setRecyclerView()
@@ -114,6 +113,7 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
     }
 
     private fun navigateToMainFragment() {
+        Log.d(getString(R.string.main_log), "Navigating to Main Fragment...")
         parentFragmentManager.popBackStack()
     }
 

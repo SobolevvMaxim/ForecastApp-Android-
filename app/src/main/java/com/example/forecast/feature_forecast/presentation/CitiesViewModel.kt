@@ -2,16 +2,12 @@ package com.example.forecast.feature_forecast.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.forecast.base.BaseViewModel
+import com.example.forecast.base.Event
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,95 +19,83 @@ class CitiesViewModel @Inject constructor(
     private val loadForecastsUseCase: LoadForecastsUseCase,
     private val writeCityToBaseUseCase: WriteCityToBaseUseCase,
     private val getCityByIDUseCase: GetCityByIDUseCase,
-) : ViewModel() {
+) : BaseViewModel() {
 
-    private val exceptionHandler = CoroutineExceptionHandler { _, t ->
-        _errorLiveData.postValue(t.toString())
-    }
+    private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
+    val chosenLiveData: LiveData<Event<CityWeather>> get() = _chosenLiveData
 
-    private val _chosenLiveData = MutableLiveData<CityWeather?>()
-    val chosenLiveData: LiveData<CityWeather?> get() = _chosenLiveData
-
-    private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
-    val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
-
-    private val _errorLiveData = MutableLiveData<String>()
-    val errorLiveData: LiveData<String> get() = _errorLiveData
-
-    private var searchJob: Job? = null
-
-    override fun onCleared() {
-        super.onCleared()
-
-        searchJob = null
-    }
+    private val _citiesLiveData = MutableLiveData<Event<Set<CityWeather>>>()
+    val citiesLiveData: LiveData<Event<Set<CityWeather>>> get() = _citiesLiveData
 
     fun searchCityForecastByName(text: CharSequence) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch(exceptionHandler) {
-            delay(500)
-            val cityInfoResponse = getCityInfoUseCase(text as String)
-            cityInfoResponse.getOrNull()?.let { city ->
-                searchForecast(city)
-            } ?: run {
-                _errorLiveData.postValue(
-                    cityInfoResponse.exceptionOrNull()?.message ?: "unexpected exception"
-                )
+        networkRequest(
+            liveData = null,
+            request = {
+                getCityInfoUseCase(text as String)
+            },
+            successCallback = {
+                searchForecast(it)
             }
-        }
+        )
     }
 
     private fun searchForecast(city: City) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch(exceptionHandler) {
-            delay(500)
-            val cityTemperatureResponse = getForecastUseCase(city)
-            cityTemperatureResponse.getOrNull()?.let {
-                writeCityToBaseUseCase(city = it)
-                _chosenLiveData.postValue(it)
-            } ?: run {
-                _errorLiveData.postValue(
-                    cityTemperatureResponse.exceptionOrNull()?.message ?: "unexpected exception"
-                )
+        networkRequest(
+            _chosenLiveData,
+            request = {
+                getForecastUseCase(city)
+            },
+            successCallback = {
+                writeCityToBaseUseCase(it)
             }
-        }
+        )
     }
 
     fun updateCityForecast(cityWeather: CityWeather) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch(exceptionHandler) {
-            val updatedCityResponse = getForecastUseCase(city = cityWeather.toCity())
-            updatedCityResponse.getOrNull()?.let {
+        networkRequest(
+            liveData = _chosenLiveData,
+            request = {
+                getForecastUseCase(city = cityWeather.toCity())
+            },
+            successCallback = {
                 updateCityUseCase(it)
-                _chosenLiveData.postValue(it)
-            } ?: run {
-                _errorLiveData.postValue(
-                    updatedCityResponse.exceptionOrNull()?.message ?: "unexpected exception"
-                )
             }
-        }
+        )
     }
 
     fun getAddedCities(post: Boolean) {
-        viewModelScope.launch {
-            delay(500)
-            val forecasts = loadForecastsUseCase()
-            if (post)
-                _citiesLiveData.postValue(forecasts)
+        when (post) {
+            true -> simpleRequest(
+                liveData = _citiesLiveData,
+                request = {
+                    loadForecastsUseCase()
+                }
+            )
+            false -> simpleRequest(
+                liveData = null,
+                request = {
+                    loadForecastsUseCase
+                }
+            )
         }
+
     }
 
     fun deleteCity(city: CityWeather) {
-        viewModelScope.launch(exceptionHandler) {
-            val addedCities = deleteCityUseCase(city)
-            _citiesLiveData.postValue(addedCities)
-        }
+        simpleRequest(
+            liveData = _citiesLiveData,
+            request = {
+                deleteCityUseCase(city)
+            }
+        )
     }
 
     fun getCityByID(cityID: String) {
-        viewModelScope.launch(exceptionHandler) {
-            val city = getCityByIDUseCase(cityID)
-            _chosenLiveData.postValue(city)
-        }
+        simpleRequest(
+            liveData = _chosenLiveData,
+            request = {
+                getCityByIDUseCase(cityID)
+            }
+        )
     }
 }

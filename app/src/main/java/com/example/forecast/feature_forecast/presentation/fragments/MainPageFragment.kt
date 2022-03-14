@@ -20,6 +20,7 @@ import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
+import com.example.forecast.base.Event
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
@@ -53,24 +54,23 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
-    private val cityObserver = Observer<CityWeather?> { city ->
-        swipe_layout.isRefreshing = false
-        city?.let {
-            Log.d(getString(R.string.main_log), "Observe city: $it")
-            checkToUpdate(it)
-            updateView(it)
-            (activity as ChosenCityInterface).changeChosenInBase(it.id)
-        } ?: run {
-            loading_city_progress.updateProgressBar(true)
-            viewModel.searchCityForecastByName(getString(R.string.default_city))
+    private val cityObserver = Observer<Event<CityWeather>> { city ->
+        when (city) {
+            is Event.Loading -> {
+                loading_city_progress.updateProgressBar(true)
+                Log.d(getString(R.string.main_log), "Loading...")
+            }
+            is Event.Success<CityWeather> -> city.data?.let {
+                loading_city_progress.updateProgressBar(false)
+                swipe_layout.isRefreshing = false
+                checkToUpdate(it)
+                updateView(it)
+                (activity as ChosenCityInterface).changeChosenInBase(it.id)
+            }
+            is Event.Error -> city.throwable?.let {
+                Toast.makeText(context, "Error: $it", Toast.LENGTH_SHORT).show()
+            } ?:  viewModel.searchCityForecastByName(getString(R.string.default_city))
         }
-    }
-
-    private val errorObserver = Observer<String> {
-
-        Log.d(getString(R.string.main_log), "Observe error:$it")
-        Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,7 +90,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
-        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
     }
 
     private fun setupListeners() {
@@ -142,7 +141,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun updateCityForecast(city: CityWeather) {
         viewModel.updateCityForecast(city)
-        loading_city_progress.updateProgressBar(true)
         Log.d(getString(R.string.main_log), "Updating forecast...")
     }
 
@@ -159,7 +157,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
                 Log.d(getString(R.string.main_log), "Searching city: $cityInput")
                 viewModel.searchCityForecastByName(cityInput)
-                loading_city_progress.updateProgressBar(true)
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
@@ -205,7 +202,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun updateView(city: CityWeather) {
-        loading_city_progress.updateProgressBar(false)
         Log.d(getString(R.string.main_log), "Updating view...")
 
         city.apply {
