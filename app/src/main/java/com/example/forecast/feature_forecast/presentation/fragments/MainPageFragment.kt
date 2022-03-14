@@ -3,11 +3,12 @@ package com.example.forecast.feature_forecast.presentation.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,7 @@ import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
+import com.example.forecast.base.BaseFragment
 import com.example.forecast.base.Event
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
@@ -39,7 +41,7 @@ import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
-class MainPageFragment : Fragment(R.layout.main_page_fragment) {
+class MainPageFragment : BaseFragment<CitiesViewModel>() {
     companion object {
         fun create() = MainPageFragment()
     }
@@ -52,25 +54,37 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
-    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     private val cityObserver = Observer<Event<CityWeather>> { city ->
         when (city) {
-            is Event.Loading -> {
-                loading_city_progress.updateProgressBar(true)
-                Log.d(getString(R.string.main_log), "Loading...")
-            }
-            is Event.Success<CityWeather> -> city.data?.let {
-                loading_city_progress.updateProgressBar(false)
-                swipe_layout.isRefreshing = false
-                checkToUpdate(it)
-                updateView(it)
-                (activity as ChosenCityInterface).changeChosenInBase(it.id)
-            }
+            is Event.Loading -> onLoading()
+            is Event.Success<CityWeather> -> city.data?.let{onSuccess(it)}
             is Event.Error -> city.throwable?.let {
-                Toast.makeText(context, "Error: $it", Toast.LENGTH_SHORT).show()
+                onError(it)
             } ?:  viewModel.searchCityForecastByName(getString(R.string.default_city))
         }
+    }
+
+    private fun onSuccess(city: CityWeather) {
+            loading_city_progress.updateProgressBar(false)
+            swipe_layout.isRefreshing = false
+            checkToUpdate(city)
+            updateView(city)
+            (activity as ChosenCityInterface).changeChosenInBase(city.id)
+    }
+
+    override fun onLoading() {
+        loading_city_progress.updateProgressBar(true)
+        Log.d(getString(R.string.main_log), "Loading...")
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.main_page_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

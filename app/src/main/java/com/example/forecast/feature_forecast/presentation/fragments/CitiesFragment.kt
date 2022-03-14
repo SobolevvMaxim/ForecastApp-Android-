@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
+import com.example.forecast.base.BaseFragment
 import com.example.forecast.base.Event
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
@@ -25,7 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
 @AndroidEntryPoint
-class CitiesFragment : Fragment(), LeftSwipeNavigation {
+class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
     companion object {
         fun create() = CitiesFragment()
     }
@@ -37,7 +37,7 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
         )
     }
 
-    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
@@ -73,19 +73,17 @@ class CitiesFragment : Fragment(), LeftSwipeNavigation {
 
         viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
             when (cities) {
-                is Event.Loading -> {}
+                is Event.Loading -> onLoading()
                 is Event.Success<Set<CityWeather>> -> cities.data?.let { updateRecyclerView(it) }
-                is Event.Error -> Toast.makeText(context, "Error: ${cities.throwable}", Toast.LENGTH_SHORT).show()
+                is Event.Error -> onError(cities.throwable)
             }
         }
 
         setRecyclerView()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onLoading() {
 
-        setHasOptionsMenu(true)
     }
 
     private fun deleteCityDialog(city: CityWeather) {
