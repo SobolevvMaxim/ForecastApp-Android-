@@ -26,7 +26,7 @@ object DomainModule {
 
     @ViewModelScoped
     @Provides
-    fun provideUpdateCityUseCase(repository: IForecastRepository) = UpdateCityForecast(repository)
+    fun provideUpdateCityUseCase(repository: IForecastRepository) = UpdateCityInBase(repository)
 
     @ViewModelScoped
     @Provides

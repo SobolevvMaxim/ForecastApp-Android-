@@ -29,7 +29,7 @@ interface IForecastRepository {
      * @param city city to update
      * @return all cities from base
      */
-    suspend fun updateCityInBase(city: CityWeather): Set<CityWeather>
+    suspend fun updateCityInBase(city: CityWeather)
 
     /**
      * Delete city from base and cities list

@@ -15,7 +15,7 @@ class CitiesViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
     private val deleteCityUseCase: DeleteCity,
-    private val updateCityUseCase: UpdateCityForecast,
+    private val updateCityUseCase: UpdateCityInBase,
     private val loadForecastsUseCase: LoadForecasts,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
