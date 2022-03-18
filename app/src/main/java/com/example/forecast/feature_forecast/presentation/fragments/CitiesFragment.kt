@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.base.BaseFragment
-import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
+import com.example.forecast.feature_forecast.presentation.base.BaseFragment
+import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
 import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
@@ -67,7 +67,7 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.getAddedCities(post = true)
+            viewModel.getAddedCities(postResults = true)
             Log.d(getString(R.string.main_log), "Loading cities from base...")
         }
 
@@ -80,10 +80,6 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
         }
 
         setRecyclerView()
-    }
-
-    override fun onLoading() {
-
     }
 
     private fun deleteCityDialog(city: CityWeather) {

@@ -2,11 +2,11 @@ package com.example.forecast.feature_forecast.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
-import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
+import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
+import com.example.forecast.feature_forecast.presentation.base.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -27,73 +27,101 @@ class CitiesViewModel @Inject constructor(
     private val _citiesLiveData = MutableLiveData<Event<Set<CityWeather>>>()
     val citiesLiveData: LiveData<Event<Set<CityWeather>>> get() = _citiesLiveData
 
-    fun searchCityForecastByName(text: CharSequence) {
+    fun searchCityForecastByName(searchInput: CharSequence) {
+        _chosenLiveData.postValue(Event.Loading())
         networkRequest(
-            liveData = null,
             request = {
-                getCityInfoUseCase(text as String)
+                getCityInfoUseCase(searchInput as String)
             },
-            successCallback = {
-                searchForecast(it)
+            successCallback = { city ->
+                searchForecast(city)
+            },
+            errorCallback = { error ->
+                _chosenLiveData.postValue(Event.Error(error))
             }
         )
     }
 
-    private fun searchForecast(city: City) {
+    private fun searchForecast(cityToSearchForecast: City) {
+        _chosenLiveData.postValue(Event.Loading())
         networkRequest(
-            _chosenLiveData,
             request = {
-                getForecastUseCase(city)
+                getForecastUseCase(cityToSearchForecast)
             },
-            successCallback = {
-                writeCityToBaseUseCase(it)
+            successCallback = { cityForecast ->
+                writeCityToBaseUseCase(cityForecast)
+                _chosenLiveData.postValue(Event.Success(cityForecast))
+            },
+            errorCallback = { error ->
+                _chosenLiveData.postValue(Event.Error(error))
             }
         )
     }
 
-    fun updateCityForecast(cityWeather: CityWeather) {
+    fun updateCityForecast(cityToUpdate: CityWeather) {
+        _chosenLiveData.postValue(Event.Loading())
         networkRequest(
-            liveData = _chosenLiveData,
             request = {
-                getForecastUseCase(city = cityWeather.toCity())
+                getForecastUseCase(city = cityToUpdate.toCity())
             },
-            successCallback = {
-                updateCityUseCase(it)
+            successCallback = { updatedCity ->
+                updateCityUseCase(updatedCity)
+                _chosenLiveData.postValue(Event.Success(updatedCity))
+            },
+            errorCallback = { error ->
+                _chosenLiveData.postValue(Event.Error(error))
             }
         )
     }
 
-    fun getAddedCities(post: Boolean) {
-        when (post) {
+    fun getAddedCities(postResults: Boolean) {
+        when (postResults) {
             true -> simpleRequest(
-                liveData = _citiesLiveData,
                 request = {
                     loadForecastsUseCase()
+                },
+                successCallback = { citiesFromBase ->
+                    _citiesLiveData.postValue(Event.Success(citiesFromBase))
+                },
+                errorCallback = { error ->
+                    _citiesLiveData.postValue(Event.Error(error))
                 }
             )
             false -> simpleRequest(
-                liveData = null,
                 request = {
-                    loadForecastsUseCase
+                    loadForecastsUseCase()
+                },
+                errorCallback = { error ->
+                    _citiesLiveData.postValue(Event.Error(error))
                 }
             )
         }
     }
 
-    fun deleteCity(city: CityWeather) {
+    fun deleteCity(cityToDelete: CityWeather) {
         simpleRequest(
-            liveData = _citiesLiveData,
             request = {
-                deleteCityUseCase(city)
+                deleteCityUseCase(cityToDelete)
+            },
+            successCallback = { cities ->
+                _citiesLiveData.postValue(Event.Success(cities))
+            },
+            errorCallback = { error ->
+                _citiesLiveData.postValue(Event.Error(error))
             }
         )
     }
 
     fun getCityByID(cityID: String) {
         simpleRequest(
-            liveData = _chosenLiveData,
             request = {
                 getCityByIDUseCase(cityID)
+            },
+            successCallback = { cityByID ->
+                _chosenLiveData.postValue(Event.Success(cityByID))
+            },
+            errorCallback = { error ->
+                _chosenLiveData.postValue(Event.Error(error))
             }
         )
     }

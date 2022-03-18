@@ -15,20 +15,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
 import com.example.extensions.DateUtils.getTime
-import com.example.extensions.NetworkUtils.isConnected
+import com.example.extensions.NetworkUtils.isOnline
 import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.base.BaseFragment
-import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.base.BaseFragment
+import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,7 +90,7 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!isConnected())
+        if (!isOnline())
             onChangeNetworkState(false, offline_mode)
 
         setupListeners()
@@ -105,7 +105,7 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
     }
 
     private fun setupListeners() {
-        setNetworkListener(context, offline_mode)
+        setNetworkListener(offline_mode)
 
         menu_button.setOnClickListener {
             showCitiesFragment()

@@ -14,5 +14,5 @@ abstract class BaseFragment<T : BaseViewModel> : Fragment() {
         Log.d(getString(R.string.main_log), "Error: $error")
     }
 
-    protected abstract fun onLoading()
+    protected open fun onLoading() {}
 }

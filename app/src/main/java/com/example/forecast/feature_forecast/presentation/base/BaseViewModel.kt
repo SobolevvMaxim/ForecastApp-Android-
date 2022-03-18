@@ -1,6 +1,5 @@
 package com.example.forecast.feature_forecast.presentation.base
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -18,11 +17,10 @@ abstract class BaseViewModel : ViewModel() {
     }
 
     fun <T> networkRequest(
-        liveData: MutableLiveData<Event<T>>?,
         request: suspend () -> Result<T>,
         successCallback: suspend (T) -> Unit,
+        errorCallback: (Throwable?) -> Unit,
     ) {
-        liveData?.postValue(Event.Loading())
         searchJob = null
 
 
@@ -32,42 +30,39 @@ abstract class BaseViewModel : ViewModel() {
                 val response = request.invoke()
                 response.getOrNull()?.let { data ->
                     successCallback(data)
-                    liveData?.postValue(Event.Success(data))
                 } ?: run {
-                    liveData?.postValue(Event.Error(response.exceptionOrNull()))
+                    errorCallback(response.exceptionOrNull())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                liveData?.postValue(Event.Error(e))
+                errorCallback(e)
             }
         }
     }
 
     fun <T> simpleRequest(
-        liveData: MutableLiveData<Event<T>>?,
         request: suspend () -> T?,
+        successCallback: ((T) -> Unit)? = null,
+        errorCallback: (Throwable?) -> Unit,
     ) {
-        liveData?.postValue(Event.Loading())
         viewModelScope.launch {
             try {
                 val response = request.invoke()
-                response?.let {
-                    liveData?.postValue(Event.Success(it))
+                response?.let { result ->
+                    successCallback?.invoke(result)
                 } ?: run {
-                    liveData?.postValue(Event.Error(null))
+                    errorCallback(null)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                liveData?.postValue(Event.Error(e))
+                errorCallback(e)
             }
         }
     }
 }
 
 sealed class Event<T> {
-    class Loading<T>: Event<T>()
-    class Success<T>(val data: T?): Event<T>()
-    class Error<T>(val throwable: Throwable?): Event<T>()
+    class Loading<T> : Event<T>()
+    class Success<T>(val data: T?) : Event<T>()
+    class Error<T>(val throwable: Throwable?) : Event<T>()
 }
-
-inline fun <reified T> isNullable(): Boolean = null is T
