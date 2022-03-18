@@ -1,5 +1,7 @@
 # ForecastApp-Android-
 [Download apk](https://github.com/SobolevvMaxim/ForecastApp-Android-/blob/master/apk/app-forecast.apk)
+## API_KEY
+!! Don't forget to put your API_KEY in gradle.properties
 ## Preview
 ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.jpg) ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_2.jpg)
 ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_3.jpg)
