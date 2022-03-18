@@ -38,7 +38,7 @@ class ForecastRepository @Inject constructor(
             runCatching {
                 temperatureService.searchTempAsync(
                     lat = city.coordinates.lat,
-                    lon = city.coordinates.lon
+                    lon = city.coordinates.lon,
                 )
                     .await()
                     .takeIf { it.isSuccessful }
