@@ -11,6 +11,6 @@ interface TemperatureService {
     fun searchTempAsync(
         @Query("lat") lat: String,
         @Query("lon") lon: String,
-        @Query("appid") ApiKey: String = API_KEY
+        @Query("appid") ApiKey: String
     ): Deferred<Response<TemperaturesDto>>
 }
