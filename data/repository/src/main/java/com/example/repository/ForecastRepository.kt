@@ -1,12 +1,12 @@
 package com.example.repository
 
-import com.example.remote.services.CitiesService
-import com.example.remote.services.TemperatureService
-import com.example.local.CityWeatherDao
-import com.example.local.entities.toCityWeatherEntity
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.repository.IForecastRepository
+import com.example.local.CityWeatherDao
+import com.example.local.entities.toCityWeatherEntity
+import com.example.remote.services.CitiesService
+import com.example.remote.services.TemperatureService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -109,6 +109,7 @@ class ForecastRepository @Inject constructor(
 
     override suspend fun getCityByID(cityID: String): CityWeather? =
         withContext(dispatcher) {
+            getAll()
             cityWeatherDao.getCityByID(cityID)?.toCityWeather()
         }
 

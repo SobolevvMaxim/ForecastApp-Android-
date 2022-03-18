@@ -3,18 +3,19 @@ package com.example.forecast.feature_forecast.presentation.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
 import com.example.extensions.DateUtils.getTime
-import com.example.extensions.NetworkUtils.isConnected
+import com.example.extensions.NetworkUtils.isOnline
 import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
@@ -26,6 +27,8 @@ import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
+import com.example.forecast.feature_forecast.presentation.base.BaseFragment
+import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,7 +41,7 @@ import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
-class MainPageFragment : Fragment(R.layout.main_page_fragment) {
+class MainPageFragment : BaseFragment<CitiesViewModel>() {
     companion object {
         fun create() = MainPageFragment()
     }
@@ -51,37 +54,46 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
-    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
-    private val cityObserver = Observer<CityWeather?> { city ->
-        swipe_layout.isRefreshing = false
-        city?.let {
-            Log.d(getString(R.string.main_log), "Observe city: $it")
-            checkToUpdate(it)
-            updateView(it)
-            (activity as ChosenCityInterface).changeChosenInBase(it.id)
-        } ?: run {
-            loading_city_progress.updateProgressBar(true)
-            viewModel.searchCityForecastByName(getString(R.string.default_city))
+    private val cityObserver = Observer<Event<CityWeather>> { city ->
+        when (city) {
+            is Event.Loading -> onLoading()
+            is Event.Success<CityWeather> -> city.data?.let{onSuccess(it)}
+            is Event.Error -> city.throwable?.let {
+                onError(it)
+            } ?:  viewModel.searchCityForecastByName(getString(R.string.default_city))
         }
     }
 
-    private val errorObserver = Observer<String> {
+    private fun onSuccess(city: CityWeather) {
+            loading_city_progress.updateProgressBar(false)
+            swipe_layout.isRefreshing = false
+            checkToUpdate(city)
+            updateView(city)
+            (activity as ChosenCityInterface).changeChosenInBase(city.id)
+    }
 
-        Log.d(getString(R.string.main_log), "Observe error:$it")
-        Toast.makeText(requireContext(), "Error: $it", Toast.LENGTH_LONG).show()
+    override fun onLoading() {
+        loading_city_progress.updateProgressBar(true)
+        Log.d(getString(R.string.main_log), "Loading...")
+    }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.main_page_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (!isConnected())
+        if (!isOnline())
             onChangeNetworkState(false, offline_mode)
 
         setupListeners()
-
-        viewModel.getAddedCities(post = false) // at start if you search a forecast repository data is empty
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
 
@@ -90,11 +102,10 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
         }
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
-        viewModel.errorLiveData.observe(viewLifecycleOwner, errorObserver)
     }
 
     private fun setupListeners() {
-        setNetworkListener(context, offline_mode)
+        setNetworkListener(offline_mode)
 
         menu_button.setOnClickListener {
             showCitiesFragment()
@@ -142,7 +153,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
     private fun updateCityForecast(city: CityWeather) {
         viewModel.updateCityForecast(city)
-        loading_city_progress.updateProgressBar(true)
         Log.d(getString(R.string.main_log), "Updating forecast...")
     }
 
@@ -159,7 +169,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
 
                 Log.d(getString(R.string.main_log), "Searching city: $cityInput")
                 viewModel.searchCityForecastByName(cityInput)
-                loading_city_progress.updateProgressBar(true)
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
@@ -205,7 +214,6 @@ class MainPageFragment : Fragment(R.layout.main_page_fragment) {
     }
 
     private fun updateView(city: CityWeather) {
-        loading_city_progress.updateProgressBar(false)
         Log.d(getString(R.string.main_log), "Updating view...")
 
         city.apply {
