@@ -1,5 +1,6 @@
 package com.example.remote.services
 
+import com.example.remote.BuildConfig
 import com.example.remote.dto.TemperaturesDto
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
@@ -11,6 +12,6 @@ interface TemperatureService {
     fun searchTempAsync(
         @Query("lat") lat: String,
         @Query("lon") lon: String,
-        @Query("appid") ApiKey: String = API_KEY
+        @Query("appid") ApiKey: String = BuildConfig.API_KEY
     ): Deferred<Response<TemperaturesDto>>
 }

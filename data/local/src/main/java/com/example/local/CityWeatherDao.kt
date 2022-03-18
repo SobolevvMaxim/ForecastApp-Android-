@@ -9,6 +9,7 @@ const val TABLE_NAME = "CITIES_TABLE"
 interface CityWeatherDao {
 
     /**
+     * Get cities from base
      * @return all forecasts from base
      */
     @Query("SELECT * FROM $TABLE_NAME")

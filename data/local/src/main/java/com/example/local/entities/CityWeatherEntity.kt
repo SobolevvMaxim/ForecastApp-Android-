@@ -1,20 +1,19 @@
 package com.example.local.entities
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.local.DailyTemperatureConverter
-import com.example.local.HourlyTemperatureConverter
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
+import com.example.local.DailyTemperatureConverter
+import com.example.local.HourlyTemperatureConverter
 
 @Entity(tableName = com.example.local.TABLE_NAME)
 data class CityWeatherEntity(
-    @PrimaryKey @ColumnInfo(name = "id") val id: String,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "country") val country: String,
+    @PrimaryKey val id: String,
+    val name: String,
+    val country: String,
     var lat: String = "",
     var lon: String = "",
     @TypeConverters(DailyTemperatureConverter::class) var dailyTemperatures: ArrayList<Daily>,
@@ -24,7 +23,7 @@ data class CityWeatherEntity(
     val feels_like: Double,
     val humidity: Int,
     val uvi: Double,
-    @ColumnInfo(name = "forecastDate") val forecastDate: String,
+    val forecastDate: String,
 ) {
     fun toCityWeather(): CityWeather {
         return CityWeather(
