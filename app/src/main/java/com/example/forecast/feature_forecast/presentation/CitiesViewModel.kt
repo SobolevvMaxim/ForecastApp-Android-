@@ -16,9 +16,9 @@ class CitiesViewModel @Inject constructor(
     private val getForecastUseCase: GetForecast,
     private val deleteCityUseCase: DeleteCity,
     private val updateCityUseCase: UpdateCityForecast,
-    private val loadForecastsUseCase: LoadForecastsUseCase,
-    private val writeCityToBaseUseCase: WriteCityToBaseUseCase,
-    private val getCityByIDUseCase: GetCityByIDUseCase,
+    private val loadForecastsUseCase: LoadForecasts,
+    private val writeCityToBaseUseCase: WriteCityToBase,
+    private val getCityUseCase: GetCityByID,
 ) : BaseViewModel() {
 
     private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
@@ -115,7 +115,7 @@ class CitiesViewModel @Inject constructor(
     fun getCityByID(cityID: String) {
         simpleRequest(
             request = {
-                getCityByIDUseCase(cityID)
+                getCityUseCase(cityID)
             },
             successCallback = { cityByID ->
                 _chosenLiveData.postValue(Event.Success(cityByID))
