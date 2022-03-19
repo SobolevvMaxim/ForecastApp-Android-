@@ -19,7 +19,7 @@ class HourlyTemperatureConverter {
             val split = it.split(", ")
             val number = split[0].substring(1)
             val description = split[1].subSequence(0, split[1].length - 1)
-            Hourly(temp = number.toInt(), description = description.toString())
+            Hourly(temp = number.toDouble(), description = description.toString())
         })
     }
 }

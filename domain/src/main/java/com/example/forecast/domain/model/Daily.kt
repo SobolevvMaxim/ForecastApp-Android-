@@ -1,3 +1,3 @@
 package com.example.forecast.domain.model
 
-data class Daily(val temp: Int, val description: String)
+data class Daily(val temp: Double, val description: String)

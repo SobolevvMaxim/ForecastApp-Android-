@@ -41,13 +41,15 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
-            { city ->
+            clickListener = { city ->
                 changeChosenCity(city.id)
                 navigateToMainFragment()
-            }, { cityToDelete ->
+            },
+            onLongClickListener = { cityToDelete ->
                 deleteCityDialog(city = cityToDelete)
             }),
-        "0"
+        chosenID = "0",
+        highlightColor = "#4680C5"
     )
 
     override fun onCreateView(
@@ -129,7 +131,10 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
     }
 
     private fun changeChosenCity(newChosenID: String) {
-        Log.d(getString(R.string.main_log), "Changing chosen from cities fragment (new chosen id: $newChosenID)")
+        Log.d(
+            getString(R.string.main_log),
+            "Changing chosen from cities fragment (new chosen id: $newChosenID)"
+        )
         viewModel.getCityByID(newChosenID)
         (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)

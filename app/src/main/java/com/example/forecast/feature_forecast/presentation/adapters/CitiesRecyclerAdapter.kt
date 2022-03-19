@@ -1,6 +1,7 @@
 package com.example.forecast.feature_forecast.presentation.adapters
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,32 +10,36 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
+import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
-    private val listener: RecyclerOnCLickListener, private var chosenID: String
+    private val listener: RecyclerOnCLickListener,
+    private var chosenID: String,
+    private val highlightColor: String,
 ) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()),
     ChosenCityInterface {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val city: TextView = view.item_city
-        private val temperature: TextView = view.city_temperature
+        private val cityTV: TextView = view.item_city
+        private val temperatureTV: TextView = view.city_temperature
 
         @SuppressLint("ResourceAsColor")
         fun bind(
             item: CityWeather,
             listener: RecyclerOnCLickListener,
-            chosenCityInterface: ChosenCityInterface
+            chosenCityInterface: ChosenCityInterface,
+            highlightColor: String,
         ) = with(itemView) {
-            val cityText = "${item.name}, ${item.country}"
-            city.text = cityText
-            val temperatureText = "${item.dailyTemperatures[0].temp}°"
-            temperature.text = temperatureText
+            DataProcessing(item).apply {
+                cityTV.text = getForecastLocation()
+                temperatureTV.text = getTemperature()
+            }
 
-            highlightIfChosenCity(itemID = item.id, chosenCityInterface)
+            highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor)
 
             setOnClickListener {
                 listener.clickListener(item)
@@ -45,14 +50,14 @@ class CitiesRecyclerAdapter(
             }
         }
 
-        @SuppressLint("ResourceAsColor")
         private fun highlightIfChosenCity(
             itemID: String,
-            chosenCityInterface: ChosenCityInterface
+            chosenCityInterface: ChosenCityInterface,
+            highlightColor: String
         ) {
             if (chosenCityInterface.getChosenCityID() == itemID) {
-                city.setTextColor(R.color.primaryColor)
-                temperature.setTextColor(R.color.primaryColor)
+                cityTV.setTextColor(Color.parseColor(highlightColor))
+                temperatureTV.setTextColor(Color.parseColor(highlightColor))
             }
         }
     }
@@ -65,7 +70,7 @@ class CitiesRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, this)
+        holder.bind(getItem(position), listener, this, highlightColor)
     }
 
     override fun changeChosenInBase(newChosenID: String) {

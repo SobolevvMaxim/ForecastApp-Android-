@@ -12,7 +12,8 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:text="@string/city_default_view" />
+        android:text="@string/city_default_view"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/city_temperature"
