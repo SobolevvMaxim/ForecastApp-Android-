@@ -11,6 +11,8 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.features.LeftSwipeNavigation
+import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
@@ -19,8 +21,6 @@ import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLi
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
-import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
