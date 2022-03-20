@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
-import kotlin.math.roundToInt
 
 object UIUtils {
 
@@ -16,6 +15,4 @@ object UIUtils {
             false -> this.visibility = View.INVISIBLE
         }
     }
-
-    fun Double.getTemperature() = "${this.roundToInt() - 273}°"
 }
