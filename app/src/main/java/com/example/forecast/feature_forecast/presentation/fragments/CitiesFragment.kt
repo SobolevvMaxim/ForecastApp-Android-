@@ -11,6 +11,8 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.features.LeftSwipeNavigation
+import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
@@ -19,8 +21,6 @@ import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLi
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.utils.LeftSwipeNavigation
-import com.example.forecast.feature_forecast.presentation.utils.SwipeListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
@@ -41,13 +41,15 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
-            { city ->
+            clickListener = { city ->
                 changeChosenCity(city.id)
                 navigateToMainFragment()
-            }, { cityToDelete ->
+            },
+            onLongClickListener = { cityToDelete ->
                 deleteCityDialog(city = cityToDelete)
             }),
-        "0"
+        chosenID = "0",
+        highlightColor = "#4680C5"
     )
 
     override fun onCreateView(
@@ -129,7 +131,10 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
     }
 
     private fun changeChosenCity(newChosenID: String) {
-        Log.d(getString(R.string.main_log), "Changing chosen from cities fragment (new chosen id: $newChosenID)")
+        Log.d(
+            getString(R.string.main_log),
+            "Changing chosen from cities fragment (new chosen id: $newChosenID)"
+        )
         viewModel.getCityByID(newChosenID)
         (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)

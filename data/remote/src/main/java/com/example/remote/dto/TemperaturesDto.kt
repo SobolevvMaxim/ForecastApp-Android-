@@ -8,7 +8,6 @@ import com.example.forecast.domain.model.Hourly
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.roundToInt
 
 data class TemperaturesDto(
     @SerializedName("hourly") val hourlyTemp: List<HourlyTemp>,
@@ -18,11 +17,11 @@ data class TemperaturesDto(
     fun toCityWeather(city: City): CityWeather {
         val daily = ArrayList(
             dailyTemp.map {
-                Daily(temp = it.temp.day.roundToInt() - 273, description = it.weather[0].main)
+                Daily(temp = it.temp.day, description = it.weather[0].main)
             })
         val hourly = ArrayList(
             hourlyTemp.map {
-                Hourly(temp = it.temp.roundToInt() - 273, description = it.weather[0].main)
+                Hourly(temp = it.temp, description = it.weather[0].main)
             }
         )
         val cityWeather = CityWeather(

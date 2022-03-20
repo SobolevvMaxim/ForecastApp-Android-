@@ -23,6 +23,7 @@ import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
+import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
@@ -31,13 +32,13 @@ import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
+import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 
 @AndroidEntryPoint
@@ -213,39 +214,28 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
         (activity as NavigationHost).navigateToCitiesFragment()
     }
 
-    private fun updateView(city: CityWeather) {
+    private fun updateView(cityToUpdateView: CityWeather) {
         Log.d(getString(R.string.main_log), "Updating view...")
 
-        city.apply {
-            val cityInfoText = "$name, $country"
-            currentCity.text = cityInfoText
-            dailyTemperatures[0].run {
-                setForecastImage(description)
-                val temperature = "$temp°"
-                temperature_today.text = temperature
-            }
-            uvindex_value.text = uvi.toString()
-            sunrise_value.text = mainTimeFormat.getTime(city.sunrise)
-            sunset_value.text = mainTimeFormat.getTime(city.sunset)
-            val feelsLikeValue =
-                "${getString(R.string.feels_like_title)} ${feels_like.roundToInt() - 273}°"
-            feels_like_view.text = feelsLikeValue
-            currentDate.text = forecastDate
-            val humidityValue = "$humidity%"
-            humidity_value.text = humidityValue
+        val getUIData = DataProcessing(cityToUpdateView)
+        getUIData.apply {
+            currentCity.text = getForecastLocation()
+            temperature_today.text = getUIData.getTemperature()
+            uvindex_value.text = getUVI()
+            feels_like_view.text = getFeelsLike(getString(R.string.feels_like_title))
+            currentDate.text = getForecastDate()
+            humidity_value.text = getHumidity()
+            setForecastImage(city)
+            sunrise_value.text = mainTimeFormat.getTime(cityToUpdateView.sunrise)
+            sunset_value.text = mainTimeFormat.getTime(cityToUpdateView.sunset)
 
-            setDailyRecyclerView(this)
-            setHourlyRecyclerView(this)
+            setDailyRecyclerView(city)
+            setHourlyRecyclerView(city)
         }
     }
 
-    private fun setForecastImage(description: String) {
-        when (description) {
-            "Rain" -> big_image.setImageResource(R.drawable.forecast_rain_icon)
-            "Snow" -> big_image.setImageResource(R.drawable.forecast_snow_icon)
-            "Clear" -> big_image.setImageResource(R.drawable.forecast_sun_icon)
-            else -> big_image.setImageResource(R.drawable.forecast_clouds_icon)
-        }
+    private fun setForecastImage(city: CityWeather) {
+        big_image.setImageResource(city.dailyTemperatures[0].description.getForecastImageID())
     }
 
     private fun setDailyRecyclerView(city: CityWeather) {

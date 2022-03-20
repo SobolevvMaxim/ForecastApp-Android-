@@ -7,7 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
+import com.example.forecast.domain.data_processing.Extensions.getCelsius
 import com.example.forecast.domain.model.Hourly
+import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
 
 class DayForecastAdapter(
     private val forecast: List<Hourly>,
@@ -31,14 +33,8 @@ class DayForecastAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         forecast[position].let {
             holder.apply {
-                val temperature = "${it.temp}°"
-                temperatureTV.text = temperature
-                when (it.description) {
-                    "Rain" -> image.setImageResource(R.drawable.forecast_rain_icon)
-                    "Snow" -> image.setImageResource(R.drawable.forecast_snow_icon)
-                    "Clear" -> image.setImageResource(R.drawable.forecast_sun_icon)
-                    else -> image.setImageResource(R.drawable.forecast_clouds_icon)
-                }
+                temperatureTV.text = it.temp.getCelsius()
+                image.setImageResource(it.description.getForecastImageID())
                 date.text = getItemTime(position)
             }
         }
