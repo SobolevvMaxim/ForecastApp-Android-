@@ -226,8 +226,8 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
             currentDate.text = getForecastDate()
             humidity_value.text = getHumidity()
             setForecastImage(city)
-            sunrise_value.text = mainTimeFormat.getTime(cityToUpdateView.sunrise)
-            sunset_value.text = mainTimeFormat.getTime(cityToUpdateView.sunset)
+            sunrise_value.text = mainTimeFormat.getTime(city.sunrise)
+            sunset_value.text = mainTimeFormat.getTime(city.sunset)
 
             setDailyRecyclerView(city)
             setHourlyRecyclerView(city)
