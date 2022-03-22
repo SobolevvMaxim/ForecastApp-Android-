@@ -8,8 +8,9 @@ import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
 import com.example.local.DailyTemperatureConverter
 import com.example.local.HourlyTemperatureConverter
+import com.example.local.TABLE_NAME
 
-@Entity(tableName = com.example.local.TABLE_NAME)
+@Entity(tableName = TABLE_NAME)
 data class CityWeatherEntity(
     @PrimaryKey val id: String,
     val name: String,

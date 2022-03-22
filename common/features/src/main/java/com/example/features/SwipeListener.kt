@@ -36,7 +36,3 @@ class SwipeListener(
         return result
     }
 }
-
-interface LeftSwipeNavigation {
-    fun onLeftSwipe()
-}
