@@ -16,11 +16,11 @@ import com.example.features.RecyclerOnCLickListener
 import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
@@ -69,7 +69,7 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
         super.onViewCreated(view, savedInstanceState)
 
         if (savedInstanceState == null) {
-            viewModel.getAddedCities(postResults = true)
+            viewModel.getAddedCities()
             Log.d(getString(R.string.main_log), "Loading cities from base...")
         }
 
@@ -135,7 +135,6 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
             getString(R.string.main_log),
             "Changing chosen from cities fragment (new chosen id: $newChosenID)"
         )
-        viewModel.getCityByID(newChosenID)
         (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
     }

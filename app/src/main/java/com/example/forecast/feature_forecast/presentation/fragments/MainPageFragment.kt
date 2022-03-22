@@ -25,7 +25,6 @@ import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
@@ -33,6 +32,7 @@ import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
+import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
@@ -42,9 +42,13 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainPageFragment : BaseFragment<CitiesViewModel>() {
+class MainPageFragment : BaseFragment<MainViewModel>() {
     companion object {
         fun create() = MainPageFragment()
+
+//        fun create(city: CityWeather): MainPageFragment {
+//
+//        }
     }
 
     @Inject
@@ -55,7 +59,7 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
-    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<MainViewModel>({ requireActivity() })
 
     private val cityObserver = Observer<Event<CityWeather>> { city ->
         when (city) {
@@ -97,10 +101,7 @@ class MainPageFragment : BaseFragment<CitiesViewModel>() {
         setupListeners()
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
-
-        if (savedInstanceState == null) {
-            viewModel.getCityByID(cityID = chosenCityID)
-        }
+        viewModel.getCityByID(cityID = chosenCityID)
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
     }

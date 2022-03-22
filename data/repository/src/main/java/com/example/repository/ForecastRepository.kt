@@ -7,9 +7,7 @@ import com.example.local.CityWeatherDao
 import com.example.local.entities.toCityWeatherEntity
 import com.example.remote.services.CitiesService
 import com.example.remote.services.TemperatureService
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class ForecastRepository @Inject constructor(
@@ -19,6 +17,12 @@ class ForecastRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ) : IForecastRepository {
     private var addedCities: Set<CityWeather>? = null
+
+    init {
+        GlobalScope.launch(dispatcher) {
+            addedCities = getAll()
+        }
+    }
 
     override suspend fun searchCity(query: String): Result<City> {
         return withContext(dispatcher) {
