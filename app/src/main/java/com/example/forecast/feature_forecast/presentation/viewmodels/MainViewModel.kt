@@ -19,8 +19,8 @@ class MainViewModel @Inject constructor(
     private val getCityUseCase: GetCityByID,
 ) : BaseViewModel() {
 
-    private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
-    val chosenLiveData: LiveData<Event<CityWeather>> get() = _chosenLiveData
+    private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
+    val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
 
     fun searchCityForecastByName(searchInput: CharSequence) {
         _chosenLiveData.postValue(Event.Loading())

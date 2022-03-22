@@ -45,10 +45,6 @@ import javax.inject.Inject
 class MainPageFragment : BaseFragment<MainViewModel>() {
     companion object {
         fun create() = MainPageFragment()
-
-//        fun create(city: CityWeather): MainPageFragment {
-//
-//        }
     }
 
     @Inject
@@ -61,22 +57,21 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
 
     override val viewModel by viewModels<MainViewModel>({ requireActivity() })
 
-    private val cityObserver = Observer<Event<CityWeather>> { city ->
+    private val cityObserver = Observer<Event<CityWeather?>> { city ->
         when (city) {
             is Event.Loading -> onLoading()
-            is Event.Success<CityWeather> -> city.data?.let{onSuccess(it)}
-            is Event.Error -> city.throwable?.let {
-                onError(it)
-            } ?:  viewModel.searchCityForecastByName(getString(R.string.default_city))
+            is Event.Success<CityWeather?> -> city.data?.let { onSuccess(it) }
+                ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
+            is Event.Error -> onError(city.throwable)
         }
     }
 
     private fun onSuccess(city: CityWeather) {
-            loading_city_progress.updateProgressBar(false)
-            swipe_layout.isRefreshing = false
-            checkToUpdate(city)
-            updateView(city)
-            (activity as ChosenCityInterface).changeChosenInBase(city.id)
+        loading_city_progress.updateProgressBar(false)
+        swipe_layout.isRefreshing = false
+        checkToUpdate(city)
+        updateView(city)
+        (activity as ChosenCityInterface).changeChosenInBase(city.id)
     }
 
     override fun onLoading() {
