@@ -1,7 +1,8 @@
-package com.example.forecast.feature_forecast.presentation
+package com.example.forecast.feature_forecast.presentation.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.extensions.mappers.CityWeatherMappers.toCity
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
@@ -11,21 +12,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CitiesViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val getCityInfoUseCase: GetCityInfo,
     private val getForecastUseCase: GetForecast,
-    private val deleteCityUseCase: DeleteCity,
     private val updateCityUseCase: UpdateCityInBase,
-    private val loadForecastsUseCase: LoadForecasts,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
 ) : BaseViewModel() {
 
-    private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
-    val chosenLiveData: LiveData<Event<CityWeather>> get() = _chosenLiveData
-
-    private val _citiesLiveData = MutableLiveData<Event<Set<CityWeather>>>()
-    val citiesLiveData: LiveData<Event<Set<CityWeather>>> get() = _citiesLiveData
+    private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
+    val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
 
     fun searchCityForecastByName(searchInput: CharSequence) {
         _chosenLiveData.postValue(Event.Loading())
@@ -70,44 +66,6 @@ class CitiesViewModel @Inject constructor(
             },
             errorCallback = { error ->
                 _chosenLiveData.postValue(Event.Error(error))
-            }
-        )
-    }
-
-    fun getAddedCities(postResults: Boolean) {
-        when (postResults) {
-            true -> simpleRequest(
-                request = {
-                    loadForecastsUseCase()
-                },
-                successCallback = { citiesFromBase ->
-                    _citiesLiveData.postValue(Event.Success(citiesFromBase))
-                },
-                errorCallback = { error ->
-                    _citiesLiveData.postValue(Event.Error(error))
-                }
-            )
-            false -> simpleRequest(
-                request = {
-                    loadForecastsUseCase()
-                },
-                errorCallback = { error ->
-                    _citiesLiveData.postValue(Event.Error(error))
-                }
-            )
-        }
-    }
-
-    fun deleteCity(cityToDelete: CityWeather) {
-        simpleRequest(
-            request = {
-                deleteCityUseCase(cityToDelete)
-            },
-            successCallback = { cities ->
-                _citiesLiveData.postValue(Event.Success(cities))
-            },
-            errorCallback = { error ->
-                _citiesLiveData.postValue(Event.Error(error))
             }
         )
     }

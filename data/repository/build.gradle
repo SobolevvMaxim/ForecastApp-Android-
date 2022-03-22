@@ -38,6 +38,7 @@ dependencies {
     implementation project(path: ':data:remote')
     implementation project(path: ':data:local')
     implementation project(path: ':domain')
+    implementation project(path: ":common:extensions")
 
     implementation deps.kotlin.kotlinstd
     implementation deps.kotlin.coroutines
