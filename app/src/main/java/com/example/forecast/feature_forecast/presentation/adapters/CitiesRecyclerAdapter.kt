@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.features.RecyclerOnCLickListener
 import com.example.forecast.R
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
@@ -16,11 +17,11 @@ import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterf
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
-    private val listener: RecyclerOnCLickListener,
+    private val listener: RecyclerOnCLickListener<CityWeather>,
     private var chosenID: String,
     private val highlightColor: String,
 ) :
-    ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(DiffCallback()),
+    ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(diffUtilCallback),
     ChosenCityInterface {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,7 +31,7 @@ class CitiesRecyclerAdapter(
         @SuppressLint("ResourceAsColor")
         fun bind(
             item: CityWeather,
-            listener: RecyclerOnCLickListener,
+            listener: RecyclerOnCLickListener<CityWeather>,
             chosenCityInterface: ChosenCityInterface,
             highlightColor: String,
         ) = with(itemView) {
@@ -80,19 +81,17 @@ class CitiesRecyclerAdapter(
     override fun getChosenCityID(): String {
         return chosenID
     }
-}
 
-class RecyclerOnCLickListener(
-    val clickListener: (newChosenCityName: CityWeather) -> Unit,
-    val onLongClickListener: (cityToDelete: CityWeather) -> Unit
-)
+    companion object {
+        val diffUtilCallback: DiffUtil.ItemCallback<CityWeather>
+            get() = object : DiffUtil.ItemCallback<CityWeather>() {
+                override fun areItemsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
+                    return oldItem.id == newItem.id
+                }
 
-class DiffCallback : DiffUtil.ItemCallback<CityWeather>() {
-    override fun areItemsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
-        return oldItem.id == newItem.id
-    }
-
-    override fun areContentsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
-        return oldItem == newItem
+                override fun areContentsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
+                    return oldItem == newItem
+                }
+            }
     }
 }

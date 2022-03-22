@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.features.LeftSwipeNavigation
+import com.example.features.RecyclerOnCLickListener
 import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
-import com.example.forecast.feature_forecast.presentation.adapters.RecyclerOnCLickListener
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
