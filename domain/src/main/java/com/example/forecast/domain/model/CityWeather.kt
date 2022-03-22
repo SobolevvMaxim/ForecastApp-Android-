@@ -16,16 +16,6 @@ data class CityWeather(
     var forecastDate: String,
 ) {
 
-    fun toCity() = City(
-        coordinates = Coordinates(
-            lat = lat,
-            lon = lon
-        ),
-        id = id,
-        name = name,
-        country = country
-    )
-
     override fun equals(other: Any?): Boolean {
         if (other is CityWeather) {
             return other.id == this.id

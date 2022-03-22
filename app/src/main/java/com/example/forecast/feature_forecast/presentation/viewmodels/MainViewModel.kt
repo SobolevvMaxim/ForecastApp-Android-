@@ -2,6 +2,7 @@ package com.example.forecast.feature_forecast.presentation.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.extensions.mappers.CityWeatherMappers.toCity
 import com.example.forecast.domain.model.City
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*

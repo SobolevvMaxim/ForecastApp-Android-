@@ -3,7 +3,6 @@ package com.example.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
 import com.example.local.DailyTemperatureConverter
@@ -25,38 +24,4 @@ data class CityWeatherEntity(
     val humidity: Int,
     val uvi: Double,
     val forecastDate: String,
-) {
-    fun toCityWeather(): CityWeather {
-        return CityWeather(
-            id,
-            name,
-            country,
-            lat,
-            lon,
-            dailyTemperatures,
-            hourlyTemperatures,
-            sunrise,
-            sunset,
-            feels_like,
-            humidity,
-            uvi,
-            forecastDate
-        )
-    }
-}
-
-fun CityWeather.toCityWeatherEntity() = CityWeatherEntity(
-    id,
-    name,
-    country,
-    lat,
-    lon,
-    dailyTemperatures,
-    hourlyTemperatures,
-    sunrise,
-    sunset,
-    feels_like,
-    humidity,
-    uvi,
-    forecastDate
 )
