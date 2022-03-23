@@ -1,10 +1,7 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.features.DialogFragmentSetup.alignToLeft
 import com.example.features.LeftSwipeNavigation
 import com.example.features.RecyclerOnCLickListener
 import com.example.features.SwipeListener
@@ -27,7 +25,6 @@ import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterf
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
@@ -89,25 +86,6 @@ class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
     override fun onResume() {
         super.onResume()
         alignToLeft()
-    }
-
-    private fun DialogFragment.alignToLeft() {
-        dialog?.window?.apply {
-            setGravity(Gravity.START or Gravity.LEFT)
-            decorView.apply {
-
-                // Get screen width
-                val displayMetrics = DisplayMetrics().apply {
-                    windowManager.defaultDisplay.getMetrics(this)
-                }
-
-                setBackgroundColor(Color.WHITE) // I don't know why it is required, without it background of rootView is ignored (is transparent even if set in xml/runtime)
-                minimumHeight = displayMetrics.heightPixels
-                minimumWidth = (displayMetrics.widthPixels * 0.75).roundToInt()
-                setPadding(0, 0, 0, 0)
-                invalidate()
-            }
-        }
     }
 
     private fun deleteCityDialog(city: CityWeather) {
