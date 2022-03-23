@@ -8,18 +8,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.features.DialogFragmentSetup.alignToLeft
 import com.example.features.LeftSwipeNavigation
 import com.example.features.RecyclerOnCLickListener
 import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
+import com.example.forecast.feature_forecast.presentation.base.BaseDialogFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
@@ -27,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
 
 @AndroidEntryPoint
-class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
+class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigation {
     private val mDetector: GestureDetectorCompat by lazy {
         GestureDetectorCompat(
             requireActivity().applicationContext,
@@ -35,7 +34,7 @@ class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
         )
     }
 
-    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
@@ -81,11 +80,6 @@ class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
         }
 
         setRecyclerView()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        alignToLeft()
     }
 
     private fun deleteCityDialog(city: CityWeather) {
@@ -151,11 +145,4 @@ class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
     override fun onLeftSwipe() {
         navigateToMainFragment()
     }
-
-    private fun onError(error: Throwable?) {
-        Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
-        Log.d(getString(R.string.main_log), "Error: $error")
-    }
-
-    private fun onLoading() {}
 }
