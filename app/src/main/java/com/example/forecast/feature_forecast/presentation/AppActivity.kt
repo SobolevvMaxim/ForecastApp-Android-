@@ -4,25 +4,20 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.forecast.R
-import com.example.forecast.feature_forecast.presentation.fragments.CitiesFragment
-import com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AppActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
+class AppActivity : AppCompatActivity(R.layout.main_activity),
     ChosenCityInterface {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (savedInstanceState == null) {
-            navigateToMainFragment()
-        }
+//        if (savedInstanceState == null) {
+//            navigateToMainFragment()
+//        }
     }
 
     override fun changeChosenInBase(newChosenID: String) {
@@ -42,30 +37,30 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), NavigationHost,
         return chosenIndex ?: "0"
     }
 
-    private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
-        Log.d(getString(R.string.main_log), "Navigating to :$fragment")
-        val transaction = supportFragmentManager.beginTransaction()
-            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//            .setCustomAnimations(
-//                R.anim.slide_in,
-//                R.anim.fade_out,
-//                R.anim.fade_in,
-//                R.anim.slide_out
-//            )
-            .add(R.id.container_main, fragment)
+//    private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
+//        Log.d(getString(R.string.main_log), "Navigating to :$fragment")
+//        val transaction = supportFragmentManager.beginTransaction()
+//            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+////            .setCustomAnimations(
+////                R.anim.slide_in,
+////                R.anim.fade_out,
+////                R.anim.fade_in,
+////                R.anim.slide_out
+////            )
+//            .add(R.id.container_main, fragment)
+//
+//        if (addToBackstack) {
+//            transaction.addToBackStack(null)
+//        }
+//
+//        transaction.commit()
+//    }
 
-        if (addToBackstack) {
-            transaction.addToBackStack(null)
-        }
-
-        transaction.commit()
-    }
-
-    private fun navigateToMainFragment() {
-        navigateTo(MainPageFragment.create(), addToBackstack = false)
-    }
-
-    override fun navigateToCitiesFragment() {
-        navigateTo(CitiesFragment.create(), addToBackstack = true)
-    }
+//    private fun navigateToMainFragment() {
+//        navigateTo(MainPageFragment.create(), addToBackstack = false)
+//    }
+//
+//    override fun navigateToCitiesFragment() {
+//        navigateTo(CitiesFragment.create(), addToBackstack = true)
+//    }
 }

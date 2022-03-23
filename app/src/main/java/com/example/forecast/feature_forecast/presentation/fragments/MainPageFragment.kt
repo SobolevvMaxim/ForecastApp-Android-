@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
@@ -30,7 +31,6 @@ import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastA
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.utils.NavigationHost
 import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,9 +43,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainPageFragment : BaseFragment<MainViewModel>() {
-    companion object {
-        fun create() = MainPageFragment()
-    }
+//    companion object {
+//        fun create() = MainPageFragment()
+//    }
 
     @Inject
     @DateFormat
@@ -207,7 +207,8 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
 
     private fun showCitiesFragment() {
         Log.d(getString(R.string.main_log), "Showing cities fragment...")
-        (activity as NavigationHost).navigateToCitiesFragment()
+//        (activity as NavigationHost).navigateToCitiesFragment()
+        findNavController().navigate(MainPageFragmentDirections.actionMainPageFragmentToCitiesFragment())
     }
 
     private fun updateView(cityToUpdateView: CityWeather) {

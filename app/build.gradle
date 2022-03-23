@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -60,6 +61,8 @@ dependencies {
     implementation deps.kotlin.kotlinstd
     implementation deps.kotlin.coroutines
 
+    implementation deps.navigation.fragment
+    implementation deps.navigation.ui_ktx
     implementation deps.core_ktx
     implementation deps.app_compat
     implementation deps.activity.activity_ktx

@@ -1,43 +1,44 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.GestureDetectorCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.features.LeftSwipeNavigation
 import com.example.features.RecyclerOnCLickListener
-import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
-import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.choose_city_fragment.*
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
-    companion object {
-        fun create() = CitiesFragment()
-    }
+class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeNavigation {
+//    companion object {
+//        fun create() = CitiesFragment()
+//    }
 
-    private val mDetector: GestureDetectorCompat by lazy {
-        GestureDetectorCompat(
-            requireActivity().applicationContext,
-            SwipeListener(leftSwipeNavigation = this)
-        )
-    }
+//    private val mDetector: GestureDetectorCompat by lazy {
+//        GestureDetectorCompat(
+//            requireActivity().applicationContext,
+//            SwipeListener(leftSwipeNavigation = this)
+//        )
+//    }
 
-    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
@@ -52,17 +53,18 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
         highlightColor = "#4680C5"
     )
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.choose_city_fragment, container, false).apply {
-            setOnTouchListener { _, p1 ->
-                location_image.performClick()
-                mDetector.onTouchEvent(p1)
-            }
-        }
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View =
+//        inflater.inflate(R.layout.choose_city_fragment, container, false)
+////            .apply {
+////            setOnTouchListener { _, p1 ->
+////                location_image.performClick()
+////                mDetector.onTouchEvent(p1)
+////            }
+////        }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,6 +84,33 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
         }
 
         setRecyclerView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        alignToLeft()
+    }
+
+    private fun DialogFragment.alignToLeft() {
+        dialog?.window?.apply {
+            setGravity(Gravity.START or Gravity.LEFT)
+            decorView.apply {
+
+                // Get screen width
+                val displayMetrics = DisplayMetrics().apply {
+                    windowManager.defaultDisplay.getMetrics(this)
+                }
+
+                setBackgroundColor(Color.WHITE) // I don't know why it is required, without it background of rootView is ignored (is transparent even if set in xml/runtime)
+//                minimumWidth = displayMetrics.widthPixels
+                minimumHeight = displayMetrics.heightPixels
+                minimumWidth = (displayMetrics.widthPixels * 0.8).roundToInt()
+                setPadding(0, 0, 0, 0)
+//                layoutParams =
+//                    WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.MATCH_PARENT)
+                invalidate()
+            }
+        }
     }
 
     private fun deleteCityDialog(city: CityWeather) {
@@ -110,7 +139,8 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
 
     private fun navigateToMainFragment() {
         Log.d(getString(R.string.main_log), "Navigating to Main Fragment...")
-        parentFragmentManager.popBackStack()
+        findNavController().navigate(R.id.mainPageFragment)
+//        parentFragmentManager.popBackStack()
     }
 
     private fun setRecyclerView() {
@@ -120,10 +150,10 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
 
         cities_recyclerView.apply {
             layoutManager = recyclerManager
-            setOnTouchListener { _, p1 ->
-                location_image.performClick()
-                mDetector.onTouchEvent(p1)
-            }
+//            setOnTouchListener { _, p1 ->
+//                location_image.performClick()
+//                mDetector.onTouchEvent(p1)
+//            }
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
@@ -147,4 +177,11 @@ class CitiesFragment : BaseFragment<CitiesViewModel>(), LeftSwipeNavigation {
     override fun onLeftSwipe() {
         navigateToMainFragment()
     }
+
+    private fun onError(error: Throwable?) {
+        Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
+        Log.d(getString(R.string.main_log), "Error: $error")
+    }
+
+    private fun onLoading() {}
 }
