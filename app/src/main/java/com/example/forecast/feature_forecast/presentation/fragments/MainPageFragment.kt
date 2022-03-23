@@ -207,7 +207,6 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
 
     private fun showCitiesFragment() {
         Log.d(getString(R.string.main_log), "Showing cities fragment...")
-//        (activity as NavigationHost).navigateToCitiesFragment()
         findNavController().navigate(MainPageFragmentDirections.actionMainPageFragmentToCitiesFragment())
     }
 

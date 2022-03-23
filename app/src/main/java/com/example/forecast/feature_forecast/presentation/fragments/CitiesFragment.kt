@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.features.LeftSwipeNavigation
 import com.example.features.RecyclerOnCLickListener
+import com.example.features.SwipeListener
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
@@ -26,17 +30,13 @@ import kotlinx.android.synthetic.main.choose_city_fragment.*
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeNavigation {
-//    companion object {
-//        fun create() = CitiesFragment()
-//    }
-
-//    private val mDetector: GestureDetectorCompat by lazy {
-//        GestureDetectorCompat(
-//            requireActivity().applicationContext,
-//            SwipeListener(leftSwipeNavigation = this)
-//        )
-//    }
+class CitiesFragment : DialogFragment(), LeftSwipeNavigation {
+    private val mDetector: GestureDetectorCompat by lazy {
+        GestureDetectorCompat(
+            requireActivity().applicationContext,
+            SwipeListener(leftSwipeNavigation = this)
+        )
+    }
 
     private val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
 
@@ -53,18 +53,18 @@ class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeN
         highlightColor = "#4680C5"
     )
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View =
-//        inflater.inflate(R.layout.choose_city_fragment, container, false)
-////            .apply {
-////            setOnTouchListener { _, p1 ->
-////                location_image.performClick()
-////                mDetector.onTouchEvent(p1)
-////            }
-////        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View =
+        inflater.inflate(R.layout.choose_city_fragment, container, false)
+            .apply {
+            setOnTouchListener { _, p1 ->
+                location_image.performClick()
+                mDetector.onTouchEvent(p1)
+            }
+        }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,12 +102,9 @@ class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeN
                 }
 
                 setBackgroundColor(Color.WHITE) // I don't know why it is required, without it background of rootView is ignored (is transparent even if set in xml/runtime)
-//                minimumWidth = displayMetrics.widthPixels
                 minimumHeight = displayMetrics.heightPixels
-                minimumWidth = (displayMetrics.widthPixels * 0.8).roundToInt()
+                minimumWidth = (displayMetrics.widthPixels * 0.75).roundToInt()
                 setPadding(0, 0, 0, 0)
-//                layoutParams =
-//                    WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.MATCH_PARENT)
                 invalidate()
             }
         }
@@ -140,7 +137,6 @@ class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeN
     private fun navigateToMainFragment() {
         Log.d(getString(R.string.main_log), "Navigating to Main Fragment...")
         findNavController().navigate(R.id.mainPageFragment)
-//        parentFragmentManager.popBackStack()
     }
 
     private fun setRecyclerView() {
@@ -150,10 +146,10 @@ class CitiesFragment : DialogFragment(R.layout.choose_city_fragment), LeftSwipeN
 
         cities_recyclerView.apply {
             layoutManager = recyclerManager
-//            setOnTouchListener { _, p1 ->
-//                location_image.performClick()
-//                mDetector.onTouchEvent(p1)
-//            }
+            setOnTouchListener { _, p1 ->
+                location_image.performClick()
+                mDetector.onTouchEvent(p1)
+            }
         }
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
 
