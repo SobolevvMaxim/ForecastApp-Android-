@@ -40,12 +40,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class MainPageFragment : BaseFragment<MainViewModel>() {
-//    companion object {
-//        fun create() = MainPageFragment()
-//    }
 
     @Inject
     @DateFormat

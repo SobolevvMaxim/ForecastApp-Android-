@@ -1,7 +1,6 @@
 package com.example.forecast.feature_forecast.presentation
 
 import android.content.Context
-import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.R
@@ -11,14 +10,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.main_activity),
     ChosenCityInterface {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-//        if (savedInstanceState == null) {
-//            navigateToMainFragment()
-//        }
-    }
 
     override fun changeChosenInBase(newChosenID: String) {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
@@ -36,31 +27,4 @@ class AppActivity : AppCompatActivity(R.layout.main_activity),
         Log.d(getString(R.string.main_log), "Getting chosen from base (AppActivity): $chosenIndex")
         return chosenIndex ?: "0"
     }
-
-//    private fun navigateTo(fragment: Fragment, addToBackstack: Boolean) {
-//        Log.d(getString(R.string.main_log), "Navigating to :$fragment")
-//        val transaction = supportFragmentManager.beginTransaction()
-//            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-////            .setCustomAnimations(
-////                R.anim.slide_in,
-////                R.anim.fade_out,
-////                R.anim.fade_in,
-////                R.anim.slide_out
-////            )
-//            .add(R.id.container_main, fragment)
-//
-//        if (addToBackstack) {
-//            transaction.addToBackStack(null)
-//        }
-//
-//        transaction.commit()
-//    }
-
-//    private fun navigateToMainFragment() {
-//        navigateTo(MainPageFragment.create(), addToBackstack = false)
-//    }
-//
-//    override fun navigateToCitiesFragment() {
-//        navigateTo(CitiesFragment.create(), addToBackstack = true)
-//    }
 }

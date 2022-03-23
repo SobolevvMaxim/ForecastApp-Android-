@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 object DialogFragmentSetup {
     fun DialogFragment.alignToLeft() {
         dialog?.window?.apply {
-            setGravity(Gravity.START or Gravity.LEFT)
+            setGravity(Gravity.START)
             decorView.apply {
 
                 // Get screen width

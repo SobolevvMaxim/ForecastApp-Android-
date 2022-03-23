@@ -123,7 +123,9 @@ class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigatio
                 mDetector.onTouchEvent(p1)
             }
         }
-        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase((activity as ChosenCityInterface).getChosenCityID())
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(
+            (activity as ChosenCityInterface).getChosenCityID()
+        )
 
         cities_recyclerView.adapter = citiesRecyclerAdapter
     }

@@ -8,6 +8,4 @@ data class CityDto(
     @SerializedName("coord") val coordinates: Coordinates,
     @SerializedName("sys") val sys: Sys,
     val id: String,
-) {
-
-}
+)
