@@ -100,12 +100,18 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     private fun setupListeners() {
         setNetworkListener(offline_mode)
 
-        menu_button.setOnClickListener {
+        topAppBar.setNavigationOnClickListener {
             showCitiesFragment()
         }
 
-        mainAddButton.setOnClickListener {
-            addCityDialog()
+        topAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.add_button -> {
+                    addCityDialog()
+                    true
+                }
+                else -> false
+            }
         }
 
         swipe_layout.setOnRefreshListener {

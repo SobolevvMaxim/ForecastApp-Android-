@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ThemeActionBar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@null">
 
     <ImageView
         android:id="@+id/background_image"
@@ -17,63 +19,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/back" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/top_screen"
-        android:layout_width="0dp"
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/loading_city_progress"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/offline_mode"
-            style="@style/Widget.Forecast.TextView.OfflineMode"
+    </com.google.android.material.progressindicator.LinearProgressIndicator>
+
+    <TextView
+        android:id="@+id/offline_mode"
+        style="@style/Widget.Forecast.TextView.OfflineMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#72151515"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            style="@style/ThemeActionBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#72151515"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            app:elevation="0dp">
 
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/loading_city_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@android:color/transparent"
+                android:fitsSystemWindows="false"
+                app:menu="@menu/main_toolbar"
+                app:navigationIcon="@drawable/ic_baseline_menu_24" />
 
-        </com.google.android.material.progressindicator.LinearProgressIndicator>
-
-        <ImageButton
-            android:id="@+id/menu_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="12dp"
-            android:background="#00FFFFFF"
-            android:contentDescription="@string/menu_button_description"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loading_city_progress"
-            app:srcCompat="@drawable/ic_baseline_menu_24"
-            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
-
-        <ImageButton
-            android:id="@+id/mainAddButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/ic_baseline_add_24"
-            android:contentDescription="@string/weather_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loading_city_progress"
-            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
@@ -82,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_screen">
+        app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout">
 
         <ScrollView
             android:id="@+id/scroll"
@@ -103,14 +96,18 @@
                     android:id="@+id/main_info"
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:layout_margin="11dp"
+                    android:layout_marginStart="11dp"
+                    android:layout_marginLeft="11dp"
+                    android:layout_marginEnd="11dp"
+                    android:layout_marginRight="11dp"
+                    android:layout_marginBottom="11dp"
                     android:layout_weight="1"
                     android:background="#72151515"
                     android:orientation="vertical"
                     android:padding="11dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/mainAddButton">
+                    app:layout_constraintTop_toBottomOf="@+id/add_button">
 
                     <TextView
                         android:id="@+id/currentCity"
