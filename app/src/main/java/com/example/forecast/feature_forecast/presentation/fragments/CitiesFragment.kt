@@ -34,7 +34,7 @@ class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigatio
         )
     }
 
-    override val viewModel by viewModels<CitiesViewModel>({ requireActivity() })
+    override val viewModel by viewModels<CitiesViewModel>()
 
     private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
         RecyclerOnCLickListener(
@@ -109,6 +109,7 @@ class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigatio
     private fun navigateToMainFragment() {
         Log.d(getString(R.string.main_log), "Navigating to Main Fragment...")
         findNavController().navigate(R.id.mainPageFragment)
+//        findNavController().popBackStack()
     }
 
     private fun setRecyclerView() {

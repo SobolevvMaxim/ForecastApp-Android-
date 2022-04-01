@@ -51,7 +51,7 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
-    override val viewModel by viewModels<MainViewModel>({ requireActivity() })
+    override val viewModel by viewModels<MainViewModel>()
 
     private val cityObserver = Observer<Event<CityWeather?>> { city ->
         when (city) {

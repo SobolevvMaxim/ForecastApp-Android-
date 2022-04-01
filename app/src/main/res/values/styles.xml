@@ -7,12 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Theme.Forecast.WithAppBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorPrimary">@color/primaryColor</item>
-        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
     <style name="Widget.Forecast.TextView.Default.CitiesFragment" parent="Widget.AppCompat.TextView">
         <item name="fontFamily">@font/roboto</item>
         <item name="android:textSize">16sp</item>
