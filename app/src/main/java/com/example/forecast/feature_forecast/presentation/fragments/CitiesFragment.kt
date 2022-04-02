@@ -56,11 +56,11 @@ class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigatio
     ): View =
         inflater.inflate(R.layout.choose_city_fragment, container, false)
             .apply {
-            setOnTouchListener { _, p1 ->
-                location_image.performClick()
-                mDetector.onTouchEvent(p1)
+                setOnTouchListener { _, p1 ->
+                    location_image.performClick()
+                    mDetector.onTouchEvent(p1)
+                }
             }
-        }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +109,6 @@ class CitiesFragment : BaseDialogFragment<CitiesViewModel>(), LeftSwipeNavigatio
     private fun navigateToMainFragment() {
         Log.d(getString(R.string.main_log), "Navigating to Main Fragment...")
         findNavController().navigate(R.id.mainPageFragment)
-//        findNavController().popBackStack()
     }
 
     private fun setRecyclerView() {

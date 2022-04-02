@@ -161,7 +161,7 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
             val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.add_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.positive_button)) { _, _ ->
-                val cityInput = city_edit_text.text.toString()
+                val cityInput = city_edit_text.text.toString().trim()
 
                 if (!checkCityInput(cityInput))
                     return@setButton
@@ -215,10 +215,9 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     private fun updateView(cityToUpdateView: CityWeather) {
         Log.d(getString(R.string.main_log), "Updating view...")
 
-        val getUIData = DataProcessing(cityToUpdateView)
-        getUIData.apply {
+        DataProcessing(cityToUpdateView).apply {
             currentCity.text = getForecastLocation()
-            temperature_today.text = getUIData.getTemperature()
+            temperature_today.text = getTemperature()
             uvindex_value.text = getUVI()
             feels_like_view.text = getFeelsLike(getString(R.string.feels_like_title))
             currentDate.text = getForecastDate()

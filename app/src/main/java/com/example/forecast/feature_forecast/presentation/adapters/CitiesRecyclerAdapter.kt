@@ -89,7 +89,10 @@ class CitiesRecyclerAdapter(
                     return oldItem.id == newItem.id
                 }
 
-                override fun areContentsTheSame(oldItem: CityWeather, newItem: CityWeather): Boolean {
+                override fun areContentsTheSame(
+                    oldItem: CityWeather,
+                    newItem: CityWeather
+                ): Boolean {
                     return oldItem == newItem
                 }
             }
