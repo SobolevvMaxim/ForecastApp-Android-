@@ -35,6 +35,9 @@ import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecas
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
+import kotlinx.android.synthetic.main.additional_forecast_info.*
+import kotlinx.android.synthetic.main.main_app_bar.*
+import kotlinx.android.synthetic.main.main_forecast_info.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
