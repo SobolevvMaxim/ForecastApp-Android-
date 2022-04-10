@@ -3,11 +3,10 @@ package com.example.forecast.feature_forecast.presentation.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,7 +35,6 @@ import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewMod
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.additional_forecast_info.*
-import kotlinx.android.synthetic.main.main_app_bar.*
 import kotlinx.android.synthetic.main.main_forecast_info.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
@@ -78,12 +76,33 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         Log.d(getString(R.string.main_log), "Loading...")
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity).supportActionBar?.title = ""
         return inflater.inflate(R.layout.main_page_fragment, container, false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_toolbar, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_button -> {
+                addCityDialog()
+                true
+            }
+            else -> false
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,19 +122,19 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     private fun setupListeners() {
         setNetworkListener(offline_mode)
 
-        topAppBar.setNavigationOnClickListener {
-            showCitiesFragment()
-        }
-
-        topAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.add_button -> {
-                    addCityDialog()
-                    true
-                }
-                else -> false
-            }
-        }
+//        topAppBar.setNavigationOnClickListener {
+//            showCitiesFragment()
+//        }
+//
+//        topAppBar.setOnMenuItemClickListener {
+//            when (it.itemId) {
+//                R.id.add_button -> {
+//                    addCityDialog()
+//                    true
+//                }
+//                else -> false
+//            }
+//        }
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()

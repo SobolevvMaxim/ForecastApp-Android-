@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     android:background="@null">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/background_description"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
-
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/loading_city_progress"
         android:layout_width="match_parent"
@@ -39,11 +28,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        layout="@layout/main_app_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <include-->
+<!--        layout="@layout/main_app_bar"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
@@ -52,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout">
+        app:layout_constraintTop_toBottomOf="@+id/loading_city_progress">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -67,7 +56,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <include layout="@layout/main_forecast_info"/>
+                <include layout="@layout/main_forecast_info" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/hourly_forecast_recycler"
@@ -98,7 +87,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
 
-                <include layout="@layout/additional_forecast_info"/>
+                <include layout="@layout/additional_forecast_info" />
 
             </LinearLayout>
         </ScrollView>

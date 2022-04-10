@@ -1,15 +1,22 @@
 package com.example.forecast.feature_forecast.presentation
 
 import android.content.Context
+import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.forecast.R
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.main_app_bar.*
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.main_activity),
     ChosenCityInterface {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setSupportActionBar(topAppBar)
+    }
 
     override fun changeChosenInBase(newChosenID: String) {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
