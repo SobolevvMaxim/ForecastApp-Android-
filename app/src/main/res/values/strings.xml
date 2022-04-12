@@ -41,4 +41,5 @@
     <string name="location_description">Location</string>
     <string name="today_description">Today Description View</string>
     <string name="background_description">background</string>
+    <string name="uvindex">uvindex</string>
 </resources>

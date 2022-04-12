@@ -8,18 +8,5 @@
         android:id="@+id/mainPageFragment"
         android:name="com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment"
         android:label="MainPageFragment"
-        tools:layout="@layout/main_page_fragment">
-        <action
-            android:id="@+id/action_mainPageFragment_to_citiesFragment"
-            app:destination="@id/citiesFragment" />
-    </fragment>
-    <dialog
-        android:id="@+id/citiesFragment"
-        android:name="com.example.forecast.feature_forecast.presentation.fragments.CitiesFragment"
-        android:label="CitiesFragment"
-        tools:layout="@layout/choose_city_fragment">
-        <action
-            android:id="@+id/action_citiesFragment_to_mainPageFragment"
-            app:destination="@id/mainPageFragment" />
-    </dialog>
+        tools:layout="@layout/main_page_fragment"/>
 </navigation>
