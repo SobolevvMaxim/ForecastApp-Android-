@@ -43,7 +43,7 @@ abstract class BaseViewModel : ViewModel() {
     fun <T> simpleRequest(
         request: suspend () -> T?,
         successCallback: ((T?) -> Unit)? = null,
-        errorCallback: (Throwable?) -> Unit,
+        errorCallback: ((Throwable?) -> Unit)? = null,
     ) {
         viewModelScope.launch {
             try {
@@ -52,7 +52,7 @@ abstract class BaseViewModel : ViewModel() {
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                errorCallback(e)
+                errorCallback?.invoke(e)
             }
         }
     }
