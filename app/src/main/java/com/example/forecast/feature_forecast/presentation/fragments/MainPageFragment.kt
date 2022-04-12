@@ -23,6 +23,7 @@ import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
+import com.example.forecast.di.PreferenceTag
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
@@ -53,6 +54,10 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
+    @Inject
+    @PreferenceTag
+    lateinit var preferenceTag: String
+
     override val viewModel by viewModels<MainViewModel>()
 
     private val cityObserver = Observer<Event<CityWeather?>> { city ->
@@ -69,7 +74,7 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
             getString(R.string.main_log),
             "onSharedPreferenceChanged: $p1"
         )
-        if (p1 == "CHOSEN_CITY")
+        if (p1 == preferenceTag)
             viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
     }
 
