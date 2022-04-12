@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class CitiesViewModel @Inject constructor(
+class ActivityViewModel @Inject constructor(
     private val deleteCityUseCase: DeleteCity,
     private val loadForecastsUseCase: LoadForecasts,
 ) : BaseViewModel() {
