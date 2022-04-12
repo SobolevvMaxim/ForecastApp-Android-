@@ -82,7 +82,7 @@ class AppActivity : AppCompatActivity(R.layout.main_activity),
     }
 
     override fun changeChosenInBase(newChosenID: String) {
-        val sharedPref = this.getSharedPreferences("TEST", Context.MODE_PRIVATE) ?: return
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
             putString(getString(R.string.chosen_pref_key), newChosenID)
             apply()
@@ -91,7 +91,7 @@ class AppActivity : AppCompatActivity(R.layout.main_activity),
     }
 
     override fun getChosenCityID(): String {
-        val sharedPref = this.getSharedPreferences("TEST", Context.MODE_PRIVATE)
+        val sharedPref = this.getPreferences( Context.MODE_PRIVATE)
         val defaultValue = resources.getString(R.string.default_chosen_id)
         val chosenIndex = sharedPref.getString(getString(R.string.chosen_pref_key), defaultValue)
         Log.d(getString(R.string.main_log), "Getting chosen from base (AppActivity): $chosenIndex")

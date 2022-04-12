@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -44,7 +46,7 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainPageFragment : BaseFragment<MainViewModel>() {
+class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fragment) {
 
     @Inject
     @DateFormat
@@ -69,74 +71,25 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         }
     }
 
-    private val listener = SharedPreferences.OnSharedPreferenceChangeListener { p0, p1 ->
-        Log.d(
-            getString(R.string.main_log),
-            "onSharedPreferenceChanged: $p1"
-        )
-        if (p1 == preferenceTag)
-            viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
-    }
-
-//    private val citiesRecyclerAdapter: CitiesRecyclerAdapter = CitiesRecyclerAdapter(
-//        RecyclerOnCLickListener(
-//            clickListener = { city ->
-//                changeChosenCity(city.id)
-//                navigateToMainFragment()
-//            },
-//            onLongClickListener = { cityToDelete ->
-//                deleteCityDialog(city = cityToDelete)
-//            }),
-//        chosenID = "0",
-//        highlightColor = "#4680C5"
-//    )
-
-    private fun onSuccess(city: CityWeather) {
-        loading_city_progress.updateProgressBar(false)
-        swipe_layout.isRefreshing = false
-        checkToUpdate(city)
-        updateView(city)
-        (activity as ChosenCityInterface).changeChosenInBase(city.id)
-//        loadCitiesToRecycler()
-    }
-
-    override fun onLoading() {
-        loading_city_progress.updateProgressBar(true)
-        Log.d(getString(R.string.main_log), "Loading...")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-//
-//        // TODO: no fragment drawer??, one live data,
-//        val toggle = ActionBarDrawerToggle(requireActivity(), fragment_drawer, topAppBar, R.string.negative_button, R.string.positive_button)
-//        fragment_drawer.addDrawerListener(toggle)
-//        toggle.syncState()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        (activity as AppCompatActivity).supportActionBar?.title = ""
-        return inflater.inflate(R.layout.main_page_fragment, container, false)
-    }
+    private val sharedPreferenceChangeListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, p1 ->
+            Log.d(
+                getString(R.string.main_log),
+                "onSharedPreferenceChanged: $p1"
+            )
+            if (p1 == preferenceTag)
+                viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
+        }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_toolbar, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.add_button -> {
-                addCityDialog()
-                true
-            }
-            else -> false
-        }
+    override fun onResume() {
+        super.onResume()
+        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,40 +104,39 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         viewModel.getCityByID(cityID = chosenCityID)
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
-
-
-
-//        setRecyclerView()
     }
 
-    override fun onResume() {
-        super.onResume()
-        val prefs = requireActivity().getSharedPreferences("TEST", Context.MODE_PRIVATE)
-        prefs.registerOnSharedPreferenceChangeListener(listener)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.add_button -> {
+                addCityDialog()
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun onSuccess(city: CityWeather) {
+        loading_city_progress.updateProgressBar(false)
+        swipe_layout.isRefreshing = false
+        checkToUpdate(city)
+        updateView(city)
+        (activity as ChosenCityInterface).changeChosenInBase(city.id)
+    }
+
+    override fun onLoading() {
+        loading_city_progress.updateProgressBar(true)
+        Log.d(getString(R.string.main_log), "Loading...")
     }
 
     override fun onPause() {
         super.onPause()
-        val prefs = requireActivity().getSharedPreferences("TEST", Context.MODE_PRIVATE)
-        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
     }
 
     private fun setupListeners() {
         setNetworkListener(offline_mode)
-
-//        topAppBar.setNavigationOnClickListener {
-//            showCitiesFragment()
-//        }
-//
-//        topAppBar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//                R.id.add_button -> {
-//                    addCityDialog()
-//                    true
-//                }
-//                else -> false
-//            }
-//        }
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
@@ -251,31 +203,6 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         }
     }
 
-//    private fun deleteCityDialog(city: CityWeather) {
-//        AlertDialog.Builder(requireContext()).create().apply {
-//            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
-//            setTitle(title)
-//            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-//                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
-//                    false -> {
-//                        viewModel.deleteCity(city)
-//                        Log.d(getString(R.string.main_log), "Deleting city: $city")
-//                    }
-//                    true -> Toast.makeText(
-//                        requireContext(),
-//                        "Unable to delete chosen city!",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                }
-//            }
-//            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
-//                dialog.cancel()
-//            }
-//            show()
-//        }
-//    }
-
-
     private fun checkCityInput(cityInput: String): Boolean {
         return when (cityInput.trimmedLength()) {
             in 0..3 -> {
@@ -304,37 +231,6 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         }
     }
 
-//    private fun loadCitiesToRecycler() {
-//        Log.d(getString(R.string.main_log), "Showing cities fragment...")
-////        findNavController().navigate(MainPageFragmentDirections.actionMainPageFragmentToCitiesFragment())
-//        viewModel.getAddedCities()
-//        Log.d(getString(R.string.main_log), "Loading cities from base...")
-//
-//        viewModel.citiesLiveData.observe(viewLifecycleOwner) { cities ->
-//            when (cities) {
-//                is Event.Loading -> onLoading()
-//                is Event.Success<Set<CityWeather>> -> cities.data?.let { updateRecyclerView(it) }
-//                is Event.Error -> onError(cities.throwable)
-//            }
-//        }
-
-//        setRecyclerView()
-//}
-
-//    private fun changeChosenCity(newChosenID: String) {
-//        Log.d(
-//            getString(R.string.main_log),
-//            "Changing chosen from cities fragment (new chosen id: $newChosenID)"
-//        )
-//        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
-//        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
-//    }
-//
-//    private fun updateRecyclerView(cities: Set<CityWeather>) {
-//        Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
-//        citiesRecyclerAdapter.submitList(cities.toList())
-//    }
-
     private fun updateView(cityToUpdateView: CityWeather) {
         Log.d(getString(R.string.main_log), "Updating view...")
 
@@ -357,21 +253,6 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     private fun setForecastImage(city: CityWeather) {
         big_image.setImageResource(city.dailyTemperatures[0].description.getForecastImageID())
     }
-
-//    private fun setRecyclerView() {
-//        Log.d(getString(R.string.main_log), "Setting cities recycler...")
-//        val recyclerManager: RecyclerView.LayoutManager =
-//            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-//
-//        cities_recyclerView.apply {
-//            layoutManager = recyclerManager
-//        }
-//        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(
-//            (activity as ChosenCityInterface).getChosenCityID()
-//        )
-//
-//        cities_recyclerView.adapter = citiesRecyclerAdapter
-//    }
 
     private fun setDailyRecyclerView(city: CityWeather) {
         Log.d(getString(R.string.main_log), "Setting daily recycler...")

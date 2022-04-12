@@ -33,6 +33,7 @@ class ActivityViewModel @Inject constructor(
         )
     }
 
+    // TODO: Delete city from navigation view
     fun deleteCity(cityToDelete: CityWeather) {
         simpleRequest(
             request = {
