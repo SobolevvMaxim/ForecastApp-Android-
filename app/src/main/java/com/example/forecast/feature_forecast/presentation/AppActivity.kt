@@ -36,6 +36,7 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
 
         viewModel.citiesLiveData.observe(this, citiesObserver)
 
+        // TODO: Add Cities management (delete city)
         navigation.setNavigationItemSelectedListener { tappedItem ->
             changeMenuChecked(tappedItem)
 
@@ -48,10 +49,15 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
         }
 
         topAppBar.setNavigationOnClickListener {
-            Log.d(getString(R.string.main_log), "Navigation Pressed!")
             drawer.open()
             viewModel.getAddedCities()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.getAddedCities()
     }
 
     private fun changeMenuChecked(newChecked: MenuItem) {
