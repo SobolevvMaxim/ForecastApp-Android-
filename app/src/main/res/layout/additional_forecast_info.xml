@@ -4,29 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="11dp"
-    android:background="#72151515"
+    android:layout_margin="@dimen/main_margin"
+    android:background="@color/background"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
+        android:layout_margin="@dimen/main_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            style="@style/AppImageView.WithMargins"
             android:contentDescription="@string/uvindex"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,11 +29,9 @@
 
         <TextView
             android:id="@+id/textView3"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
+            style="@style/TextView.MainWhite"
+            android:layout_marginStart="@dimen/main_margin"
+            android:layout_marginLeft="@dimen/main_margin"
             android:text="@string/uvi_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -49,9 +40,7 @@
 
         <TextView
             android:id="@+id/uvindex_value"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView.MainWhite"
             android:text="@string/no_value"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,21 +53,14 @@
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
+        android:layout_margin="@dimen/main_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            style="@style/AppImageView.WithMargins"
             android:contentDescription="dusk"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,11 +70,9 @@
 
         <TextView
             android:id="@+id/textView4"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
+            style="@style/TextView.MainWhite"
+            android:layout_marginStart="@dimen/main_margin"
+            android:layout_marginLeft="@dimen/main_margin"
             android:text="@string/sunset_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -101,9 +81,7 @@
 
         <TextView
             android:id="@+id/sunset_value"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView.MainWhite"
             android:text="@string/no_value"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,21 +93,14 @@
         android:id="@+id/constraintLayout3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
+        android:layout_margin="@dimen/main_margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            style="@style/AppImageView.WithMargins"
             android:contentDescription="uvindex"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,11 +110,9 @@
 
         <TextView
             android:id="@+id/textView2"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
+            style="@style/TextView.MainWhite"
+            android:layout_marginStart="@dimen/main_margin"
+            android:layout_marginLeft="@dimen/main_margin"
             android:text="@string/sunrise_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
@@ -152,9 +121,7 @@
 
         <TextView
             android:id="@+id/sunrise_value"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView.MainWhite"
             android:text="@string/no_value"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -165,12 +132,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="11dp"
-        android:layout_marginRight="11dp"
-        android:layout_marginBottom="11dp"
+        android:layout_margin="@dimen/main_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -178,10 +140,7 @@
 
         <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            style="@style/AppImageView.WithMargins"
             android:contentDescription="humidity"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -190,11 +149,9 @@
             tools:ignore="ImageContrastCheck" />
 
         <TextView
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
+            style="@style/TextView.MainWhite"
+            android:layout_marginStart="@dimen/main_margin"
+            android:layout_marginLeft="@dimen/main_margin"
             android:text="@string/humidity_title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView4"
@@ -203,9 +160,7 @@
 
         <TextView
             android:id="@+id/humidity_value"
-            style="@style/Widget.Forecast.TextView.Default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextView.MainWhite"
             android:text="@string/no_value"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

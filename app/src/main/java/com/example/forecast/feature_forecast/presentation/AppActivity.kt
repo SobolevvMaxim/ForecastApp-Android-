@@ -62,7 +62,7 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
     private fun addCitiesToMenu(cities: List<CityWeather>) {
         val navMenu = navigation.menu
         val currentChosenID = getChosenCityID()
-        navMenu.clear()
+//        navMenu.clear()
         cities.forEach {
             val item = navMenu.add(R.id.group1, it.id.toInt(), Menu.NONE, it.name)
 

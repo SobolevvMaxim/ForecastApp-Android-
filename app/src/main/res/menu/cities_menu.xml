@@ -3,5 +3,7 @@
     <group
         android:id="@+id/group1"
         android:checkableBehavior="single">
+
+        <item android:title="Brest"></item>
     </group>
 </menu>

@@ -1,45 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--    Main App Theme-->
     <style name="Theme.Forecast" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="Widget.Forecast.TextView.Default.CitiesFragment" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/black</item>
+
+    <!--    Image Styles-->
+    <style name="AppImageView">
+        <item name="android:layout_width">@dimen/main_size</item>
+        <item name="android:layout_height">@dimen/main_size</item>
     </style>
 
-    <style name="Widget.Forecast.TextView.Default.CitiesFragment.Titles" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/black</item>
+    <style name="AppImageView.SmallSize">
+        <item name="android:layout_width">@dimen/small_size</item>
+        <item name="android:layout_height">@dimen/small_size</item>
     </style>
 
-    <style name="Widget.Forecast.TextView.Default" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/white</item>
+    <style name="AppImageView.MiddleSize">
+        <item name="android:layout_width">@dimen/middle_size</item>
+        <item name="android:layout_height">@dimen/middle_size</item>
     </style>
 
-    <style name="Widget.Forecast.TextView.Small" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/white</item>
+    <style name="AppImageView.BigSize">
+        <item name="android:layout_width">@dimen/big_size</item>
+        <item name="android:layout_height">@dimen/big_size</item>
     </style>
 
-    <style name="Widget.Forecast.TextView.OfflineMode" parent="Widget.AppCompat.TextView">
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/white</item>
+    <style name="AppImageView.WithMargins">
+        <item name="android:layout_marginTop">@dimen/main_margin.small</item>
+        <item name="android:layout_marginBottom">@dimen/main_margin.small</item>
+    </style>
+
+
+    <!--    TextView Styles-->
+    <style name="TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:textAppearance">@style/Text</item>
+    </style>
+
+    <style name="TextView.MainWhite">
+
+        <item name="android:textAppearance">@style/Text.MainWhite</item>
+    </style>
+
+    <style name="TextView.MainWhite.Titles">
+
+        <item name="android:textAppearance">@style/Text.MainWhite.Titles</item>
+    </style>
+
+    <style name="TextView.MainWhite.Big">
+
+        <item name="android:textAppearance">@style/Text.MainWhite.Big</item>
+    </style>
+
+    <style name="TextView.MainWhite.OfflineMode">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/main_margin</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:layout_marginStart">@dimen/main_margin</item>
+        <item name="android:layout_marginEnd">@dimen/main_margin</item>
+        <item name="android:layout_marginRight">@dimen/main_margin</item>
         <item name="android:visibility">gone</item>
         <item name="android:text">@string/offline_mode</item>
         <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/Text.MainWhite</item>
     </style>
 
+    <style name="TextView.MainBlack">
+
+        <item name="android:textAppearance">@style/Text.MainBlack</item>
+    </style>
+
+    <style name="TextView.MainBlack.Titles">
+
+        <item name="android:textAppearance">@style/Text.MainBlack.Titles</item>
+    </style>
+
+    <style name="TextView.Small">
+
+        <item name="android:textAppearance">@style/Text.MainWhite.Small</item>
+    </style>
+
+
+    <!--    TextAppearances-->
+    <style name="Text">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="Text.MainWhite">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Text.MainWhite.Titles">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Text.MainWhite.Big">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Text.MainBlack">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Text.MainBlack.Titles">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Text.MainWhite.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!--    ActionBar Style-->
     <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:background">@null</item>
         <item name="background">@null</item>

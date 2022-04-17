@@ -5,13 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--        <include-->
-    <!--            android:id="@+id/include"-->
-    <!--            layout="@layout/main_app_bar"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent"-->
-    <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/loading_city_progress"
         android:layout_width="match_parent"
@@ -26,10 +19,8 @@
 
     <TextView
         android:id="@+id/offline_mode"
-        style="@style/Widget.Forecast.TextView.OfflineMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#72151515"
+        style="@style/TextView.MainWhite.OfflineMode"
+        android:gravity="center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,11 +29,10 @@
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="11dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loading_city_progress">
+        app:layout_constraintTop_toBottomOf="@+id/offline_mode">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -63,14 +53,14 @@
                     android:id="@+id/hourly_forecast_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginStart="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginEnd="11dp"
-                    android:layout_marginRight="11dp"
+                    android:layout_marginStart="@dimen/main_margin"
+                    android:layout_marginLeft="@dimen/main_margin"
+                    android:layout_marginEnd="@dimen/main_margin"
+                    android:layout_marginRight="@dimen/main_margin"
                     android:layout_weight="1"
-                    android:background="#72151515"
+                    android:background="@color/background"
                     android:orientation="horizontal"
-                    android:padding="11dp"
+                    android:padding="@dimen/main_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/main_info" />
@@ -79,15 +69,15 @@
                     android:id="@+id/daily_forecast_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginStart="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginTop="11dp"
-                    android:layout_marginEnd="11dp"
-                    android:layout_marginRight="11dp"
+                    android:layout_marginStart="@dimen/main_margin"
+                    android:layout_marginLeft="@dimen/main_margin"
+                    android:layout_marginTop="@dimen/main_margin"
+                    android:layout_marginEnd="@dimen/main_margin"
+                    android:layout_marginRight="@dimen/main_margin"
                     android:layout_weight="1"
-                    android:background="#72151515"
+                    android:background="@color/background"
                     android:orientation="vertical"
-                    android:padding="11dp"
+                    android:padding="@dimen/main_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
