@@ -10,18 +10,19 @@
     android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout
-        app:elevation="0dp"
+        style="@style/ThemeActionBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:elevation="0dp">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
-            app:menu="@menu/main_toolbar"
-            app:navigationIcon="@drawable/ic_baseline_menu_24"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            android:fitsSystemWindows="false" />
+            android:fitsSystemWindows="false"
+            app:menu="@menu/main_toolbar"
+            app:navigationIcon="@drawable/ic_baseline_menu_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

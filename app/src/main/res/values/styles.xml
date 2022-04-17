@@ -6,9 +6,6 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:actionBarTabTextStyle">@style/MyTabTextStyle</item>
-        <item name="actionMenuTextColor">#FF0000</item>
-        <item name="android:actionMenuTextColor">#FF0000</item>
     </style>
 
 
@@ -116,16 +113,17 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="MyTabTextStyle" parent="@android:style/Widget.ActionBar.TabText">
-        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#FF0000</item>
+
+    <!--    TextAppearance in NavigationView-->
+    <style name="Navigation.TextAppearance" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto</item>
     </style>
 
-    <!--    ActionBar Style-->
-<!--    <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">-->
-<!--        <item name="android:background">@null</item>-->
-<!--        <item name="background">@null</item>-->
-<!--    </style>-->
+
+    <!--        ActionBar Style-->
+    <style name="ThemeActionBar" parent="Widget.AppCompat.Light.ActionBar.Solid">
+        <item name="android:background">@null</item>
+        <item name="background">@null</item>
+    </style>
 </resources>
