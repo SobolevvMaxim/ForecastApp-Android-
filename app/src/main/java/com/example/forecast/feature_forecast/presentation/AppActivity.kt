@@ -46,17 +46,11 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
             drawer.close()
             true
         }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                Log.d(getString(R.string.main_log), "Navigation Pressed!")
-                drawer.open()
-                viewModel.getAddedCities()
-                true
-            }
-            else -> false
+        topAppBar.setNavigationOnClickListener {
+            Log.d(getString(R.string.main_log), "Navigation Pressed!")
+            drawer.open()
+            viewModel.getAddedCities()
         }
     }
 
