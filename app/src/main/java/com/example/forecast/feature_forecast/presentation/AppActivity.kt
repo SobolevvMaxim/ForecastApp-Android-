@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
@@ -20,6 +21,10 @@ import kotlinx.android.synthetic.main.main_app_bar.*
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterface {
     private val viewModel: ActivityViewModel by viewModels()
+
+    private val navMenu by lazy {
+        navigation.menu
+    }
 
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
         cities.run {
@@ -61,18 +66,29 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
     }
 
     private fun changeMenuChecked(newChecked: MenuItem) {
-        navigation.menu.forEach { item -> item.isChecked = false }
+        navMenu.forEach { item -> item.isChecked = false }
         newChecked.isChecked = true
     }
 
     private fun addCitiesToMenu(cities: List<CityWeather>) {
-        val navMenu = navigation.menu
         val currentChosenID = getChosenCityID()
         navMenu.clear()
         cities.forEach {
-            val item = navMenu.add(R.id.group1, it.id.toInt(), Menu.NONE, it.name)
+            val item = navMenu.add(R.id.cities, it.id.toInt(), Menu.NONE, it.name)
 
             if (it.id == currentChosenID) item.isChecked = true
+        }
+//        navigationOptions()
+    }
+
+    private fun navigationOptions() {
+        navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
+            Toast.makeText(this, "Manage Cities pressed!", Toast.LENGTH_SHORT).show()
+            true
+        }
+        navMenu.add("TODO").setOnMenuItemClickListener {
+            Toast.makeText(this, "TODO pressed!", Toast.LENGTH_SHORT).show()
+            true
         }
     }
 
