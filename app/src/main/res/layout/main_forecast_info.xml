@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/main_margin"
     android:layout_weight="1"
-    android:background="@color/background"
+    android:background="@drawable/blackout"
     android:orientation="vertical"
     android:padding="@dimen/main_margin"
     app:layout_constraintEnd_toEndOf="parent"

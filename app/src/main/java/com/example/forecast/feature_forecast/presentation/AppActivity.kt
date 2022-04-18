@@ -37,7 +37,6 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
         viewModel.citiesLiveData.observe(this, citiesObserver)
 
         // TODO: delete screen (with selecting?, adding city?) or long click listener on menu items
-        // TODO: drawer listener? (if you add city and then navigation by gesture)
         navigation.setNavigationItemSelectedListener { tappedItem ->
             changeMenuChecked(tappedItem)
 
