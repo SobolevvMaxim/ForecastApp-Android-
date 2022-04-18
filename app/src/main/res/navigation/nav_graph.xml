@@ -8,5 +8,5 @@
         android:id="@+id/mainPageFragment"
         android:name="com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment"
         android:label="MainPageFragment"
-        tools:layout="@layout/main_page_fragment"/>
+        tools:layout="@layout/main_page_fragment" />
 </navigation>
