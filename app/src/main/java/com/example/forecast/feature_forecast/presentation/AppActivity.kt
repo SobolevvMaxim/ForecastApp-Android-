@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.example.forecast.R
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
@@ -24,6 +25,10 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
 
     private val navMenu by lazy {
         navigation.menu
+    }
+
+    private val mainDrawer by lazy {
+        drawer
     }
 
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
@@ -49,7 +54,11 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
                 changeChosenInBase(it.id)
             }
 
-            drawer.close()
+            findNavController(R.id.nav_host_fragment).run {
+                if (currentDestination?.id != R.id.mainPageFragment)
+                    navigate(R.id.action_manageCitiesFragment_to_mainPageFragment)
+            }
+            mainDrawer.close()
             true
         }
 
@@ -78,12 +87,16 @@ class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterfa
 
             if (it.id == currentChosenID) item.isChecked = true
         }
-//        navigationOptions()
+        navigationOptions()
     }
 
     private fun navigationOptions() {
         navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
-            Toast.makeText(this, "Manage Cities pressed!", Toast.LENGTH_SHORT).show()
+            findNavController(R.id.nav_host_fragment).run {
+                if (currentDestination?.id != R.id.manageCitiesFragment)
+                    navigate(R.id.action_mainPageFragment_to_manageCitiesFragment)
+            }
+            mainDrawer.close()
             true
         }
         navMenu.add("TODO").setOnMenuItemClickListener {
