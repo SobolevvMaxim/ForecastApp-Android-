@@ -5,15 +5,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
+import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
@@ -49,6 +49,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fragment) {
 
+    private val navMenu by lazy {
+        navigation.menu
+    }
+
+    private val mainDrawer by lazy {
+        fragment_drawer
+    }
+
     @Inject
     @DateFormat
     lateinit var mainDateFormat: SimpleDateFormat
@@ -69,6 +77,15 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             is Event.Success<CityWeather?> -> city.data?.let { onSuccess(it) }
                 ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
             is Event.Error -> onError(city.throwable)
+        }
+    }
+
+    private val citiesObserver = Observer<Set<CityWeather>> { cities ->
+        cities.run {
+            if (this.isNullOrEmpty())
+                return@Observer
+
+            addCitiesToMenu(this.toList())
         }
     }
 
@@ -109,6 +126,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         viewModel.getCityByID(cityID = chosenCityID)
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        viewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
     }
 
     private fun onSuccess(city: CityWeather) {
@@ -139,7 +157,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         topAppBar.apply {
             setNavigationOnClickListener {
-                fragment_drawer.open()
+                mainDrawer.open()
+                viewModel.getAddedCities()
             }
 
             setOnMenuItemClickListener {
@@ -152,6 +171,26 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 }
             }
         }
+
+        navigation.setNavigationItemSelectedListener { tappedItem ->
+            changeMenuChecked(tappedItem)
+
+            viewModel.citiesLiveData.value?.firstOrNull { it.name == tappedItem.title }?.let {
+                (activity as ChosenCityInterface).changeChosenInBase(it.id)
+            }
+
+            findNavController().run {
+                if (currentDestination?.id != R.id.mainPageFragment)
+                    navigate(R.id.action_manageCitiesFragment_to_mainPageFragment)
+            }
+            mainDrawer.close()
+            true
+        }
+    }
+
+    private fun changeMenuChecked(newChecked: MenuItem) {
+        navMenu.forEach { item -> item.isChecked = false }
+        newChecked.isChecked = true
     }
 
     private fun onRefreshListener() {
@@ -211,6 +250,32 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 dialog.cancel()
             }
             show()
+        }
+    }
+
+    private fun addCitiesToMenu(cities: List<CityWeather>) {
+        val currentChosenID = (activity as ChosenCityInterface).getChosenCityID()
+        navMenu.clear()
+        cities.forEach {
+            val item = navMenu.add(R.id.cities, it.id.toInt(), Menu.NONE, it.name)
+
+            if (it.id == currentChosenID) item.isChecked = true
+        }
+        navigationOptions()
+    }
+
+    private fun navigationOptions() {
+        navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
+            findNavController().run {
+                if (currentDestination?.id != R.id.manageCitiesFragment)
+                    navigate(R.id.action_mainPageFragment_to_manageCitiesFragment)
+            }
+            mainDrawer.close()
+            true
+        }
+        navMenu.add("TODO").setOnMenuItemClickListener {
+            Toast.makeText(context, "TODO pressed!", Toast.LENGTH_SHORT).show()
+            true
         }
     }
 
