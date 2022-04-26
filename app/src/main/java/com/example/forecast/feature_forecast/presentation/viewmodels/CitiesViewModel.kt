@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CitiesViewModel @Inject constructor(
     private val deleteCityUseCase: DeleteCity,
-    ): BaseViewModel() {
+) : BaseViewModel() {
 
     private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
     val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData

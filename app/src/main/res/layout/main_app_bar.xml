@@ -21,6 +21,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
             android:fitsSystemWindows="false"
+            app:menu="@menu/main_toolbar"
             app:navigationIcon="@drawable/ic_baseline_menu_24" />
 
     </com.google.android.material.appbar.AppBarLayout>
