@@ -18,8 +18,8 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Provides
     @PreferenceTag
+    @Provides
     fun provideGetCityTag(@ApplicationContext context: Context): String {
         return context.getString(R.string.get_city_extra)
     }

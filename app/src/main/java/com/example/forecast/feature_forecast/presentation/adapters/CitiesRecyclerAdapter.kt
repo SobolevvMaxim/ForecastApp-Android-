@@ -1,6 +1,5 @@
 package com.example.forecast.feature_forecast.presentation.adapters
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.features.RecyclerOnCLickListener
+import com.example.features.RecyclerClickListener
 import com.example.forecast.R
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
@@ -17,7 +16,7 @@ import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterf
 import kotlinx.android.synthetic.main.city_item.view.*
 
 class CitiesRecyclerAdapter(
-    private val listener: RecyclerOnCLickListener<CityWeather>,
+    private val listener: RecyclerClickListener<CityWeather>,
     private var chosenID: String,
     private val highlightColor: String,
     private val commonColor: String,
@@ -30,7 +29,7 @@ class CitiesRecyclerAdapter(
 
         fun bind(
             item: CityWeather,
-            listener: RecyclerOnCLickListener<CityWeather>,
+            listener: RecyclerClickListener<CityWeather>,
             chosenCityInterface: ChosenCityInterface,
             highlightColor: String,
             commonColor: String
@@ -42,15 +41,14 @@ class CitiesRecyclerAdapter(
             highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor, commonColor)
 
             setOnClickListener {
-                listener.clickListener(item)
+                listener.clickListener?.invoke(item)
             }
             setOnLongClickListener {
-                listener.onLongClickListener(item)
+                listener.onLongClickListener?.invoke(item)
                 true
             }
         }
 
-        @SuppressLint("ResourceAsColor")
         private fun highlightIfChosenCity(
             itemID: String,
             chosenCityInterface: ChosenCityInterface,

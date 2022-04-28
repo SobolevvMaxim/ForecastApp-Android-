@@ -23,7 +23,7 @@ import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
-import com.example.features.RecyclerOnCLickListener
+import com.example.features.RecyclerClickListener
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.PreferenceTag
@@ -99,7 +99,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private val citiesRecyclerAdapter = CitiesRecyclerAdapter(
-        listener = RecyclerOnCLickListener(
+        listener = RecyclerClickListener(
             clickListener = {
                 changeChosen(it.id)
                 mainDrawer.close()
