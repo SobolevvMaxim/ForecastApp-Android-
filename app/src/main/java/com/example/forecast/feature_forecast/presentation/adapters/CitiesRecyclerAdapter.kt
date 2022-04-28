@@ -26,6 +26,7 @@ class CitiesRecyclerAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val cityTV: TextView = view.item_city
+        private val temperatureTV: TextView = view.city_temperature
 
         fun bind(
             item: CityWeather,
@@ -36,6 +37,7 @@ class CitiesRecyclerAdapter(
         ) = with(itemView) {
             DataProcessing(item).apply {
                 cityTV.text = getForecastLocation()
+                temperatureTV.text = getTemperature()
             }
 
             highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor, commonColor)
