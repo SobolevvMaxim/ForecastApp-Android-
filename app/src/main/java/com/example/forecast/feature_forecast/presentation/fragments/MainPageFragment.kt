@@ -105,12 +105,36 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 mainDrawer.close()
             },
             onLongClickListener = {
-                Toast.makeText(context, "On long pressed on ${it.name}", Toast.LENGTH_SHORT).show()
+                deleteCityDialog(it)
             }
         ),
         chosenID = "0",
         highlightColor = "#4680C5"
     )
+
+    private fun deleteCityDialog(city: CityWeather) {
+        AlertDialog.Builder(requireContext()).create().apply {
+            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
+            setTitle(title)
+            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
+                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
+                    false -> {
+                        viewModel.deleteCity(city)
+                        Log.d(getString(R.string.main_log), "Deleting city: $city")
+                    }
+                    true -> Toast.makeText(
+                        requireContext(),
+                        "Unable to delete chosen city!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
 
     private fun changeChosen(newChosenID: String) {
         (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
