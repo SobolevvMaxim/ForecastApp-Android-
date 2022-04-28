@@ -35,6 +35,7 @@ import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
@@ -66,6 +67,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     lateinit var preferenceTag: String
 
     override val viewModel by viewModels<MainViewModel>()
+
+    private val citiesViewModel by viewModels<CitiesViewModel>()
 
     private val cityObserver = Observer<Event<CityWeather?>> { city ->
         when (city) {
@@ -131,9 +134,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
         viewModel.getCityByID(cityID = chosenCityID)
+        citiesViewModel.getAddedCities()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
-        viewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
+        citiesViewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
 
         setRecyclerView()
     }
@@ -143,7 +147,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         swipe_layout.isRefreshing = false
         checkToUpdate(city)
         updateView(city)
-        viewModel.getAddedCities()
+        citiesViewModel.getAddedCities()
         changeChosen(city.id)
     }
 
@@ -168,7 +172,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         topAppBar.apply {
             setNavigationOnClickListener {
                 mainDrawer.open()
-                viewModel.getAddedCities()
             }
             Log.d(getString(R.string.main_log), "Navigation listener set")
 
@@ -271,7 +274,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
                 when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
                     false -> {
-                        viewModel.deleteCity(city)
+                        citiesViewModel.deleteCity(city)
                         Log.d(getString(R.string.main_log), "Deleting city: $city")
                     }
                     true -> Toast.makeText(

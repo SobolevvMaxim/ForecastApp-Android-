@@ -18,15 +18,11 @@ class MainViewModel @Inject constructor(
     private val updateCityUseCase: UpdateCityInBase,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
-    private val loadForecastsUseCase: LoadForecasts,
-    private val deleteCityUseCase: DeleteCity,
+
 ) : BaseViewModel() {
 
     private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
     val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
-
-    private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
-    val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData
 
     fun searchCityForecastByName(searchInput: CharSequence) {
         _chosenLiveData.postValue(Event.Loading())
@@ -85,28 +81,6 @@ class MainViewModel @Inject constructor(
             },
             errorCallback = { error ->
                 _chosenLiveData.postValue(Event.Error(error))
-            }
-        )
-    }
-
-    fun getAddedCities() {
-        simpleRequest(
-            request = {
-                loadForecastsUseCase()
-            },
-            successCallback = { citiesFromBase ->
-                _citiesLiveData.postValue(citiesFromBase)
-            }
-        )
-    }
-
-    fun deleteCity(cityToDelete: CityWeather) {
-        simpleRequest(
-            request = {
-                deleteCityUseCase(cityToDelete)
-            },
-            successCallback = { cities ->
-                _citiesLiveData.postValue(cities)
             }
         )
     }
