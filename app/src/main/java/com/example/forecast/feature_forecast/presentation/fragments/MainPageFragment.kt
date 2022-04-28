@@ -82,11 +82,9 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-    // TODO: Implement ManageCitiesFragment (replace container in main activity)
     // TODO: Move logics of cities menu to somewhere
     // TODO: Change passing chosen city logics
     // TODO: Network listener leak
-    // TODO: Navigation button is not clickable after navigating from ManageCitiesFragment
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
         cities.run {
             if (this.isNullOrEmpty())
@@ -201,7 +199,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         checkToUpdate(city)
         updateView(city)
         viewModel.getAddedCities()
-        (activity as ChosenCityInterface).changeChosenInBase(city.id)
+        changeChosen(city.id)
     }
 
     override fun onLoading() {
