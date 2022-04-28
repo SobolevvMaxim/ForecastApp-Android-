@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:baselineAligned="true"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/item_city"
+        style="@style/TextView.MainBlack"
+        android:layout_height="match_parent"
+        android:layout_marginStart="55dp"
+        android:layout_marginLeft="55dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="@string/city_default_view" />
+
+</LinearLayout>

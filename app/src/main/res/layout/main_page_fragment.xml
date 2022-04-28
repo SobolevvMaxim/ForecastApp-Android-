@@ -111,8 +111,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/cities_header"
         app:itemHorizontalPadding="52dp"
-        app:itemTextAppearance="@style/Navigation.TextAppearance"
-        app:menu="@menu/cities_menu" />
+        app:itemTextAppearance="@style/Navigation.TextAppearance">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/cities_header" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/cities_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

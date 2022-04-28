@@ -5,15 +5,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
-import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
@@ -23,12 +23,14 @@ import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
+import com.example.features.RecyclerOnCLickListener
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.PreferenceTag
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
@@ -90,8 +92,30 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             if (this.isNullOrEmpty())
                 return@Observer
 
-            addCitiesToMenu(this.toList())
+            // TODO: pass to recycler
+            updateRecyclerView(cities)
+//            addCitiesToMenu(this.toList())
         }
+    }
+
+    private val citiesRecyclerAdapter = CitiesRecyclerAdapter(
+        listener = RecyclerOnCLickListener(
+            clickListener = {
+                changeChosen(it.id)
+                mainDrawer.close()
+            },
+            onLongClickListener = {
+                Toast.makeText(context, "On long pressed on ${it.name}", Toast.LENGTH_SHORT).show()
+            }
+        ),
+        chosenID = "0",
+        highlightColor = "#4680C5"
+    )
+
+    private fun changeChosen(newChosenID: String) {
+        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
+        citiesRecyclerAdapter.notifyDataSetChanged()
     }
 
     private val sharedPreferenceChangeListener =
@@ -142,6 +166,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
         viewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
+
+        setRecyclerView()
     }
 
     private fun onSuccess(city: CityWeather) {
@@ -194,11 +220,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
 
         navigation.setNavigationItemSelectedListener { tappedItem ->
-            changeMenuChecked(tappedItem)
+//            changeMenuChecked(tappedItem)
 
-            viewModel.citiesLiveData.value?.firstOrNull { it.name == tappedItem.title }?.let {
-                (activity as ChosenCityInterface).changeChosenInBase(it.id)
-            }
+//            viewModel.citiesLiveData.value?.firstOrNull { it.name == tappedItem.title }?.let {
+//                (activity as ChosenCityInterface).changeChosenInBase(it.id)
+//            }
 
 //            findNavController().run {
 //                if (currentDestination?.id != R.id.mainPageFragment)
@@ -209,10 +235,30 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-    private fun changeMenuChecked(newChecked: MenuItem) {
-        navMenu.forEach { item -> item.isChecked = false }
-        newChecked.isChecked = true
+    private fun setRecyclerView() {
+        Log.d(getString(R.string.main_log), "Setting cities recycler...")
+        val recyclerManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+        cities_recycler.apply {
+            layoutManager = recyclerManager
+        }
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(
+            (activity as ChosenCityInterface).getChosenCityID()
+        )
+
+        cities_recycler.adapter = citiesRecyclerAdapter
     }
+
+    private fun updateRecyclerView(cities: Set<CityWeather>) {
+        Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
+        citiesRecyclerAdapter.submitList(cities.toList())
+    }
+
+//    private fun changeMenuChecked(newChecked: MenuItem) {
+//        navMenu.forEach { item -> item.isChecked = false }
+//        newChecked.isChecked = true
+//    }
 
     private fun onRefreshListener() {
         currentCity.text?.let {
@@ -274,31 +320,31 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-    private fun addCitiesToMenu(cities: List<CityWeather>) {
-        val currentChosenID = (activity as ChosenCityInterface).getChosenCityID()
-        navMenu.clear()
-        cities.forEach {
-            val item = navMenu.add(R.id.cities, it.id.toInt(), Menu.NONE, it.name)
+//    private fun addCitiesToMenu(cities: List<CityWeather>) {
+//        val currentChosenID = (activity as ChosenCityInterface).getChosenCityID()
+//        navMenu.clear()
+//        cities.forEach {
+//            val item = navMenu.add(R.id.cities, it.id.toInt(), Menu.NONE, it.name)
+//
+//            if (it.id == currentChosenID) item.isChecked = true
+//        }
+//        navigationOptions()
+//    }
 
-            if (it.id == currentChosenID) item.isChecked = true
-        }
-        navigationOptions()
-    }
-
-    private fun navigationOptions() {
-        navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
-            findNavController().run {
-                if (currentDestination?.id != R.id.manageCitiesFragment)
-                    navigate(R.id.action_mainPageFragment_to_manageCitiesFragment)
-            }
-            mainDrawer.close()
-            true
-        }
-        navMenu.add("TODO").setOnMenuItemClickListener {
-            Toast.makeText(context, "TODO pressed!", Toast.LENGTH_SHORT).show()
-            true
-        }
-    }
+//    private fun navigationOptions() {
+//        navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
+//            findNavController().run {
+//                if (currentDestination?.id != R.id.manageCitiesFragment)
+//                    navigate(R.id.action_mainPageFragment_to_manageCitiesFragment)
+//            }
+//            mainDrawer.close()
+//            true
+//        }
+//        navMenu.add("TODO").setOnMenuItemClickListener {
+//            Toast.makeText(context, "TODO pressed!", Toast.LENGTH_SHORT).show()
+//            true
+//        }
+//    }
 
     private fun checkCityInput(cityInput: String): Boolean {
         return when (cityInput.trimmedLength()) {
