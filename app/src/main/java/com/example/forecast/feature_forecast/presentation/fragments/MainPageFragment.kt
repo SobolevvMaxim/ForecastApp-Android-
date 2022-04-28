@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,6 +18,7 @@ import com.example.extensions.DateUtils.getTime
 import com.example.extensions.NetworkUtils.isOnline
 import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
+import com.example.extensions.UIUtils.closeNavigationViewOnBackPressed
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.features.RecyclerClickListener
@@ -51,10 +49,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fragment) {
 
-    private val navMenu by lazy {
-        navigation.menu
-    }
-
     private val mainDrawer by lazy {
         fragment_drawer
     }
@@ -82,17 +76,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-    // TODO: Move logics of cities menu to somewhere
-    // TODO: Change passing chosen city logics
-    // TODO: Network listener leak
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
-        cities.run {
-            if (this.isNullOrEmpty())
-                return@Observer
+        cities.run {                            // TODO: Change passing chosen city logics
+            if (this.isNullOrEmpty())           // TODO: Network listener leak
+                return@Observer                 // TODO: Move logics of cities menu to somewhere
 
-            // TODO: pass to recycler
             updateRecyclerView(cities)
-//            addCitiesToMenu(this.toList())
         }
     }
 
@@ -107,57 +96,21 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             }
         ),
         chosenID = "0",
-        highlightColor = "#4680C5",
+        highlightColor = "#4680C5", // TODO: get colors from app theme
         commonColor = "#FF000000"
     )
 
-    private fun deleteCityDialog(city: CityWeather) {
-        AlertDialog.Builder(requireContext()).create().apply {
-            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
-            setTitle(title)
-            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
-                    false -> {
-                        viewModel.deleteCity(city)
-                        Log.d(getString(R.string.main_log), "Deleting city: $city")
-                    }
-                    true -> Toast.makeText(
-                        requireContext(),
-                        "Unable to delete chosen city!",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
-                dialog.cancel()
-            }
-            show()
-        }
-    }
-
-    private fun changeChosen(newChosenID: String) {
-        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
-        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
-        citiesRecyclerAdapter.notifyDataSetChanged()
-    }
-
     private val sharedPreferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, p1 ->
-            Log.d(
-                getString(R.string.main_log),
-                "onSharedPreferenceChanged: $p1"
-            )
             if (p1 == preferenceTag)
                 viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
         }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        (activity as AppCompatActivity).setSupportActionBar(topAppBar)
-        return super.onCreateView(inflater, container, savedInstanceState)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeChosen(newChosenID: String) {
+        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
+        citiesRecyclerAdapter.notifyDataSetChanged()
     }
 
     override fun onResume() {
@@ -165,20 +118,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
 
-//        requireActivity()
-//            .onBackPressedDispatcher
-//            .addCallback {
-//                if (mainDrawer.isDrawerOpen(GravityCompat.START)) {
-//                    mainDrawer.closeDrawer(GravityCompat.START)
-//                }
-//            }
+        closeNavigationViewOnBackPressed(drawerLayout = mainDrawer)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        navigation.setupWithNavController(findNavController())
-//        topAppBar.setupWithNavController(findNavController(), mainDrawer)
         if (!isOnline())
             onChangeNetworkState(false, offline_mode)
 
@@ -233,28 +178,9 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                         addCityDialog()
                         true
                     }
-                    android.R.id.home -> {
-                        mainDrawer.open()
-                        true
-                    }
                     else -> false
                 }
             }
-        }
-
-        navigation.setNavigationItemSelectedListener { tappedItem ->
-//            changeMenuChecked(tappedItem)
-
-//            viewModel.citiesLiveData.value?.firstOrNull { it.name == tappedItem.title }?.let {
-//                (activity as ChosenCityInterface).changeChosenInBase(it.id)
-//            }
-
-//            findNavController().run {
-//                if (currentDestination?.id != R.id.mainPageFragment)
-//                    popBackStack()
-//            }
-            mainDrawer.close()
-            true
         }
     }
 
@@ -277,11 +203,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
         citiesRecyclerAdapter.submitList(cities.toList())
     }
-
-//    private fun changeMenuChecked(newChecked: MenuItem) {
-//        navMenu.forEach { item -> item.isChecked = false }
-//        newChecked.isChecked = true
-//    }
 
     private fun onRefreshListener() {
         currentCity.text?.let {
@@ -343,31 +264,29 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-//    private fun addCitiesToMenu(cities: List<CityWeather>) {
-//        val currentChosenID = (activity as ChosenCityInterface).getChosenCityID()
-//        navMenu.clear()
-//        cities.forEach {
-//            val item = navMenu.add(R.id.cities, it.id.toInt(), Menu.NONE, it.name)
-//
-//            if (it.id == currentChosenID) item.isChecked = true
-//        }
-//        navigationOptions()
-//    }
-
-//    private fun navigationOptions() {
-//        navMenu.add(getString(R.string.manage_cities)).setOnMenuItemClickListener {
-//            findNavController().run {
-//                if (currentDestination?.id != R.id.manageCitiesFragment)
-//                    navigate(R.id.action_mainPageFragment_to_manageCitiesFragment)
-//            }
-//            mainDrawer.close()
-//            true
-//        }
-//        navMenu.add("TODO").setOnMenuItemClickListener {
-//            Toast.makeText(context, "TODO pressed!", Toast.LENGTH_SHORT).show()
-//            true
-//        }
-//    }
+    private fun deleteCityDialog(city: CityWeather) {
+        AlertDialog.Builder(requireContext()).create().apply {
+            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
+            setTitle(title)
+            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
+                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
+                    false -> {
+                        viewModel.deleteCity(city)
+                        Log.d(getString(R.string.main_log), "Deleting city: $city")
+                    }
+                    true -> Toast.makeText(
+                        requireContext(),
+                        "Unable to delete chosen city!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
 
     private fun checkCityInput(cityInput: String): Boolean {
         return when (cityInput.trimmedLength()) {
