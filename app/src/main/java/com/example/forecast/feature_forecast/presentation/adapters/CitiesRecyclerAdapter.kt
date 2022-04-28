@@ -20,6 +20,7 @@ class CitiesRecyclerAdapter(
     private val listener: RecyclerOnCLickListener<CityWeather>,
     private var chosenID: String,
     private val highlightColor: String,
+    private val commonColor: String,
 ) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(diffUtilCallback),
     ChosenCityInterface {
@@ -32,12 +33,13 @@ class CitiesRecyclerAdapter(
             listener: RecyclerOnCLickListener<CityWeather>,
             chosenCityInterface: ChosenCityInterface,
             highlightColor: String,
+            commonColor: String
         ) = with(itemView) {
             DataProcessing(item).apply {
                 cityTV.text = getForecastLocation()
             }
 
-            highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor)
+            highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor, commonColor)
 
             setOnClickListener {
                 listener.clickListener(item)
@@ -52,12 +54,13 @@ class CitiesRecyclerAdapter(
         private fun highlightIfChosenCity(
             itemID: String,
             chosenCityInterface: ChosenCityInterface,
-            highlightColor: String
+            highlightColor: String,
+            commonColor: String
         ) {
             if (chosenCityInterface.getChosenCityID() == itemID) {
                 cityTV.setTextColor(Color.parseColor(highlightColor))
             } else {
-                cityTV.setTextColor(R.color.black)
+                cityTV.setTextColor(Color.parseColor(commonColor))
             }
         }
     }
@@ -70,7 +73,7 @@ class CitiesRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, this, highlightColor)
+        holder.bind(getItem(position), listener, this, highlightColor, commonColor)
     }
 
     override fun changeChosenInBase(newChosenID: String) {

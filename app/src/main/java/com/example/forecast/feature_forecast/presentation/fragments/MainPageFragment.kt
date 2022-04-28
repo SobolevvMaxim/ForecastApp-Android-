@@ -109,7 +109,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             }
         ),
         chosenID = "0",
-        highlightColor = "#4680C5"
+        highlightColor = "#4680C5",
+        commonColor = "#FF000000"
     )
 
     private fun deleteCityDialog(city: CityWeather) {
