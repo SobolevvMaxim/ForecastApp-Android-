@@ -7,19 +7,13 @@
     <fragment
         android:id="@+id/mainPageFragment"
         android:name="com.example.forecast.feature_forecast.presentation.fragments.MainPageFragment"
-        android:label="MainPageFragment"
         tools:layout="@layout/main_page_fragment">
         <action
             android:id="@+id/action_mainPageFragment_to_manageCitiesFragment"
             app:destination="@id/manageCitiesFragment" />
     </fragment>
-    <dialog
+    <fragment
         android:id="@+id/manageCitiesFragment"
         android:name="com.example.forecast.feature_forecast.presentation.fragments.ManageCitiesFragment"
-        android:label="fragment_manage_cities"
-        tools:layout="@layout/fragment_manage_cities">
-        <action
-            android:id="@+id/action_manageCitiesFragment_to_mainPageFragment"
-            app:destination="@id/mainPageFragment" />
-    </dialog>
+        tools:layout="@layout/fragment_manage_cities"/>
 </navigation>

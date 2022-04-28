@@ -80,6 +80,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
+    // TODO: Implement ManageCitiesFragment (replace container in main activity)
+    // TODO: Move logics of cities menu to somewhere
+    // TODO: Change passing chosen city logics
+    // TODO: Network listener leak
+    // TODO: Navigation button is not clickable after navigating from ManageCitiesFragment
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
         cities.run {
             if (this.isNullOrEmpty())
@@ -112,11 +117,21 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         super.onResume()
         val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
+
+//        requireActivity()
+//            .onBackPressedDispatcher
+//            .addCallback {
+//                if (mainDrawer.isDrawerOpen(GravityCompat.START)) {
+//                    mainDrawer.closeDrawer(GravityCompat.START)
+//                }
+//            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        navigation.setupWithNavController(findNavController())
+//        topAppBar.setupWithNavController(findNavController(), mainDrawer)
         if (!isOnline())
             onChangeNetworkState(false, offline_mode)
 
@@ -134,6 +149,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         swipe_layout.isRefreshing = false
         checkToUpdate(city)
         updateView(city)
+        viewModel.getAddedCities()
         (activity as ChosenCityInterface).changeChosenInBase(city.id)
     }
 
@@ -160,11 +176,16 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 mainDrawer.open()
                 viewModel.getAddedCities()
             }
+            Log.d(getString(R.string.main_log), "Navigation listener set")
 
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_button -> {
                         addCityDialog()
+                        true
+                    }
+                    android.R.id.home -> {
+                        mainDrawer.open()
                         true
                     }
                     else -> false
@@ -179,10 +200,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 (activity as ChosenCityInterface).changeChosenInBase(it.id)
             }
 
-            findNavController().run {
-                if (currentDestination?.id != R.id.mainPageFragment)
-                    navigate(R.id.action_manageCitiesFragment_to_mainPageFragment)
-            }
+//            findNavController().run {
+//                if (currentDestination?.id != R.id.mainPageFragment)
+//                    popBackStack()
+//            }
             mainDrawer.close()
             true
         }

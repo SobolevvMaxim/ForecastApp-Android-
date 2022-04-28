@@ -5,6 +5,7 @@
     android:id="@+id/fragment_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/back"
     tools:context=".feature_forecast.presentation.fragments.MainPageFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
