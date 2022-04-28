@@ -57,14 +57,13 @@
     <style name="TextView.MainWhite.OfflineMode">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginLeft">@dimen/main_margin</item>
-        <item name="android:background">@color/background</item>
         <item name="android:layout_marginStart">@dimen/main_margin</item>
         <item name="android:layout_marginEnd">@dimen/main_margin</item>
         <item name="android:layout_marginRight">@dimen/main_margin</item>
         <item name="android:visibility">gone</item>
         <item name="android:text">@string/offline_mode</item>
         <item name="android:gravity">center</item>
-        <item name="android:textAppearance">@style/Text.MainWhite</item>
+        <item name="android:textAppearance">@style/Text.MainBlack</item>
     </style>
 
     <style name="TextView.MainBlack">

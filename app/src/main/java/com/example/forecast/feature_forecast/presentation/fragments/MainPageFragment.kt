@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
 import com.example.extensions.DateUtils.getTime
 import com.example.extensions.NetworkUtils.isOnline
-import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.closeNavigationViewOnBackPressed
 import com.example.extensions.UIUtils.networkCheckByUI
@@ -128,7 +127,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         super.onViewCreated(view, savedInstanceState)
 
         if (!isOnline())
-            onChangeNetworkState(false, offline_mode)
+            offline_mode.visibility = View.GONE
 
         setupListeners()
 
@@ -163,7 +162,14 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setupListeners() {
-        setNetworkListener(offline_mode)
+        setNetworkListener { available ->
+            activity?.runOnUiThread {
+                when (available) {
+                    true -> offline_mode.visibility = View.GONE
+                    false -> offline_mode.visibility = View.VISIBLE
+                } 
+            }
+        }
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
