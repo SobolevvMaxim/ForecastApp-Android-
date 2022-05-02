@@ -26,6 +26,7 @@ import com.example.forecast.di.DateFormat
 import com.example.forecast.di.PreferenceTag
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
@@ -73,7 +74,9 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         when (city) {
             is Event.Loading -> onLoading()
             is Event.Success<CityWeather?> -> city.data?.let { onSuccess(it) }
-                ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
+                ?: viewModel.searchCityForecastByName(
+                    CityToSearch(searchName = getString(R.string.default_city))
+                )
             is Event.Error -> onError(city.throwable)
         }
     }
@@ -225,7 +228,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 return@onRefreshListener
             }
             Log.d(getString(R.string.main_log), "Updating city: $it")
-            viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
+            viewModel.searchCityForecastByName(CityToSearch(searchName = it.subSequence(0, it.length - 4).toString()))
         }
     }
 
@@ -261,7 +264,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                     return@setButton
 
                 Log.d(getString(R.string.main_log), "Searching city: $cityInput")
-                viewModel.searchCityForecastByName(cityInput)
+                viewModel.searchCityForecastByName(CityToSearch(searchName = cityInput))
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,

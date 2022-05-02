@@ -2,8 +2,8 @@ package com.example.forecast.feature_forecast.presentation.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.extensions.mappers.CityWeatherMappers.toCity
-import com.example.forecast.domain.model.City
+import com.example.extensions.mappers.CityWeatherMappers.toCityToSearch
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
 import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
@@ -18,20 +18,19 @@ class MainViewModel @Inject constructor(
     private val updateCityUseCase: UpdateCityInBase,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
-
-) : BaseViewModel() {
+    ) : BaseViewModel() {
 
     private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
     val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
 
-    fun searchCityForecastByName(searchInput: CharSequence) {
+    fun searchCityForecastByName(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
-                getCityInfoUseCase(searchInput as String)
+                getCityInfoUseCase(cityToSearch.searchName)
             },
             successCallback = { city ->
-                searchForecast(city)
+                searchForecastByCoordinates(city)
             },
             errorCallback = { error ->
                 _chosenLiveData.postValue(Event.Error(error))
@@ -39,18 +38,18 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun searchForecast(cityToSearchForecast: City) {
+    private fun searchForecastByCoordinates(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
-                getForecastUseCase(cityToSearchForecast)
+                getForecastUseCase(cityToSearch)
             },
             successCallback = { cityForecast ->
                 writeCityToBaseUseCase(cityForecast)
                 _chosenLiveData.postValue(Event.Success(cityForecast))
             },
-            errorCallback = { error ->
-                _chosenLiveData.postValue(Event.Error(error))
+            errorCallback = {
+                _chosenLiveData.postValue(Event.Error(it))
             }
         )
     }
@@ -59,7 +58,7 @@ class MainViewModel @Inject constructor(
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
-                getForecastUseCase(city = cityToUpdate.toCity())
+                getForecastUseCase(cityToUpdate.toCityToSearch())
             },
             successCallback = { updatedCity ->
                 updateCityUseCase(updatedCity)

@@ -1,6 +1,6 @@
 package com.example.extensions.mappers
 
-import com.example.forecast.domain.model.City
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Coordinates
 import com.example.local.entities.CityWeatherEntity
@@ -23,13 +23,11 @@ object CityWeatherMappers {
         forecastDate
     )
 
-    fun CityWeather.toCity() = City(
+    fun CityWeather.toCityToSearch() = CityToSearch(
         coordinates = Coordinates(
             lat = lat,
             lon = lon
         ),
-        id = id,
-        name = name,
-        country = country
+        searchName = name
     )
 }
