@@ -17,6 +17,7 @@
     <string name="main_log">MAIN_LOG</string>
     <string name="network_unavailable">Network unavailable now!</string>
     <string name="incorrect_input">Incorrect input!</string>
+    <string name="location_title">Your Location</string>
 
     <!--    image descriptions-->
     <string name="forecast_default_image">forecast_default_image</string>

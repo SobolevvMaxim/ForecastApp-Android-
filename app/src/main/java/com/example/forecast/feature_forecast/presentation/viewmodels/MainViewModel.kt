@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
     private val updateCityUseCase: UpdateCityInBase,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
-    ) : BaseViewModel() {
+) : BaseViewModel() {
 
     private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
     val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
@@ -38,7 +38,7 @@ class MainViewModel @Inject constructor(
         )
     }
 
-    private fun searchForecastByCoordinates(cityToSearch: CityToSearch) {
+    fun searchForecastByCoordinates(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {

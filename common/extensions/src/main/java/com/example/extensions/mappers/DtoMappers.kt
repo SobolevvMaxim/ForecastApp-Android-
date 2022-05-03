@@ -27,7 +27,7 @@ object DtoMappers {
             }
         )
         val cityWeather = CityWeather(
-            id = UUID.randomUUID().toString(),
+            id = UUID.nameUUIDFromBytes(cityToSearch.searchName.encodeToByteArray()).toString(),
             name = cityToSearch.searchName,
             country = timezone.substring(0, 2),
             lat = cityToSearch.coordinates!!.lat,

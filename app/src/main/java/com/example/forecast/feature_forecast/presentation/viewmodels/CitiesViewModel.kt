@@ -13,7 +13,7 @@ import javax.inject.Inject
 class CitiesViewModel @Inject constructor(
     private val loadForecastsUseCase: LoadForecasts,
     private val deleteCityUseCase: DeleteCity,
-) : BaseViewModel(){
+) : BaseViewModel() {
 
     private val _citiesLiveData = MutableLiveData<Set<CityWeather>>()
     val citiesLiveData: LiveData<Set<CityWeather>> get() = _citiesLiveData

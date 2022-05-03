@@ -40,7 +40,12 @@ class CitiesRecyclerAdapter(
                 temperatureTV.text = getTemperature()
             }
 
-            highlightIfChosenCity(itemID = item.id, chosenCityInterface, highlightColor, commonColor)
+            highlightIfChosenCity(
+                itemID = item.id,
+                chosenCityInterface,
+                highlightColor,
+                commonColor
+            )
 
             setOnClickListener {
                 listener.clickListener?.invoke(item)
