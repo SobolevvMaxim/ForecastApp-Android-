@@ -23,8 +23,8 @@ class MainViewModel @Inject constructor(
     private val prefStore: IPrefStore,
 ) : BaseViewModel() {
 
-    private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
-    val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
+    private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
+    val chosenLiveData: LiveData<Event<CityWeather>> get() = _chosenLiveData
 
     val chosenID = prefStore.getChosen().asLiveData()
 
@@ -81,7 +81,9 @@ class MainViewModel @Inject constructor(
                 getCityUseCase(cityID)
             },
             successCallback = { cityByID ->
-                _chosenLiveData.postValue(Event.Success(cityByID))
+                cityByID?.let {
+                    _chosenLiveData.postValue(Event.Success(it))
+                }
             },
             errorCallback = { error ->
                 _chosenLiveData.postValue(Event.Error(error))

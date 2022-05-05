@@ -71,9 +71,9 @@ dependencies {
     implementation deps.material
     implementation deps.constraint_layout
     implementation deps.refresh_layout
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "com.google.android.gms:play-services-location:19.0.1"
+    debugImplementation deps.leak_canary
+    implementation deps.multidex
+    implementation deps.location
 }
 
 kapt {

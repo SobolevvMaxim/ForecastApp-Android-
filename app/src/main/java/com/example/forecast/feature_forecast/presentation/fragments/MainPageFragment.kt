@@ -72,12 +72,18 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     private val citiesViewModel by viewModels<CitiesViewModel>()
 
-    private val cityObserver = Observer<Event<CityWeather?>> { city ->
+    private val cityObserver = Observer<Event<CityWeather>> { city ->
         when (city) {
             is Event.Loading -> onLoading()
-            is Event.Success<CityWeather?> -> city.data
-                ?.let { onSuccess(it) }
-                ?: getLastLocation(
+            is Event.Success<CityWeather> -> onSuccess(city.data)
+            is Event.Error -> onError(city.throwable)
+        }
+    }
+
+    private val citiesObserver = Observer<Set<CityWeather>> { cities ->
+        cities.run {
+            if (this.isNullOrEmpty()) {
+                getLastLocation(
                     successCallback = {
                         viewModel.searchForecastByCoordinates(
                             cityToSearch = CityToSearch(
@@ -93,14 +99,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                         searchDefaultCityForecast()
                     }
                 )
-            is Event.Error -> onError(city.throwable)
-        }
-    }
-
-    private val citiesObserver = Observer<Set<CityWeather>> { cities ->
-        cities.run {
-            if (this.isNullOrEmpty())
                 return@Observer
+            }
 
             updateRecyclerView(cities)
         }
@@ -108,7 +108,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     private val chosenObserver = Observer<String> { newChosenID ->
         viewModel.getCityByID(newChosenID)
-
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenCityID(newChosenID)
     }
 
@@ -144,8 +143,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         getLocationPermissions(
             onPermissionGained = {
-                val chosenCityID = viewModel.chosenID.value ?: "0"
-                viewModel.getCityByID(cityID = chosenCityID)
+                citiesViewModel.getAddedCities()
             },
             onPermissionDenied = {
                 searchDefaultCityForecast()
@@ -167,6 +165,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         setupListeners()
 
+        viewModel.chosenID
         citiesViewModel.getAddedCities()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
@@ -259,8 +258,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             return
         }
 
-        (viewModel.chosenLiveData.value as Event.Success<CityWeather?>).data?.let {
-            viewModel.updateCityForecast(it)
+        viewModel.run {
+            updateCityForecast((chosenLiveData.value as Event.Success<CityWeather>).data)
         }
     }
 
