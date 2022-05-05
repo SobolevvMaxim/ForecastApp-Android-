@@ -13,7 +13,7 @@ interface IForecastRepository {
 
     /**
      * Search forecast by City
-     * @param city cearch forecast for current city
+     * @param cityToSearch cearch forecast for current city
      * @return City forecast with all info
      */
     suspend fun searchForecastByCoordinates(cityToSearch: CityToSearch): Result<CityWeather>

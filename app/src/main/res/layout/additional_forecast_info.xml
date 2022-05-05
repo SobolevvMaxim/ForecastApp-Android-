@@ -28,7 +28,6 @@
             tools:ignore="ImageContrastCheck" />
 
         <TextView
-            android:id="@+id/textView3"
             style="@style/TextView.MainWhite"
             android:layout_marginStart="@dimen/main_margin"
             android:layout_marginLeft="@dimen/main_margin"
@@ -69,7 +68,6 @@
             tools:ignore="ImageContrastCheck" />
 
         <TextView
-            android:id="@+id/textView4"
             style="@style/TextView.MainWhite"
             android:layout_marginStart="@dimen/main_margin"
             android:layout_marginLeft="@dimen/main_margin"
@@ -109,7 +107,6 @@
             tools:ignore="ImageContrastCheck" />
 
         <TextView
-            android:id="@+id/textView2"
             style="@style/TextView.MainWhite"
             android:layout_marginStart="@dimen/main_margin"
             android:layout_marginLeft="@dimen/main_margin"

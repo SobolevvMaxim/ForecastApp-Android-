@@ -18,7 +18,6 @@
         tools:ignore="TouchTargetSizeCheck" />
 
     <TextView
-        android:id="@+id/textView"
         style="@style/TextView.MainBlack.Titles"
         android:layout_marginStart="@dimen/main_margin"
         android:layout_marginLeft="@dimen/main_margin"

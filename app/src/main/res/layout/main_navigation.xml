@@ -2,7 +2,6 @@
 <com.google.android.material.navigation.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation"
     app:itemHorizontalPadding="52dp"
     app:itemTextAppearance="@style/Navigation.TextAppearance"
     android:layout_width="match_parent"
@@ -14,7 +13,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/location_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -27,7 +25,6 @@
                 android:padding="@dimen/main_margin">
 
                 <ImageView
-                    android:id="@+id/izb"
                     style="@style/AppImageView"
                     android:clickable="true"
                     android:contentDescription="@string/location_description"
@@ -38,7 +35,6 @@
                     tools:ignore="TouchTargetSizeCheck" />
 
                 <TextView
-                    android:id="@+id/tvvv"
                     style="@style/TextView.MainBlack.Titles"
                     android:layout_marginStart="@dimen/main_margin"
                     android:layout_marginLeft="@dimen/main_margin"
@@ -54,7 +50,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/location_city"
                     style="@style/TextView.MainBlack"
                     android:layout_height="match_parent"
                     android:layout_marginStart="55dp"
@@ -64,7 +59,6 @@
                     tools:text="@string/city_default_view" />
 
                 <TextView
-                    android:id="@+id/location_city_temperature"
                     style="@style/TextView.MainBlack.Titles"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="@dimen/big_margin"

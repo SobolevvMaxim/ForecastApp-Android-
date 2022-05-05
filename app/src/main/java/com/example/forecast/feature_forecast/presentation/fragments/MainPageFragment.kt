@@ -106,9 +106,9 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
-        cities.run {                            // TODO: Change passing chosen city logics
-            if (this.isNullOrEmpty())           // TODO: Network listener leak
-                return@Observer                 // TODO: Move logics of cities menu to somewhere
+        cities.run {
+            if (this.isNullOrEmpty())
+                return@Observer
 
             updateRecyclerView(cities)
         }
