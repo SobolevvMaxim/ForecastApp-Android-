@@ -1,8 +1,6 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.extensions.DateUtils.getCityForecastDate
+import com.example.extensions.DateUtils.checkIfDeprecated
 import com.example.extensions.DateUtils.getTime
 import com.example.extensions.LocationUtils.getLastLocation
 import com.example.extensions.LocationUtils.getLocationPermissions
@@ -92,13 +90,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                         )
                     },
                     locationNullCallback = {
-                        viewModel.searchCityForecastByName(
-                            cityToSearch = CityToSearch(
-                                searchName = getString(
-                                    R.string.default_city
-                                )
-                            )
-                        )
+                        searchDefaultCityForecast()
                     }
                 )
             is Event.Error -> onError(city.throwable)
@@ -112,6 +104,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
             updateRecyclerView(cities)
         }
+    }
+
+    private val chosenObserver = Observer<String> { newChosenID ->
+        viewModel.getCityByID(newChosenID)
+
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenCityID(newChosenID)
     }
 
     private val citiesRecyclerAdapter = CitiesRecyclerAdapter(
@@ -129,16 +127,15 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         commonColor = "#FF000000"
     )
 
-    private val sharedPreferenceChangeListener =
-        SharedPreferences.OnSharedPreferenceChangeListener { _, p1 ->
-            if (p1 == preferenceTag)
-                viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
-        }
+    private fun searchDefaultCityForecast() {
+        viewModel.searchCityForecastByName(
+            cityToSearch = CityToSearch(searchName = getString(R.string.default_city))
+        )
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun changeChosen(newChosenID: String) {
-        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
-        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
+        viewModel.changeChosenInBase(newChosenID)
         citiesRecyclerAdapter.notifyDataSetChanged()
     }
 
@@ -146,26 +143,18 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         super.onCreate(savedInstanceState)
 
         getLocationPermissions(
-            successCallback = {
-                val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
+            onPermissionGained = {
+                val chosenCityID = viewModel.chosenID.value ?: "0"
                 viewModel.getCityByID(cityID = chosenCityID)
             },
-            failureCallback = {
-                viewModel.searchCityForecastByName(
-                    cityToSearch = CityToSearch(
-                        searchName = getString(
-                            R.string.default_city
-                        )
-                    )
-                )
+            onPermissionDenied = {
+                searchDefaultCityForecast()
             }
         )
     }
 
     override fun onResume() {
         super.onResume()
-        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
 
         closeNavigationViewOnBackPressed(drawerLayout = mainDrawer)
     }
@@ -181,6 +170,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         citiesViewModel.getAddedCities()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        viewModel.chosenID.observe(viewLifecycleOwner, chosenObserver)
         citiesViewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
 
         setRecyclerView()
@@ -189,10 +179,19 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     private fun onSuccess(city: CityWeather) {
         loading_city_progress.updateProgressBar(false)
         swipe_layout.isRefreshing = false
-        checkToUpdate(city)
-        updateView(city)
-        citiesViewModel.getAddedCities()
-        changeChosen(city.id)
+        city.run {
+            checkIfDeprecated(
+                dateFormat = mainDateFormat,
+                deprecatedAction = { deprecatedCityForecast ->
+                    if (offline_mode.networkCheckByUI())
+                        viewModel.updateCityForecast(deprecatedCityForecast)
+                }
+            )
+            updateView(this)
+            citiesViewModel.getAddedCities()
+            viewModel.changeChosenInBase(id)
+            changeChosen(id)
+        }
     }
 
     override fun onLoading() {
@@ -200,16 +199,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         Log.d(getString(R.string.main_log), "Loading...")
     }
 
-    override fun onPause() {
-        super.onPause()
-        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
-    }
-
     private fun setupListeners() {
-        setNetworkListener { available ->
+        setNetworkListener { isAvailable ->
             activity?.runOnUiThread {
-                when (available) {
+                when (isAvailable) {
                     true -> offline_mode.visibility = View.GONE
                     false -> offline_mode.visibility = View.VISIBLE
                 }
@@ -246,9 +239,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         cities_recycler.apply {
             layoutManager = recyclerManager
         }
-        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(
-            (activity as ChosenCityInterface).getChosenCityID()
-        )
 
         cities_recycler.adapter = citiesRecyclerAdapter
     }
@@ -259,44 +249,19 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun onRefreshListener() {
-        currentCity.text?.let { it ->
-            if (!offline_mode.networkCheckByUI()) {
-                Toast.makeText(
-                    context,
-                    getString(R.string.network_unavailable),
-                    Toast.LENGTH_SHORT
-                ).show()
-                swipe_layout.isRefreshing = false
-                return@onRefreshListener
-            }
-            Log.d(getString(R.string.main_log), "Updating city: $it")
-            val chosenID = (activity as ChosenCityInterface).getChosenCityID()
-            citiesViewModel.citiesLiveData.value
-                ?.firstOrNull { city -> city.id == chosenID }
-                ?.let {
-                    updateCityForecast(it)
-                }
-        }
-    }
-
-    private fun checkToUpdate(city: CityWeather) {
-        val cityDate = Calendar.getInstance()
-        val currentDate = Calendar.getInstance()
-
-        cityDate.apply {
-            time = mainDateFormat.getCityForecastDate(city)
-            add(Calendar.HOUR, 1)
+        if (!offline_mode.networkCheckByUI()) {
+            Toast.makeText(
+                context,
+                getString(R.string.network_unavailable),
+                Toast.LENGTH_SHORT
+            ).show()
+            swipe_layout.isRefreshing = false
+            return
         }
 
-        if (cityDate.time.before(currentDate.time) && offline_mode.networkCheckByUI()) {
-            Log.d(getString(R.string.main_log), "AutoUpdating city: $city")
-            updateCityForecast(city)
+        (viewModel.chosenLiveData.value as Event.Success<CityWeather?>).data?.let {
+            viewModel.updateCityForecast(it)
         }
-    }
-
-    private fun updateCityForecast(city: CityWeather) {
-        viewModel.updateCityForecast(city)
-        Log.d(getString(R.string.main_log), "Updating forecast...")
     }
 
     @SuppressLint("InflateParams")
@@ -328,7 +293,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             val title = "${getString(R.string.delete_city_title)} ${city.name}?"
             setTitle(title)
             setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
-                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
+                when (city.id == viewModel.chosenID.value) {
                     false -> {
                         citiesViewModel.deleteCity(city)
                         Log.d(getString(R.string.main_log), "Deleting city: $city")
