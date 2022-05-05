@@ -1,12 +1,12 @@
-package com.example.forecast.feature_forecast.presentation.prefstore
+package com.example.local.prefstore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.forecast.domain.prefstore.IPrefStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 private const val STORE_NAME = "chosen_city_store"
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = STORE_NAME)
+val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(name = STORE_NAME)
 
 class PrefStore @Inject constructor(
     @ApplicationContext context: Context

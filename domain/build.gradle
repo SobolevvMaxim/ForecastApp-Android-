@@ -35,4 +35,5 @@ android {
 dependencies {
     implementation deps.hilt.android
     kapt deps.hilt.compiler
+    implementation deps.kotlin.coroutines
 }

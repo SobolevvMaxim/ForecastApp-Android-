@@ -1,7 +1,7 @@
-package com.example.forecast.di
+package com.example.local.di
 
-import com.example.forecast.feature_forecast.presentation.prefstore.IPrefStore
-import com.example.forecast.feature_forecast.presentation.prefstore.PrefStore
+import com.example.forecast.domain.prefstore.IPrefStore
+import com.example.local.prefstore.PrefStore
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
