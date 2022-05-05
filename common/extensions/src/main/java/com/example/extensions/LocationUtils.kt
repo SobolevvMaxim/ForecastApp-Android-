@@ -11,17 +11,17 @@ import com.google.android.gms.location.LocationServices
 
 object LocationUtils {
 
-    fun Fragment.getLocationPermissions(successCallback: () -> Unit, failureCallback: () -> Unit) {
+    fun Fragment.getLocationPermissions(onPermissionGained: () -> Unit, onPermissionDenied: () -> Unit) {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                        successCallback()
+                        onPermissionGained()
                     }
                     else -> {
-                        failureCallback()
+                        onPermissionDenied()
                     }
                 }
             }
