@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.navigation.NavigationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:itemHorizontalPadding="52dp"
+    app:itemTextAppearance="@style/Navigation.TextAppearance"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/main_margin">
+
+                <ImageView
+                    style="@style/AppImageView"
+                    android:clickable="true"
+                    android:contentDescription="@string/location_description"
+                    android:focusable="true"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_add_location_24"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    style="@style/TextView.MainBlack.Titles"
+                    android:layout_marginStart="@dimen/main_margin"
+                    android:layout_marginLeft="@dimen/main_margin"
+                    android:text="Местоположение"
+                    app:layout_constraintStart_toEndOf="@+id/location_image"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:baselineAligned="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/TextView.MainBlack"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    tools:text="@string/city_default_view" />
+
+                <TextView
+                    style="@style/TextView.MainBlack.Titles"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/big_margin"
+                    android:layout_marginRight="@dimen/big_margin"
+                    android:gravity="center_vertical|end"
+                    tools:text="10" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <include layout="@layout/cities_header" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cities_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</com.google.android.material.navigation.NavigationView>

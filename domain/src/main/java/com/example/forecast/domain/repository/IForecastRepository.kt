@@ -1,6 +1,6 @@
 package com.example.forecast.domain.repository
 
-import com.example.forecast.domain.model.City
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 
 interface IForecastRepository {
@@ -9,14 +9,14 @@ interface IForecastRepository {
      * @param query city name to search
      * @return City()
      */
-    suspend fun searchCity(query: String): Result<City>
+    suspend fun searchCity(query: String): Result<CityToSearch>
 
     /**
      * Search forecast by City
-     * @param city cearch forecast for current city
+     * @param cityToSearch cearch forecast for current city
      * @return City forecast with all info
      */
-    suspend fun searchForecast(city: City): Result<CityWeather>
+    suspend fun searchForecastByCoordinates(cityToSearch: CityToSearch): Result<CityWeather>
 
     /**
      * Write city forecast to base

@@ -1,107 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/ThemeActionBar"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null">
+    android:background="@drawable/back"
+    tools:context=".feature_forecast.presentation.fragments.MainPageFragment">
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/background_description"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/back" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/loading_city_progress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/loading_city_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include">
 
-    </com.google.android.material.progressindicator.LinearProgressIndicator>
+        </com.google.android.material.progressindicator.LinearProgressIndicator>
 
-    <TextView
-        android:id="@+id/offline_mode"
-        style="@style/Widget.Forecast.TextView.OfflineMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#72151515"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/offline_mode"
+            style="@style/TextView.MainWhite.OfflineMode"
+            android:gravity="center_horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        layout="@layout/main_app_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/main_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/coordinatorLayout">
-
-        <ScrollView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/top_screen">
+            app:layout_constraintTop_toBottomOf="@+id/loading_city_progress">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_screen">
 
-                <include layout="@layout/main_forecast_info"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/hourly_forecast_recycler"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginStart="11dp"
-                    android:layout_marginLeft="11dp"
-                    android:layout_marginEnd="11dp"
-                    android:layout_marginRight="11dp"
-                    android:layout_weight="1"
-                    android:background="#72151515"
-                    android:orientation="horizontal"
-                    android:padding="11dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_info" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/daily_forecast_recycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_margin="11dp"
-                    android:layout_weight="1"
-                    android:background="#72151515"
-                    android:orientation="vertical"
-                    android:padding="11dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
+                    <include layout="@layout/main_forecast_info" />
 
-                <include layout="@layout/additional_forecast_info"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/hourly_forecast_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginStart="@dimen/main_margin"
+                        android:layout_marginLeft="@dimen/main_margin"
+                        android:layout_marginEnd="@dimen/main_margin"
+                        android:layout_marginRight="@dimen/main_margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/blackout"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/main_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/main_info" />
 
-            </LinearLayout>
-        </ScrollView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/daily_forecast_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginStart="@dimen/main_margin"
+                        android:layout_marginLeft="@dimen/main_margin"
+                        android:layout_marginTop="@dimen/main_margin"
+                        android:layout_marginEnd="@dimen/main_margin"
+                        android:layout_marginRight="@dimen/main_margin"
+                        android:layout_weight="1"
+                        android:background="@drawable/blackout"
+                        android:orientation="vertical"
+                        android:padding="@dimen/main_margin"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/hourly_forecast_recycler" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <include layout="@layout/additional_forecast_info" />
+
+                </LinearLayout>
+            </ScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/main_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+</androidx.drawerlayout.widget.DrawerLayout>

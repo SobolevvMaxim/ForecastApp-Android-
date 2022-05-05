@@ -8,8 +8,7 @@ import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterf
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class AppActivity : AppCompatActivity(R.layout.main_activity),
-    ChosenCityInterface {
+class AppActivity : AppCompatActivity(R.layout.main_activity), ChosenCityInterface {
 
     override fun changeChosenInBase(newChosenID: String) {
         val sharedPref = this.getPreferences(Context.MODE_PRIVATE) ?: return

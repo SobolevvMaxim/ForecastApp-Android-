@@ -18,6 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    @PreferenceTag
     @Provides
     fun provideGetCityTag(@ApplicationContext context: Context): String {
         return context.getString(R.string.get_city_extra)
@@ -44,3 +45,7 @@ annotation class DateFormat
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class TimeFormat
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PreferenceTag

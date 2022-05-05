@@ -1,50 +1,62 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.getCityForecastDate
 import com.example.extensions.DateUtils.getTime
+import com.example.extensions.LocationUtils.getLastLocation
+import com.example.extensions.LocationUtils.getLocationPermissions
 import com.example.extensions.NetworkUtils.isOnline
-import com.example.extensions.NetworkUtils.onChangeNetworkState
 import com.example.extensions.NetworkUtils.setNetworkListener
+import com.example.extensions.UIUtils.closeNavigationViewOnBackPressed
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
+import com.example.features.RecyclerClickListener
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
+import com.example.forecast.di.PreferenceTag
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
+import com.example.forecast.domain.model.Coordinates
+import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
 import com.example.forecast.feature_forecast.presentation.base.BaseFragment
 import com.example.forecast.feature_forecast.presentation.base.Event
 import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
+import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.additional_forecast_info.*
 import kotlinx.android.synthetic.main.main_app_bar.*
 import kotlinx.android.synthetic.main.main_forecast_info.*
+import kotlinx.android.synthetic.main.main_navigation.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainPageFragment : BaseFragment<MainViewModel>() {
+class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fragment) {
+
+    private val mainDrawer by lazy {
+        fragment_drawer
+    }
 
     @Inject
     @DateFormat
@@ -54,15 +66,124 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
 
+    @Inject
+    @PreferenceTag
+    lateinit var preferenceTag: String
+
     override val viewModel by viewModels<MainViewModel>()
+
+    private val citiesViewModel by viewModels<CitiesViewModel>()
 
     private val cityObserver = Observer<Event<CityWeather?>> { city ->
         when (city) {
             is Event.Loading -> onLoading()
-            is Event.Success<CityWeather?> -> city.data?.let { onSuccess(it) }
-                ?: viewModel.searchCityForecastByName(getString(R.string.default_city))
+            is Event.Success<CityWeather?> -> city.data
+                ?.let { onSuccess(it) }
+                ?: getLastLocation(
+                    successCallback = {
+                        viewModel.searchForecastByCoordinates(
+                            cityToSearch = CityToSearch(
+                                coordinates = Coordinates(
+                                    lat = it.latitude.toString(),
+                                    lon = it.longitude.toString()
+                                ),
+                                searchName = getString(R.string.location_title)
+                            )
+                        )
+                    },
+                    locationNullCallback = {
+                        viewModel.searchCityForecastByName(
+                            cityToSearch = CityToSearch(
+                                searchName = getString(
+                                    R.string.default_city
+                                )
+                            )
+                        )
+                    }
+                )
             is Event.Error -> onError(city.throwable)
         }
+    }
+
+    private val citiesObserver = Observer<Set<CityWeather>> { cities ->
+        cities.run {
+            if (this.isNullOrEmpty())
+                return@Observer
+
+            updateRecyclerView(cities)
+        }
+    }
+
+    private val citiesRecyclerAdapter = CitiesRecyclerAdapter(
+        listener = RecyclerClickListener(
+            clickListener = {
+                changeChosen(it.id)
+                mainDrawer.close()
+            },
+            onLongClickListener = {
+                deleteCityDialog(it)
+            }
+        ),
+        chosenID = "0",
+        highlightColor = "#4680C5", // TODO: get colors from app theme
+        commonColor = "#FF000000"
+    )
+
+    private val sharedPreferenceChangeListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { _, p1 ->
+            if (p1 == preferenceTag)
+                viewModel.getCityByID((activity as ChosenCityInterface).getChosenCityID())
+        }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeChosen(newChosenID: String) {
+        (activity as ChosenCityInterface).changeChosenInBase(newChosenID)
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(newChosenID)
+        citiesRecyclerAdapter.notifyDataSetChanged()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        getLocationPermissions(
+            successCallback = {
+                val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
+                viewModel.getCityByID(cityID = chosenCityID)
+            },
+            failureCallback = {
+                viewModel.searchCityForecastByName(
+                    cityToSearch = CityToSearch(
+                        searchName = getString(
+                            R.string.default_city
+                        )
+                    )
+                )
+            }
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        prefs.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
+
+        closeNavigationViewOnBackPressed(drawerLayout = mainDrawer)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (!isOnline())
+            offline_mode.visibility = View.GONE
+
+        setupListeners()
+
+        citiesViewModel.getAddedCities()
+
+        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+        citiesViewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
+
+        setRecyclerView()
     }
 
     private fun onSuccess(city: CityWeather) {
@@ -70,7 +191,8 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         swipe_layout.isRefreshing = false
         checkToUpdate(city)
         updateView(city)
-        (activity as ChosenCityInterface).changeChosenInBase(city.id)
+        citiesViewModel.getAddedCities()
+        changeChosen(city.id)
     }
 
     override fun onLoading() {
@@ -78,52 +200,66 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
         Log.d(getString(R.string.main_log), "Loading...")
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.main_page_fragment, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        if (!isOnline())
-            onChangeNetworkState(false, offline_mode)
-
-        setupListeners()
-
-        val chosenCityID = (activity as ChosenCityInterface).getChosenCityID()
-        viewModel.getCityByID(cityID = chosenCityID)
-
-        viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
+    override fun onPause() {
+        super.onPause()
+        val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        prefs.unregisterOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
     }
 
     private fun setupListeners() {
-        setNetworkListener(offline_mode)
-
-        topAppBar.setNavigationOnClickListener {
-            showCitiesFragment()
-        }
-
-        topAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.add_button -> {
-                    addCityDialog()
-                    true
+        setNetworkListener { available ->
+            activity?.runOnUiThread {
+                when (available) {
+                    true -> offline_mode.visibility = View.GONE
+                    false -> offline_mode.visibility = View.VISIBLE
                 }
-                else -> false
             }
         }
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
         }
+
+        topAppBar.apply {
+            setNavigationOnClickListener {
+                mainDrawer.open()
+            }
+            Log.d(getString(R.string.main_log), "Navigation listener set")
+
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.add_button -> {
+                        addCityDialog()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+    }
+
+    private fun setRecyclerView() {
+        Log.d(getString(R.string.main_log), "Setting cities recycler...")
+        val recyclerManager: RecyclerView.LayoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+
+        cities_recycler.apply {
+            layoutManager = recyclerManager
+        }
+        (citiesRecyclerAdapter as ChosenCityInterface).changeChosenInBase(
+            (activity as ChosenCityInterface).getChosenCityID()
+        )
+
+        cities_recycler.adapter = citiesRecyclerAdapter
+    }
+
+    private fun updateRecyclerView(cities: Set<CityWeather>) {
+        Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
+        citiesRecyclerAdapter.submitList(cities.toList())
     }
 
     private fun onRefreshListener() {
-        currentCity.text?.let {
+        currentCity.text?.let { it ->
             if (!offline_mode.networkCheckByUI()) {
                 Toast.makeText(
                     context,
@@ -134,7 +270,12 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
                 return@onRefreshListener
             }
             Log.d(getString(R.string.main_log), "Updating city: $it")
-            viewModel.searchCityForecastByName(it.subSequence(0, it.length - 4))
+            val chosenID = (activity as ChosenCityInterface).getChosenCityID()
+            citiesViewModel.citiesLiveData.value
+                ?.firstOrNull { city -> city.id == chosenID }
+                ?.let {
+                    updateCityForecast(it)
+                }
         }
     }
 
@@ -170,12 +311,36 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
                     return@setButton
 
                 Log.d(getString(R.string.main_log), "Searching city: $cityInput")
-                viewModel.searchCityForecastByName(cityInput)
+                viewModel.searchCityForecastByName(CityToSearch(searchName = cityInput))
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
                 getString(R.string.negative_button)
             ) { dialog, _ ->
+                dialog.cancel()
+            }
+            show()
+        }
+    }
+
+    private fun deleteCityDialog(city: CityWeather) {
+        AlertDialog.Builder(requireContext()).create().apply {
+            val title = "${getString(R.string.delete_city_title)} ${city.name}?"
+            setTitle(title)
+            setButton(AlertDialog.BUTTON_POSITIVE, "Yes") { _, _ ->
+                when (city.id == (activity as ChosenCityInterface).getChosenCityID()) {
+                    false -> {
+                        citiesViewModel.deleteCity(city)
+                        Log.d(getString(R.string.main_log), "Deleting city: $city")
+                    }
+                    true -> Toast.makeText(
+                        requireContext(),
+                        "Unable to delete chosen city!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            setButton(AlertDialog.BUTTON_NEGATIVE, "No") { dialog, _ ->
                 dialog.cancel()
             }
             show()
@@ -208,11 +373,6 @@ class MainPageFragment : BaseFragment<MainViewModel>() {
                 }
             }
         }
-    }
-
-    private fun showCitiesFragment() {
-        Log.d(getString(R.string.main_log), "Showing cities fragment...")
-        findNavController().navigate(MainPageFragmentDirections.actionMainPageFragmentToCitiesFragment())
     }
 
     private fun updateView(cityToUpdateView: CityWeather) {
