@@ -2,12 +2,14 @@ package com.example.forecast.feature_forecast.presentation.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import com.example.extensions.mappers.CityWeatherMappers.toCityToSearch
 import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.*
 import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
 import com.example.forecast.feature_forecast.presentation.base.Event
+import com.example.forecast.feature_forecast.presentation.prefstore.IPrefStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -18,10 +20,13 @@ class MainViewModel @Inject constructor(
     private val updateCityUseCase: UpdateCityInBase,
     private val writeCityToBaseUseCase: WriteCityToBase,
     private val getCityUseCase: GetCityByID,
+    private val prefStore: IPrefStore,
 ) : BaseViewModel() {
 
     private val _chosenLiveData = MutableLiveData<Event<CityWeather?>>()
     val chosenLiveData: LiveData<Event<CityWeather?>> get() = _chosenLiveData
+
+    val chosenID = prefStore.getChosen().asLiveData()
 
     fun searchCityForecastByName(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())
@@ -80,6 +85,14 @@ class MainViewModel @Inject constructor(
             },
             errorCallback = { error ->
                 _chosenLiveData.postValue(Event.Error(error))
+            }
+        )
+    }
+
+    fun changeChosenInBase(newChosenID: String) {
+        simpleRequest(
+            request = {
+                prefStore.changeChosen(newChosenID)
             }
         )
     }
