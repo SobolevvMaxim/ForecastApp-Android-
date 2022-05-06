@@ -1,6 +1,5 @@
 package com.example.forecast.feature_forecast.presentation.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +17,8 @@ import kotlinx.android.synthetic.main.city_item.view.*
 class CitiesRecyclerAdapter(
     private val listener: RecyclerClickListener<CityWeather>,
     private var chosenID: String,
-    private val highlightColor: String,
-    private val commonColor: String,
+    private val highlightColor: Int,
+    private val commonColor: Int,
 ) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(diffUtilCallback),
     ChosenCityInterface {
@@ -32,8 +31,8 @@ class CitiesRecyclerAdapter(
             item: CityWeather,
             listener: RecyclerClickListener<CityWeather>,
             chosenCityInterface: ChosenCityInterface,
-            highlightColor: String,
-            commonColor: String
+            highlightColor: Int,
+            commonColor: Int
         ) = with(itemView) {
             DataProcessing(item).apply {
                 cityTV.text = getForecastLocation()
@@ -59,13 +58,13 @@ class CitiesRecyclerAdapter(
         private fun highlightIfChosenCity(
             itemID: String,
             chosenCityInterface: ChosenCityInterface,
-            highlightColor: String,
-            commonColor: String
+            highlightColor: Int,
+            commonColor: Int
         ) {
             if (chosenCityInterface.getChosenCityID() == itemID) {
-                cityTV.setTextColor(Color.parseColor(highlightColor))
+                cityTV.setTextColor(highlightColor)
             } else {
-                cityTV.setTextColor(Color.parseColor(commonColor))
+                cityTV.setTextColor(commonColor)
             }
         }
     }

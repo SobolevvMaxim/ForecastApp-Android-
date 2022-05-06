@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -23,7 +24,6 @@ import com.example.extensions.UIUtils.updateProgressBar
 import com.example.features.RecyclerClickListener
 import com.example.forecast.R
 import com.example.forecast.di.DateFormat
-import com.example.forecast.di.PreferenceTag
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityToSearch
@@ -63,10 +63,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     @Inject
     @TimeFormat
     lateinit var mainTimeFormat: SimpleDateFormat
-
-    @Inject
-    @PreferenceTag
-    lateinit var preferenceTag: String
 
     override val viewModel by viewModels<MainViewModel>()
 
@@ -111,20 +107,22 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenCityID(newChosenID)
     }
 
-    private val citiesRecyclerAdapter = CitiesRecyclerAdapter(
-        listener = RecyclerClickListener(
-            clickListener = {
-                changeChosen(it.id)
-                mainDrawer.close()
-            },
-            onLongClickListener = {
-                deleteCityDialog(it)
-            }
-        ),
-        chosenID = "0",
-        highlightColor = "#4680C5", // TODO: get colors from app theme
-        commonColor = "#FF000000"
-    )
+    private val citiesRecyclerAdapter by lazy {
+        CitiesRecyclerAdapter(
+            listener = RecyclerClickListener(
+                clickListener = {
+                    changeChosen(it.id)
+                    mainDrawer.close()
+                },
+                onLongClickListener = {
+                    deleteCityDialog(it)
+                }
+            ),
+            chosenID = getString(R.string.default_chosen_id),
+            highlightColor = ContextCompat.getColor(requireContext(), R.color.primaryColor),
+            commonColor = ContextCompat.getColor(requireContext(), R.color.black)
+        )
+    }
 
     private fun searchDefaultCityForecast() {
         viewModel.searchCityForecastByName(
