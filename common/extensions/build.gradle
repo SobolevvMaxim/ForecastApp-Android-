@@ -38,5 +38,5 @@ dependencies {
     implementation deps.app_compat
     implementation deps.material
     implementation deps.location
-    implementation 'com.jakewharton.timber:timber:5.0.1'
+    implementation deps.timber
 }

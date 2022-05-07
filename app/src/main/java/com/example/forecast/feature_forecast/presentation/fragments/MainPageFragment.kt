@@ -82,6 +82,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             if (this.isNullOrEmpty()) {
                 getLastLocation(
                     successCallback = {
+                        Timber.d("Location success callback (lat: %s, lon: %s)", it.latitude, it.longitude)
                         viewModel.searchForecastByCoordinates(
                             cityToSearch = CityToSearch(
                                 coordinates = Coordinates(
@@ -93,6 +94,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                         )
                     },
                     locationNullCallback = {
+                        Timber.d("Location null callback")
                         searchDefaultCityForecast()
                     }
                 )

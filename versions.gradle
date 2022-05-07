@@ -31,6 +31,7 @@ versions.leak_canary = "2.9.1"
 versions.multidex = "2.0.1"
 versions.location = "19.0.1"
 versions.datastore = "1.0.0"
+versions.timber = "5.0.1"
 ext.versions = versions
 
 def build_versions = [:]
@@ -62,6 +63,8 @@ deps.constraint_layout = "androidx.constraintlayout:constraintlayout:$versions.c
 deps.core_ktx = "androidx.core:core-ktx:$versions.core_ktx"
 
 deps.refresh_layout = "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swiperefresh"
+
+deps.timber = "com.jakewharton.timber:timber:$versions.timber"
 
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.gradle"
 deps.kotlin_gradle_plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin_gradle"
