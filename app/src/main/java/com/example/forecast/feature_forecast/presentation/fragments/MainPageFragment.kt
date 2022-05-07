@@ -96,6 +96,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                     locationNullCallback = {
                         Timber.d("Location null callback")
                         searchDefaultCityForecast()
+                    },
+                    noPermissionCallback = {
+                        Timber.d("No location permission gained")
+                        searchDefaultCityForecast()
                     }
                 )
                 return@Observer
@@ -152,7 +156,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 citiesViewModel.getAddedCities()
             },
             onPermissionDenied = {
-                searchDefaultCityForecast()
+                citiesViewModel.getAddedCities()
             }
         )
     }
@@ -172,7 +176,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         setupListeners()
 
         viewModel.chosenID
-        citiesViewModel.getAddedCities()
+//        citiesViewModel.getAddedCities()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
         viewModel.chosenID.observe(viewLifecycleOwner, chosenObserver)

@@ -12,7 +12,10 @@ import timber.log.Timber
 
 object LocationUtils {
 
-    fun Fragment.getLocationPermissions(onPermissionGained: () -> Unit, onPermissionDenied: () -> Unit) {
+    fun Fragment.getLocationPermissions(
+        onPermissionGained: (() -> Unit)? = null,
+        onPermissionDenied: (() -> Unit)? = null
+    ) {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -20,11 +23,11 @@ object LocationUtils {
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
                         Timber.d("Location permission gained...")
-                        onPermissionGained()
+                        onPermissionGained?.invoke()
                     }
                     else -> {
                         Timber.d("Location permission denied...")
-                        onPermissionDenied()
+                        onPermissionDenied?.invoke()
                     }
                 }
             }
@@ -36,7 +39,11 @@ object LocationUtils {
         )
     }
 
-    fun Fragment.getLastLocation(successCallback: (location: Location) -> Unit, locationNullCallback: () -> Unit) {
+    fun Fragment.getLastLocation(
+        successCallback: (location: Location) -> Unit,
+        locationNullCallback: () -> Unit,
+        noPermissionCallback: () -> Unit
+    ) {
         Timber.d("Getting last location...")
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
@@ -51,6 +58,8 @@ object LocationUtils {
                         successCallback(it)
                     } ?: locationNullCallback()
                 }
+        } else {
+            noPermissionCallback()
         }
     }
 }
