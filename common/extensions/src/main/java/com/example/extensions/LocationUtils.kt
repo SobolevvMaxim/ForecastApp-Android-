@@ -8,20 +8,26 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.LocationServices
+import timber.log.Timber
 
 object LocationUtils {
 
-    fun Fragment.getLocationPermissions(onPermissionGained: () -> Unit, onPermissionDenied: () -> Unit) {
+    fun Fragment.getLocationPermissions(
+        onPermissionGained: (() -> Unit)? = null,
+        onPermissionDenied: (() -> Unit)? = null
+    ) {
         val locationPermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                        onPermissionGained()
+                        Timber.d("Location permission gained...")
+                        onPermissionGained?.invoke()
                     }
                     else -> {
-                        onPermissionDenied()
+                        Timber.d("Location permission denied...")
+                        onPermissionDenied?.invoke()
                     }
                 }
             }
@@ -33,7 +39,12 @@ object LocationUtils {
         )
     }
 
-    fun Fragment.getLastLocation(successCallback: (location: Location) -> Unit, locationNullCallback: () -> Unit) {
+    fun Fragment.getLastLocation(
+        successCallback: (location: Location) -> Unit,
+        locationNullCallback: () -> Unit,
+        noPermissionCallback: () -> Unit
+    ) {
+        Timber.d("Getting last location...")
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (ActivityCompat.checkSelfPermission(
@@ -47,6 +58,8 @@ object LocationUtils {
                         successCallback(it)
                     } ?: locationNullCallback()
                 }
+        } else {
+            noPermissionCallback()
         }
     }
 }

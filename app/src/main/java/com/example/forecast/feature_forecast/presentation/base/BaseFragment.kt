@@ -1,7 +1,6 @@
 package com.example.forecast.feature_forecast.presentation.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.forecast.R
+import timber.log.Timber
 
 abstract class BaseFragment<T : BaseViewModel>(
     @LayoutRes res: Int,
@@ -19,7 +18,7 @@ abstract class BaseFragment<T : BaseViewModel>(
 
     protected fun onError(error: Throwable?) {
         Toast.makeText(context, "Error: $error", Toast.LENGTH_SHORT).show()
-        Log.d(getString(R.string.main_log), "Error: $error")
+        Timber.e(error)
     }
 
     protected open fun onLoading() {}

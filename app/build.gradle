@@ -74,6 +74,7 @@ dependencies {
     debugImplementation deps.leak_canary
     implementation deps.multidex
     implementation deps.location
+    implementation deps.timber
 }
 
 kapt {

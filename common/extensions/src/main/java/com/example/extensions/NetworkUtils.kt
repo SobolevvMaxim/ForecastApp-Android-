@@ -6,8 +6,8 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
-import android.util.Log
 import androidx.fragment.app.Fragment
+import timber.log.Timber
 
 object NetworkUtils {
 
@@ -25,16 +25,19 @@ object NetworkUtils {
                 object : ConnectivityManager.NetworkCallback() {
                     override fun onAvailable(network: Network) {
                         super.onAvailable(network)
+                        Timber.d("Network available")
                         onChangeNetworkState(true)
                     }
 
                     override fun onUnavailable() {
                         super.onUnavailable()
+                        Timber.d("Network unavailable")
                         onChangeNetworkState(false)
                     }
 
                     override fun onLost(network: Network) {
                         super.onLost(network)
+                        Timber.d("Network lost")
                         onChangeNetworkState(false)
                     }
                 })
@@ -42,15 +45,6 @@ object NetworkUtils {
             TODO("VERSION.SDK_INT < LOLLIPOP")
         }
     }
-
-//    fun Fragment.onChangeNetworkState(available: Boolean, offlineModeTextView: TextView) {
-//        activity?.runOnUiThread {
-//            when (available) {
-//                true -> offlineModeTextView.visibility = View.GONE
-//                false -> offlineModeTextView.visibility = View.VISIBLE
-//            }
-//        }
-//    }
 
 
     fun Fragment.isOnline(): Boolean {
@@ -63,15 +57,15 @@ object NetworkUtils {
             if (capabilities != null) {
                 when {
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                        Timber.i("NetworkCapabilities.TRANSPORT_CELLULAR")
                         return true
                     }
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                        Timber.i("NetworkCapabilities.TRANSPORT_WIFI")
                         return true
                     }
                     capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                        Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                        Timber.i("NetworkCapabilities.TRANSPORT_ETHERNET")
                         return true
                     }
                 }

@@ -2,7 +2,6 @@ package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -45,6 +44,7 @@ import kotlinx.android.synthetic.main.main_app_bar.*
 import kotlinx.android.synthetic.main.main_forecast_info.*
 import kotlinx.android.synthetic.main.main_navigation.*
 import kotlinx.android.synthetic.main.main_page_fragment.*
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -78,9 +78,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     private val citiesObserver = Observer<Set<CityWeather>> { cities ->
         cities.run {
+            Timber.d("Observed cities: %s", cities)
             if (this.isNullOrEmpty()) {
                 getLastLocation(
                     successCallback = {
+                        Timber.d("Location success callback (lat: %s, lon: %s)", it.latitude, it.longitude)
                         viewModel.searchForecastByCoordinates(
                             cityToSearch = CityToSearch(
                                 coordinates = Coordinates(
@@ -92,6 +94,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                         )
                     },
                     locationNullCallback = {
+                        Timber.d("Location null callback")
+                        searchDefaultCityForecast()
+                    },
+                    noPermissionCallback = {
+                        Timber.d("No location permission gained")
                         searchDefaultCityForecast()
                     }
                 )
@@ -103,6 +110,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private val chosenObserver = Observer<String> { newChosenID ->
+        Timber.d("Observed chosen: %s", newChosenID)
         viewModel.getCityByID(newChosenID)
         (citiesRecyclerAdapter as ChosenCityInterface).changeChosenCityID(newChosenID)
     }
@@ -111,10 +119,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         CitiesRecyclerAdapter(
             listener = RecyclerClickListener(
                 clickListener = {
+                    Timber.d("Cities recycler clicked on item: %s", it)
                     changeChosen(it.id)
                     mainDrawer.close()
                 },
                 onLongClickListener = {
+                    Timber.d("Cities recycler long clicked on item: %s", it)
                     deleteCityDialog(it)
                 }
             ),
@@ -125,13 +135,15 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun searchDefaultCityForecast() {
-        viewModel.searchCityForecastByName(
+        Timber.d("Searching default city forecast...")
+        viewModel.searchCityInfoByName(
             cityToSearch = CityToSearch(searchName = getString(R.string.default_city))
         )
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun changeChosen(newChosenID: String) {
+        Timber.d("Changing chosen to %s", newChosenID)
         viewModel.changeChosenInBase(newChosenID)
         citiesRecyclerAdapter.notifyDataSetChanged()
     }
@@ -144,7 +156,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 citiesViewModel.getAddedCities()
             },
             onPermissionDenied = {
-                searchDefaultCityForecast()
+                citiesViewModel.getAddedCities()
             }
         )
     }
@@ -164,7 +176,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         setupListeners()
 
         viewModel.chosenID
-        citiesViewModel.getAddedCities()
+//        citiesViewModel.getAddedCities()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
         viewModel.chosenID.observe(viewLifecycleOwner, chosenObserver)
@@ -174,6 +186,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun onSuccess(city: CityWeather) {
+        Timber.d("Observed city success: %s", city)
         loading_city_progress.updateProgressBar(false)
         swipe_layout.isRefreshing = false
         city.run {
@@ -192,8 +205,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     override fun onLoading() {
+        Timber.d("On loading...")
         loading_city_progress.updateProgressBar(true)
-        Log.d(getString(R.string.main_log), "Loading...")
     }
 
     private fun setupListeners() {
@@ -214,7 +227,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             setNavigationOnClickListener {
                 mainDrawer.open()
             }
-            Log.d(getString(R.string.main_log), "Navigation listener set")
 
             setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -229,7 +241,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setRecyclerView() {
-        Log.d(getString(R.string.main_log), "Setting cities recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
 
@@ -241,11 +252,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun updateRecyclerView(cities: Set<CityWeather>) {
-        Log.d(getString(R.string.main_log), "Updating cities recycler: $cities")
         citiesRecyclerAdapter.submitList(cities.toList())
     }
 
     private fun onRefreshListener() {
+        Timber.d("Refresh layout triggered...")
         if (!offline_mode.networkCheckByUI()) {
             Toast.makeText(
                 context,
@@ -272,8 +283,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 if (!checkCityInput(cityInput))
                     return@setButton
 
-                Log.d(getString(R.string.main_log), "Searching city: $cityInput")
-                viewModel.searchCityForecastByName(CityToSearch(searchName = cityInput))
+                viewModel.searchCityInfoByName(CityToSearch(searchName = cityInput))
             }
             setButton(
                 AlertDialog.BUTTON_NEGATIVE,
@@ -293,7 +303,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 when (city.id == viewModel.chosenID.value) {
                     false -> {
                         citiesViewModel.deleteCity(city)
-                        Log.d(getString(R.string.main_log), "Deleting city: $city")
+
                     }
                     true -> Toast.makeText(
                         requireContext(),
@@ -338,7 +348,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun updateView(cityToUpdateView: CityWeather) {
-        Log.d(getString(R.string.main_log), "Updating view...")
+        Timber.d("Updating main view (city: %s)", cityToUpdateView)
 
         DataProcessing(cityToUpdateView).apply {
             currentCity.text = getForecastLocation()
@@ -361,7 +371,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setDailyRecyclerView(city: CityWeather) {
-        Log.d(getString(R.string.main_log), "Setting daily recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
                 override fun canScrollVertically(): Boolean = false
@@ -385,7 +394,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setHourlyRecyclerView(city: CityWeather) {
-        Log.d(getString(R.string.main_log), "Setting hourly recycler...")
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 

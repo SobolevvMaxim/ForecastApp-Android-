@@ -44,7 +44,6 @@ object DtoMappers {
                 Locale.getDefault()
             ).format(Calendar.getInstance().time),
         )
-        Log.d("HOUR", "toCityWeather: $hourlyTemp")
         return cityWeather
     }
 }
