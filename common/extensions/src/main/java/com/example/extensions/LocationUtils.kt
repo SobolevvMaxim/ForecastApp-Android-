@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.LocationServices
+import timber.log.Timber
 
 object LocationUtils {
 
@@ -18,9 +19,11 @@ object LocationUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 when {
                     permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                        Timber.d("Location permission gained...")
                         onPermissionGained()
                     }
                     else -> {
+                        Timber.d("Location permission denied...")
                         onPermissionDenied()
                     }
                 }
@@ -34,6 +37,7 @@ object LocationUtils {
     }
 
     fun Fragment.getLastLocation(successCallback: (location: Location) -> Unit, locationNullCallback: () -> Unit) {
+        Timber.d("Getting last location...")
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (ActivityCompat.checkSelfPermission(

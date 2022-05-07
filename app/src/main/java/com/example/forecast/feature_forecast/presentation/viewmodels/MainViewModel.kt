@@ -11,6 +11,7 @@ import com.example.forecast.domain.use_case.*
 import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
 import com.example.forecast.feature_forecast.presentation.base.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,10 +29,11 @@ class MainViewModel @Inject constructor(
 
     val chosenID = prefStore.getChosen().asLiveData()
 
-    fun searchCityForecastByName(cityToSearch: CityToSearch) {
+    fun searchCityInfoByName(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
+                Timber.d("Searching city info by name: %s", cityToSearch)
                 getCityInfoUseCase(cityToSearch.searchName)
             },
             successCallback = { city ->
@@ -47,6 +49,7 @@ class MainViewModel @Inject constructor(
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
+                Timber.d("Searching city forecast by coordinates: %s", cityToSearch)
                 getForecastUseCase(cityToSearch)
             },
             successCallback = { cityForecast ->
@@ -63,6 +66,7 @@ class MainViewModel @Inject constructor(
         _chosenLiveData.postValue(Event.Loading())
         networkRequest(
             request = {
+                Timber.d("Updating city forecast: %s", cityToUpdate)
                 getForecastUseCase(cityToUpdate.toCityToSearch())
             },
             successCallback = { updatedCity ->
@@ -78,6 +82,7 @@ class MainViewModel @Inject constructor(
     fun getCityByID(cityID: String) {
         simpleRequest(
             request = {
+                Timber.d("Getting city by id: %s", cityID)
                 getCityUseCase(cityID)
             },
             successCallback = { cityByID ->
@@ -94,6 +99,7 @@ class MainViewModel @Inject constructor(
     fun changeChosenInBase(newChosenID: String) {
         simpleRequest(
             request = {
+                Timber.d("Changing chosen in base, new id: %s", newChosenID)
                 prefStore.changeChosen(newChosenID)
             }
         )
