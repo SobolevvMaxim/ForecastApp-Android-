@@ -1,6 +1,5 @@
 package com.example.extensions.mappers
 
-import android.util.Log
 import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily

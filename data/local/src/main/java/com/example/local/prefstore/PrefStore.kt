@@ -16,7 +16,9 @@ import javax.inject.Inject
 
 private const val STORE_NAME = "chosen_city_store"
 
-val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(name = STORE_NAME)
+val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences> by preferencesDataStore(
+    name = STORE_NAME
+)
 
 class PrefStore @Inject constructor(
     @ApplicationContext context: Context
