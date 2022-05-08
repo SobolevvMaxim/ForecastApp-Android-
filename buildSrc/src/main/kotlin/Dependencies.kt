@@ -1,7 +1,7 @@
 const val kotlinVersion = "1.6.10"
 
 object ApiKey {
-    const val API_KEY = "38b77b2ee349a9b3c7b01a4c19660ebb"
+    const val API_KEY = "PutYourApiKeyHere"
 }
 
 object BuildPlugins {
