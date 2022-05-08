@@ -1,7 +1,7 @@
 plugins {
-    id(BuildPlugins.androidLibrary)
-    id(BuildPlugins.kotlinAndroid)
-    id(BuildPlugins.kotlinKapt)
+    id(BuildPlugins.ModulePlugins.androidLibrary)
+    id(BuildPlugins.Kotlin.android)
+    id(BuildPlugins.Kotlin.kapt)
 }
 
 android {
@@ -10,14 +10,15 @@ android {
     defaultConfig {
         minSdkVersion(AndroidSdk.minSdk)
         targetSdkVersion(AndroidSdk.targetSdk)
-
-//        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
@@ -25,12 +26,12 @@ android {
 dependencies {
     implementation(project(":domain"))
 
-    implementation(Libraries.room_runtime)
-    kapt(Libraries.room_compiler)
+    implementation(Libraries.Room.room_runtime)
+    kapt(Libraries.Room.room_compiler)
 
-    kapt(Libraries.hilt_compiler)
-    implementation(Libraries.hilt_android)
+    kapt(Libraries.Hilt.hilt_compiler)
+    implementation(Libraries.Hilt.hilt_android)
 
-    implementation(Libraries.core)
-    implementation(Libraries.preferences)
+    implementation(Libraries.DataStore.core)
+    implementation(Libraries.DataStore.preferences)
 }

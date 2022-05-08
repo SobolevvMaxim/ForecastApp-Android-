@@ -11,7 +11,10 @@ object DateUtils {
 
     fun SimpleDateFormat.getTime(time: String): String = this.format(Date(time.toLong() * 1000))
 
-    fun CityWeather.checkIfDeprecated(dateFormat: SimpleDateFormat, deprecatedAction: (deprecatedCityForecast: CityWeather) -> Unit) {
+    fun CityWeather.checkIfDeprecated(
+        dateFormat: SimpleDateFormat,
+        deprecatedAction: (deprecatedCityForecast: CityWeather) -> Unit
+    ) {
         val cityDate = Calendar.getInstance()
         val currentDate = Calendar.getInstance()
 

@@ -40,7 +40,7 @@ interface IForecastRepository {
 
     /**
      * Get all cities from base
-=     * @return all cities from base
+    =     * @return all cities from base
      */
     suspend fun getAll(): Set<CityWeather>
 

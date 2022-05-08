@@ -12,24 +12,37 @@ object BuildPlugins {
         const val navigation = "2.4.2"
     }
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:${Versions.buildToolsVersion}"
-    const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-    const val androidApplication = "com.android.application"
-    const val kotlinAndroid = "kotlin-android"
-    const val kotlinKapt = "kotlin-kapt"
-    const val hiltGradleAndroid = "com.google.dagger:hilt-android-gradle-plugin:${Versions.hiltVersion}"
+    object Kotlin {
+        const val android = "kotlin-android"
+        const val kapt = "kotlin-kapt"
+    }
+
+    object GradlePlugins {
+        const val androidGradlePlugin =
+            "com.android.tools.build:gradle:${Versions.buildToolsVersion}"
+        const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        const val hiltGradleAndroid =
+            "com.google.dagger:hilt-android-gradle-plugin:${Versions.hiltVersion}"
+    }
+
+    object ModulePlugins {
+        const val androidApplication = "com.android.application"
+        const val androidLibrary = "com.android.library"
+    }
+
     const val navigationSafeArgs = "androidx.navigation.safeargs.kotlin"
     const val hiltAndroidPlugin = "dagger.hilt.android.plugin"
-    const val androidLibrary = "com.android.library"
-    const val navigationAndroid = "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
+    const val navigationAndroid =
+        "androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.navigation}"
     const val kotlinAndroidExtensions = "kotlin-android-extensions"
-
 }
 
 object AndroidSdk {
     const val minSdk = 16
     const val compileSdk = 31
     const val targetSdk = compileSdk
+
+    const val applicationID = "com.example.homeworksandroid"
 }
 
 object Libraries {
@@ -62,77 +75,69 @@ object Libraries {
         const val timber = "5.0.1"
     }
 
+    object UI {
+        const val activity_ktx = "androidx.activity:activity-ktx:${Versions.activity}"
+        const val core_ktx = "androidx.core:core-ktx:${Versions.core_ktx}"
+        const val app_compat = "androidx.appcompat:appcompat:${Versions.appcompat}"
+        const val constraint_layout =
+            "androidx.constraintlayout:constraintlayout:${Versions.constraint_layout}"
+        const val refresh_layout =
+            "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swiperefresh}"
+    }
 
-    const val activity_ktx = "androidx.activity:activity-ktx:${Versions.activity}"
-    const val fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
-    const val ui_ktx = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
-    const val app_compat = "androidx.appcompat:appcompat:${Versions.appcompat}"
+    object Navigation {
+        const val fragment = "androidx.navigation:navigation-fragment-ktx:${Versions.navigation}"
+        const val ui_ktx = "androidx.navigation:navigation-ui-ktx:${Versions.navigation}"
+    }
 
-    const val leak_canary = "com.squareup.leakcanary:leakcanary-android:${Versions.leak_canary}"
+    object DataStore {
+        const val core = "androidx.datastore:datastore-core:${Versions.datastore}"
+        const val preferences = "androidx.datastore:datastore-preferences:${Versions.datastore}"
+    }
 
-    const val multidex = "androidx.multidex:multidex:${Versions.multidex}"
+    object Fragment {
+        const val runtime = "androidx.fragment:fragment:${Versions.fragment}"
+        const val runtime_ktx = "androidx.fragment:fragment-ktx:${Versions.fragment}"
+        const val testing = "androidx.fragment:fragment-testing:${Versions.fragment}"
+    }
 
-    const val location = "com.google.android.gms:play-services-location:${Versions.location}"
+    object Kotlin {
+        const val kotlinstd = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin_std}"
+        const val coroutines =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    }
 
-    const val constraint_layout =
-        "androidx.constraintlayout:constraintlayout:${Versions.constraint_layout}"
+    object Lifecycle {
+        const val runtime_ktx = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
+        const val java8 = "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
+        const val lifecycle_compiler = "androidx.lifecycle:lifecycle-compiler:${Versions.lifecycle}"
+        const val viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
+        const val livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+    }
 
-    const val core_ktx = "androidx.core:core-ktx:${Versions.core_ktx}"
+    object Room {
+        const val room_runtime = "androidx.room:room-runtime:${Versions.room}"
+        const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
+    }
 
-    const val refresh_layout =
-        "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.swiperefresh}"
+    object Hilt {
+        const val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
+        const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.hilt}"
+    }
 
-    const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
+    object Retrofit {
+        const val okhttp_logging_interceptor =
+            "com.squareup.okhttp3:logging-interceptor:${Versions.interceptor}"
 
-    const val android_gradle_plugin = "com.android.tools.build:gradle:${Versions.gradle}"
-    const val kotlin_gradle_plugin =
-        "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin_gradle}"
-    const val hilt_plugin = ("com.google.dagger:hilt-android-gradle-plugin:${Versions.hilt}")
-
-    const val core = "androidx.datastore:datastore-core:${Versions.datastore}"
-    const val preferences = "androidx.datastore:datastore-preferences:${Versions.datastore}"
-
-    const val runtime = "androidx.fragment:fragment:${Versions.fragment}"
-    const val fragment_runtime_ktx = "androidx.fragment:fragment-ktx:${Versions.fragment}"
-    const val testing = "androidx.fragment:fragment-testing:${Versions.fragment}"
-
-    const val kotlinstd = "org.jetbrains.kotlin:kotlin-stdlib:${Versions.kotlin_std}"
-    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
-
-    const val runtime_ktx = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
-    const val java8 = "androidx.lifecycle:lifecycle-common-java8:${Versions.lifecycle}"
-    const val lifecycle_compiler = "androidx.lifecycle:lifecycle-compiler:${Versions.lifecycle}"
-    const val viewmodel_ktx = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.lifecycle}"
-    const val livedata_ktx = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifecycle}"
+        const val retrofit_runtime = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+        const val adapter =
+            "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.retrofit_coroutines}"
+    }
 
     const val material = "com.google.android.material:material:${Versions.material}"
-
-    const val junit = "junit:junit:${Versions.junit}"
-    const val junit_test = "androidx.test.ext:junit:${Versions.junit_test}"
-
-    const val okhttp_logging_interceptor =
-        "com.squareup.okhttp3:logging-interceptor:${Versions.interceptor}"
-
-    const val retrofit_runtime = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
-    const val adapter =
-        "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.retrofit_coroutines}"
-
-    const val room_runtime = "androidx.room:room-runtime:${Versions.room}"
-    const val room_compiler = "androidx.room:room-compiler:${Versions.room}"
-
-    const val hilt_android = "com.google.dagger:hilt-android:${Versions.hilt}"
-    const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.hilt}"
-
+    const val leak_canary = "com.squareup.leakcanary:leakcanary-android:${Versions.leak_canary}"
+    const val multidex = "androidx.multidex:multidex:${Versions.multidex}"
+    const val location = "com.google.android.gms:play-services-location:${Versions.location}"
+    const val timber = "com.jakewharton.timber:timber:${Versions.timber}"
     const val converter = "com.squareup.retrofit2:converter-gson:${Versions.gson}"
 }
-
-//object TestLibraries {
-//    private object Versions {
-//        const val junit4 = "4.12"
-//        const val testRunner = "1.1.0-alpha4"
-//        const val espresso = "3.1.0-alpha4"
-//    }
-//    const val junit4     = "junit:junit:${Versions.junit4}"
-//    const val testRunner = "androidx.test:runner:${Versions.testRunner}"
-//    const val espresso   = "androidx.test.espresso:espresso-core:${Versions.espresso}"
-//}

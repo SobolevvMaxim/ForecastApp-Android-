@@ -5,10 +5,10 @@ buildscript {
 
     }
     dependencies {
-        classpath (BuildPlugins.androidGradlePlugin)
-        classpath (BuildPlugins.kotlinGradlePlugin)
-        classpath (BuildPlugins.hiltGradleAndroid)
-        classpath (BuildPlugins.navigationAndroid)
+        classpath(BuildPlugins.GradlePlugins.androidGradlePlugin)
+        classpath(BuildPlugins.GradlePlugins.kotlinGradlePlugin)
+        classpath(BuildPlugins.GradlePlugins.hiltGradleAndroid)
+        classpath(BuildPlugins.navigationAndroid)
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle.kts.kts files
     }

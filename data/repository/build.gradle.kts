@@ -1,7 +1,7 @@
 plugins {
-    id(BuildPlugins.androidLibrary)
-    id(BuildPlugins.kotlinAndroid)
-    id(BuildPlugins.kotlinKapt)
+    id(BuildPlugins.ModulePlugins.androidLibrary)
+    id(BuildPlugins.Kotlin.android)
+    id(BuildPlugins.Kotlin.kapt)
     id(BuildPlugins.kotlinAndroidExtensions)
     id(BuildPlugins.hiltAndroidPlugin)
 }
@@ -14,13 +14,15 @@ android {
         targetSdkVersion(AndroidSdk.targetSdk)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-//        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
@@ -31,12 +33,11 @@ dependencies {
     implementation(project(":data:local"))
     implementation(project(":common:extensions"))
 
-    implementation(Libraries.kotlinstd)
-    implementation(Libraries.coroutines)
-    implementation(Libraries.adapter)
+    implementation(Libraries.Kotlin.kotlinstd)
+    implementation(Libraries.Kotlin.coroutines)
+    implementation(Libraries.UI.core_ktx)
+    implementation(Libraries.Retrofit.adapter)
 
-    kapt(Libraries.hilt_compiler)
-    implementation(Libraries.hilt_android)
-
-    implementation(Libraries.core_ktx)
+    kapt(Libraries.Hilt.hilt_compiler)
+    implementation(Libraries.Hilt.hilt_android)
 }
