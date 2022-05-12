@@ -36,7 +36,3 @@ annotation class DateFormat
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class TimeFormat
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class PreferenceTag

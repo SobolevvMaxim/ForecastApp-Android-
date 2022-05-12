@@ -1,4 +1,4 @@
-package com.example.local
+package com.example.local.converters
 
 import androidx.room.TypeConverter
 import com.example.forecast.domain.model.Hourly
