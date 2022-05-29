@@ -355,6 +355,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         Timber.d("Updating main view (city: %s)", cityToUpdateView)
 
         DataProcessing(cityToUpdateView).apply {
+            if (cityToUpdateView.name == getString(R.string.location_title))
+                your_location.visibility = View.VISIBLE
+            else your_location.visibility = View.INVISIBLE
+
             currentCity.text = getForecastLocation()
             temperature_today.text = getTemperature()
             uvindex_value.text = getUVI()

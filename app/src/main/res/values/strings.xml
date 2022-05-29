@@ -43,4 +43,5 @@
     <string name="today_description">Today Description View</string>
     <string name="uvindex">uvindex</string>
     <string name="time_default">12:00</string>
+    <string name="location_image">location_image</string>
 </resources>
