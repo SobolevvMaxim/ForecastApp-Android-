@@ -3,6 +3,7 @@ package com.example.forecast.feature_forecast.presentation.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -26,6 +27,7 @@ class CitiesRecyclerAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val cityTV: TextView = view.item_city
         private val temperatureTV: TextView = view.city_temperature
+        private val itemLocation: ImageView = view.item_location
 
         fun bind(
             item: CityWeather,
@@ -46,6 +48,8 @@ class CitiesRecyclerAdapter(
                 commonColor
             )
 
+            showLocation(item.name)
+
             setOnClickListener {
                 listener.clickListener?.invoke(item)
             }
@@ -65,6 +69,14 @@ class CitiesRecyclerAdapter(
                 cityTV.setTextColor(highlightColor)
             } else {
                 cityTV.setTextColor(commonColor)
+            }
+        }
+
+        private fun showLocation(itemName: String) {
+            if (itemName == "Your Location") {
+                itemLocation.visibility = View.VISIBLE
+            } else {
+                itemLocation.visibility = View.GONE
             }
         }
     }
