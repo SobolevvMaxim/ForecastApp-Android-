@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.forecast">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name="com.example.forecast.App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_weather"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
         android:permission=""
+        android:roundIcon="@mipmap/ic_launcher_weather"
+        android:supportsRtl="true"
         android:theme="@style/Theme.Forecast">
 
-        <activity android:name="com.example.forecast.feature_forecast.presentation.AppActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"
+        <activity
+            android:name="com.example.forecast.feature_forecast.presentation.AppActivity"
             android:exported="true"
-            android:launchMode="standard">
+            android:launchMode="standard"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

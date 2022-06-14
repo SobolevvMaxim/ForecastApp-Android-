@@ -1,11 +1,17 @@
 # ForecastApp-Android-
+
 [Download apk](https://github.com/SobolevvMaxim/ForecastApp-Android-/blob/master/apk/app-forecast.apk)
+
 ## API_KEY
-!! Don't forget to put your API_KEY in gradle.properties
+
+!! Don't forget to put your API_KEY in buildSrc/Dependencies
+
 ## Preview
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_1.jpg) ![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_2.jpg)
-![](https://github.com/SobolevvMaxim/images/blob/master/forecast-images/img_3.jpg)
+
+![](screenshots/main.png) ![](screenshots/side_menu.png)
+
 ## Stack
+
 - Kotlin
 - MVVM
 - Retrofit
@@ -13,8 +19,10 @@
 - Coroutines
 - GSON
 - Hilt (Koin in another branch)
+
 ## Features
-- Load default city (Minsk) weather at first start
+
+- Load default city (Minsk) weather at first start or by user location
 - Get city forecast by name
 - Tap the city to choose it
 - Long tap to delete the city

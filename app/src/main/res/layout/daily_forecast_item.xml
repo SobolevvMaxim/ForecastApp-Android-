@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/daily"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:orientation="horizontal"
     app:cardElevation="8dp">
 
     <TextView
         android:id="@+id/daily_date"
-        style="@style/Widget.Forecast.TextView.Small"
+        style="@style/TextView.Small"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center|start"
-        android:lineSpacingExtra="18sp"
         android:text="@string/date_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +20,8 @@
 
     <ImageView
         android:id="@+id/daily_image"
+        style="@style/AppImageView.MiddleSize"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
         android:contentDescription="@string/forecast_default_image"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,9 +31,8 @@
 
     <TextView
         android:id="@+id/daily_description"
-        style="@style/Widget.Forecast.TextView.Small"
+        style="@style/TextView.Small"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center|start"
         android:paddingLeft="20dp"
@@ -47,13 +43,11 @@
 
     <TextView
         android:id="@+id/daily_temp"
-        style="@style/Widget.Forecast.TextView.Default"
+        style="@style/TextView.MainWhite.Titles"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center|end"
         android:text="@string/default_main_temperature"
-        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/daily_image" />

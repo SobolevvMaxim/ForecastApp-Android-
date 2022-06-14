@@ -4,7 +4,7 @@ import com.example.extensions.mappers.CityWeatherMappers.toCityWeatherEntity
 import com.example.extensions.mappers.DtoMappers.toCity
 import com.example.extensions.mappers.DtoMappers.toCityWeather
 import com.example.extensions.mappers.EntityMappers.toCityWeather
-import com.example.forecast.domain.model.City
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.repository.IForecastRepository
 import com.example.local.CityWeatherDao
@@ -27,7 +27,7 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    override suspend fun searchCity(query: String): Result<City> {
+    override suspend fun searchCity(query: String): Result<CityToSearch> {
         return withContext(dispatcher) {
             runCatching {
                 citiesService.searchCityAsync(query = query)
@@ -40,17 +40,17 @@ class ForecastRepository @Inject constructor(
         }
     }
 
-    override suspend fun searchForecast(city: City): Result<CityWeather> {
+    override suspend fun searchForecastByCoordinates(cityToSearch: CityToSearch): Result<CityWeather> {
         return withContext(dispatcher) {
             runCatching {
                 temperatureService.searchTempAsync(
-                    lat = city.coordinates.lat,
-                    lon = city.coordinates.lon,
+                    lat = cityToSearch.coordinates!!.lat, //
+                    lon = cityToSearch.coordinates!!.lon,
                 )
                     .await()
                     .takeIf { it.isSuccessful }
                     ?.body()
-                    ?.toCityWeather(city)
+                    ?.toCityWeather(cityToSearch)
                     ?: throw Exception("empty data")
             }
         }
@@ -65,7 +65,7 @@ class ForecastRepository @Inject constructor(
 
     private fun insertInMemory(city: CityWeather) {
         addedCities = addedCities?.toMutableSet()?.let { cities ->
-            when (cities.add(city)){
+            when (cities.add(city)) {
                 true -> cities
                 false -> {
                     val index = cities.indexOfFirst { it.id == city.id }

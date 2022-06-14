@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
-import com.example.local.DailyTemperatureConverter
-import com.example.local.HourlyTemperatureConverter
+import com.example.local.converters.DailyTemperatureConverter
+import com.example.local.converters.HourlyTemperatureConverter
 import com.example.local.TABLE_NAME
 
 @Entity(tableName = TABLE_NAME)

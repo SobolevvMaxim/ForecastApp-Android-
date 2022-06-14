@@ -1,7 +1,6 @@
 package com.example.extensions.mappers
 
-import android.util.Log
-import com.example.forecast.domain.model.City
+import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.domain.model.Hourly
@@ -11,14 +10,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object DtoMappers {
-    fun CityDto.toCity(name: String) = City(
+    fun CityDto.toCity(name: String) = CityToSearch(
         coordinates = coordinates,
-        id = id,
-        name = name,
-        country = sys.country
+        searchName = name
     )
 
-    fun TemperaturesDto.toCityWeather(city: City): CityWeather {
+    fun TemperaturesDto.toCityWeather(cityToSearch: CityToSearch): CityWeather {
         val daily = ArrayList(
             dailyTemp.map {
                 Daily(temp = it.temp.day, description = it.weather[0].main)
@@ -29,11 +26,11 @@ object DtoMappers {
             }
         )
         val cityWeather = CityWeather(
-            id = city.id,
-            name = city.name,
-            country = city.country,
-            lat = city.coordinates.lat,
-            lon = city.coordinates.lon,
+            id = UUID.nameUUIDFromBytes(cityToSearch.searchName.encodeToByteArray()).toString(),
+            name = cityToSearch.searchName,
+            country = timezone.substring(0, 2),
+            lat = cityToSearch.coordinates!!.lat,
+            lon = cityToSearch.coordinates!!.lon,
             dailyTemperatures = daily,
             hourlyTemperatures = hourly,
             sunrise = current.sunrise,
@@ -46,7 +43,6 @@ object DtoMappers {
                 Locale.getDefault()
             ).format(Calendar.getInstance().time),
         )
-        Log.d("HOUR", "toCityWeather: $hourlyTemp")
         return cityWeather
     }
 }

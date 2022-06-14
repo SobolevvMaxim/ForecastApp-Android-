@@ -6,6 +6,7 @@ data class TemperaturesDto(
     @SerializedName("hourly") val hourlyTemp: List<HourlyTemp>,
     @SerializedName("daily") val dailyTemp: List<DailyTemp>,
     @SerializedName("current") val current: Current,
+    @SerializedName("timezone") val timezone: String,
 )
 
 data class Current(
