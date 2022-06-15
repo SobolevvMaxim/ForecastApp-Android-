@@ -5,6 +5,7 @@ plugins {
     id(BuildPlugins.kotlinAndroidExtensions)
     id(BuildPlugins.hiltAndroidPlugin)
     id(BuildPlugins.navigationSafeArgs)
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -43,6 +44,7 @@ dependencies {
     implementation(Libraries.Lifecycle.viewmodel_ktx)
     implementation(Libraries.Lifecycle.livedata_ktx)
     implementation(Libraries.Lifecycle.runtime_ktx)
+    implementation("androidx.preference:preference:1.1.1")
 
     kapt(Libraries.Hilt.hilt_compiler)
     implementation(Libraries.Hilt.hilt_android)

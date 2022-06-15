@@ -8,8 +8,8 @@ import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.prefstore.IPrefStore
 import com.example.forecast.domain.use_case.*
-import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
-import com.example.forecast.feature_forecast.presentation.base.Event
+import com.example.forecast.feature_forecast.base.BaseViewModel
+import com.example.forecast.feature_forecast.base.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject

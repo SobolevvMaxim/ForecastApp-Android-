@@ -15,8 +15,17 @@
         android:permission=""
         android:roundIcon="@mipmap/ic_launcher_weather"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Forecast">
-
+        android:theme="@style/Theme.Forecast.NoActionBar">
+        <activity
+            android:name=".feature_settings.SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/Theme.Forecast"
+            android:parentActivityName=".feature_forecast.presentation.AppActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".feature_forecast.presentation.AppActivity" />
+        </activity>
         <activity
             android:name="com.example.forecast.feature_forecast.presentation.AppActivity"
             android:exported="true"
@@ -30,6 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
