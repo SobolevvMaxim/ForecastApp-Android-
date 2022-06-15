@@ -7,7 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
-import com.example.forecast.domain.data_processing.Extensions.getCelsius
+import com.example.forecast.domain.data_processing.Extensions.getTemperatureByUnit
+import com.example.forecast.domain.data_processing.TemperatureUnit
 import com.example.forecast.domain.model.Daily
 import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
 
@@ -15,6 +16,7 @@ class WeekForecastAdapter(
     private val forecast: List<Daily>,
     private val startDayIndex: Int,
     private val dayOfWeeks: List<String>,
+    private val temperatureUnit: TemperatureUnit,
 ) :
     RecyclerView.Adapter<WeekForecastAdapter.ViewHolder>() {
 
@@ -35,7 +37,7 @@ class WeekForecastAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         forecast[position].let {
             holder.apply {
-                temperatureTV.text = it.temp.getCelsius()
+                temperatureTV.text = it.temp.getTemperatureByUnit(temperatureUnit)
                 image.setImageResource(it.description.getForecastImageID())
                 descriptionTV.text = it.description
                 date.text = getItemDate(position)

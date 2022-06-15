@@ -1,4 +1,4 @@
-package com.example.forecast.feature_settings
+package com.example.forecast.domain.data_processing
 
 object UnitConverter {
     /**

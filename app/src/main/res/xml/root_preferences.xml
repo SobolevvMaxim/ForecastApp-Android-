@@ -21,13 +21,13 @@
 
     </PreferenceCategory>
 
-    <androidx.preference.PreferenceCategory android:title="Other">
+    <androidx.preference.PreferenceCategory android:title="Другое">
         <androidx.preference.Preference
             android:enabled="true"
             android:key="About"
             android:selectable="true"
             android:summary="Github: https://github.com/SobolevvMaxim/ForecastApp-Android-"
-            android:title="About app" />
+            android:title="О приложении" />
     </androidx.preference.PreferenceCategory>
 
 </PreferenceScreen>

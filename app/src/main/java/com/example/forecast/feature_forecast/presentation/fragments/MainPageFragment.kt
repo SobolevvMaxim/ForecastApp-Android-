@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.extensions.DateUtils.checkIfDeprecated
@@ -26,6 +27,7 @@ import com.example.forecast.R
 import com.example.forecast.di.DateFormat
 import com.example.forecast.di.TimeFormat
 import com.example.forecast.domain.data_processing.DataProcessing
+import com.example.forecast.domain.data_processing.TemperatureUnit
 import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Coordinates
@@ -39,6 +41,7 @@ import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewMod
 import com.example.forecast.feature_forecast.utils.ChosenCityInterface
 import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
 import com.example.forecast.feature_settings.SettingsActivity
+import com.example.forecast.feature_settings.SettingsPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.additional_forecast_info.*
@@ -71,6 +74,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     private val citiesViewModel by viewModels<CitiesViewModel>()
 
+    private val prefs by lazy { PreferenceManager(context).sharedPreferences }
+
     private val cityObserver = Observer<Event<CityWeather>> { city ->
         when (city) {
             is Event.Loading -> onLoading()
@@ -78,6 +83,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             is Event.Error -> onError(city.throwable)
         }
     }
+
+    private val settingsPreferences by lazy { SettingsPreferences(prefs, requireContext()) }
 
     private val _networkManager by lazy { NetworkManager(context, ::onChangeNetworkState) }
 
@@ -148,7 +155,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             ),
             chosenID = getString(R.string.default_chosen_id),
             highlightColor = ContextCompat.getColor(requireContext(), R.color.primaryColor),
-            commonColor = ContextCompat.getColor(requireContext(), R.color.black)
+            commonColor = ContextCompat.getColor(requireContext(), R.color.black),
+            unit = settingsPreferences.getTemperatureUnit(),
         )
     }
 
@@ -220,7 +228,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 deprecatedAction = { deprecatedCityForecast ->
                     if (offline_mode.networkCheckByUI())
                         viewModel.updateCityForecast(deprecatedCityForecast)
-                }
+                },
+                settingsPreferences.getAutoUpdateTime()
             )
             updateView(this)
             citiesViewModel.getAddedCities()
@@ -371,7 +380,11 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     private fun updateView(cityToUpdateView: CityWeather) {
         Timber.d("Updating main view (city: %s)", cityToUpdateView)
 
-        DataProcessing(cityToUpdateView).apply {
+        val temperatureUnit = settingsPreferences.getTemperatureUnit()
+        DataProcessing(
+            cityToUpdateView,
+            temperatureUnit
+        ).apply {
             if (cityToUpdateView.name == getString(R.string.location_title))
                 your_location.visibility = View.VISIBLE
             else your_location.visibility = View.INVISIBLE
@@ -386,8 +399,8 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             sunrise_value.text = mainTimeFormat.getTime(city.sunrise)
             sunset_value.text = mainTimeFormat.getTime(city.sunset)
 
-            setDailyRecyclerView(city)
-            setHourlyRecyclerView(city)
+            setDailyRecyclerView(city, temperatureUnit)
+            setHourlyRecyclerView(city, temperatureUnit)
         }
     }
 
@@ -395,7 +408,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         big_image.setImageResource(city.dailyTemperatures[0].description.getForecastImageID())
     }
 
-    private fun setDailyRecyclerView(city: CityWeather) {
+    private fun setDailyRecyclerView(city: CityWeather, temperatureUnit: TemperatureUnit) {
         val recyclerManager: RecyclerView.LayoutManager =
             object : LinearLayoutManager(context, RecyclerView.VERTICAL, false) {
                 override fun canScrollVertically(): Boolean = false
@@ -413,12 +426,13 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             WeekForecastAdapter(
                 city.dailyTemperatures.subList(1, city.dailyTemperatures.size),
                 todayDayOfWeek,
-                resources.getStringArray(R.array.days).toList()
+                resources.getStringArray(R.array.days).toList(),
+                temperatureUnit
             )
         daily_forecast_recycler.adapter = forecastAdapter
     }
 
-    private fun setHourlyRecyclerView(city: CityWeather) {
+    private fun setHourlyRecyclerView(city: CityWeather, temperatureUnit: TemperatureUnit) {
         val recyclerManager: RecyclerView.LayoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
@@ -434,6 +448,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             DayForecastAdapter(
                 city.hourlyTemperatures,
                 hourOfDay,
+                temperatureUnit
             )
         hourly_forecast_recycler.adapter = forecastAdapter
     }

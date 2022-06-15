@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.preference.Preference
@@ -42,38 +41,14 @@ class SettingsActivity : AppCompatActivity(R.layout.settings_activity) {
         NavUtils.navigateUpFromSameTask(this)
     }
 
-    class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
+    class SettingsFragment : PreferenceFragmentCompat() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
-        override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-            val key = preference.key
-            when {
-                key == getString(R.string.key_temperature_unit) && newValue is String -> {
-                    val temperatureUnit = TemperatureUnit.fromString(newValue)
-
-                    Toast.makeText(context, "Unit changed to $temperatureUnit", Toast.LENGTH_LONG)
-                        .show()
-                }
-                key == getString(R.string.key_auto_update) && newValue is String -> {
-
-
-                    Toast.makeText(context, "AutoUpdate changed to $newValue", Toast.LENGTH_LONG)
-                        .show()
-                }
-            }
-            return true
-        }
-
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
-
-            findPreference<Preference>(getString(R.string.key_temperature_unit))!!.onPreferenceChangeListener =
-                this
-            findPreference<Preference>(getString(R.string.key_auto_update))!!.onPreferenceChangeListener =
-                this
 
             findPreference<Preference>("About")!!.setOnPreferenceClickListener {
                 Intent(Intent.ACTION_VIEW)

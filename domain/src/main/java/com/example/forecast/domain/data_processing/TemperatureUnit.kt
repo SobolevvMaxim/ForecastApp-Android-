@@ -1,8 +1,8 @@
-package com.example.forecast.feature_settings
+package com.example.forecast.domain.data_processing
 
 import java.text.DecimalFormat
 
-private val NUMBER_FORMAT = DecimalFormat("#.#")
+private val NUMBER_FORMAT = DecimalFormat("#")
 
 enum class TemperatureUnit {
     FAHRENHEIT,

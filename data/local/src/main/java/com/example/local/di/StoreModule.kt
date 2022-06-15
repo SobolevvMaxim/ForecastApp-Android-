@@ -13,4 +13,7 @@ abstract class StoreModule {
 
     @Binds
     abstract fun bindPrefsStore(prefStore: PrefStore): IPrefStore
+
+//    @Binds
+//    abstract fun bindSettingsStore(settingsDataStore: SettingsDataStore): ISettingsDataStore
 }

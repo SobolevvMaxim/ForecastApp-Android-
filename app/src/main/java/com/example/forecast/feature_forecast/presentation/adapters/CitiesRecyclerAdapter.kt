@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.features.RecyclerClickListener
 import com.example.forecast.R
 import com.example.forecast.domain.data_processing.DataProcessing
+import com.example.forecast.domain.data_processing.TemperatureUnit
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.feature_forecast.utils.ChosenCityInterface
 import kotlinx.android.synthetic.main.city_item.view.*
@@ -20,6 +21,7 @@ class CitiesRecyclerAdapter(
     private var chosenID: String,
     private val highlightColor: Int,
     private val commonColor: Int,
+    private val unit: TemperatureUnit,
 ) :
     ListAdapter<CityWeather, CitiesRecyclerAdapter.ViewHolder>(diffUtilCallback),
     ChosenCityInterface {
@@ -34,9 +36,10 @@ class CitiesRecyclerAdapter(
             listener: RecyclerClickListener<CityWeather>,
             chosenCityInterface: ChosenCityInterface,
             highlightColor: Int,
-            commonColor: Int
+            commonColor: Int,
+            unit: TemperatureUnit
         ) = with(itemView) {
-            DataProcessing(item).apply {
+            DataProcessing(item, unit).apply {
                 cityTV.text = getForecastLocation()
                 temperatureTV.text = getTemperature()
             }
@@ -89,7 +92,7 @@ class CitiesRecyclerAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position), listener, this, highlightColor, commonColor)
+        holder.bind(getItem(position), listener, this, highlightColor, commonColor, unit)
     }
 
     override fun changeChosenCityID(newChosenID: String) {
