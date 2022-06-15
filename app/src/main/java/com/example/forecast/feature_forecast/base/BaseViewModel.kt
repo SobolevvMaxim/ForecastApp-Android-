@@ -1,5 +1,6 @@
-package com.example.forecast.feature_forecast.presentation.base
+package com.example.forecast.feature_forecast.base
 
+import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -10,6 +11,7 @@ abstract class BaseViewModel : ViewModel() {
 
     private var searchJob: Job? = null
 
+    @CallSuper
     override fun onCleared() {
         super.onCleared()
 

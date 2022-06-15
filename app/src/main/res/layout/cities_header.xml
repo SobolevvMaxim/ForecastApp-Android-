@@ -9,6 +9,7 @@
     <ImageView
         android:id="@+id/location_image"
         style="@style/AppImageView"
+        android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/location_description"
         android:focusable="true"
@@ -21,7 +22,17 @@
         style="@style/TextView.MainBlack.Titles"
         android:layout_marginStart="@dimen/main_margin"
         android:layout_marginLeft="@dimen/main_margin"
+        android:layout_weight="1"
         android:text="@string/added_cities"
         app:layout_constraintStart_toEndOf="@+id/location_image"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/settings_button"
+        style="@style/AppImageView"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:contentDescription="Settings"
+        app:srcCompat="@drawable/ic_baseline_settings_24"
+        tools:ignore="TouchTargetSizeCheck" />
 </LinearLayout>
