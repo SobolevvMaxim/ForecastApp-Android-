@@ -26,11 +26,12 @@ enum class TemperatureUnit {
     }
 
     private fun symbol(): String {
-        return when (this) {
-            FAHRENHEIT -> "°F"
-            CELSIUS -> "°C"
-            KELVIN -> "K"
-        }
+//        return when (this) {
+//            FAHRENHEIT -> "°F"
+//            CELSIUS -> "°C"
+//            KELVIN -> "k"
+//        }
+        return "°"
     }
 
     companion object {
