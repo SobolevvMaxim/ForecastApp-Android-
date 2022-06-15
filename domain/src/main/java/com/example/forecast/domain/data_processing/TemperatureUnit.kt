@@ -1,6 +1,7 @@
 package com.example.forecast.domain.data_processing
 
 import java.text.DecimalFormat
+import java.util.*
 
 private val NUMBER_FORMAT = DecimalFormat("#")
 
@@ -34,7 +35,7 @@ enum class TemperatureUnit {
 
     companion object {
         fun fromString(s: String): TemperatureUnit {
-            return when (s.toLowerCase()) {
+            return when (s.lowercase(Locale.ROOT)) {
                 "celsius" -> CELSIUS
                 "metric" -> CELSIUS
                 "kelvin" -> KELVIN

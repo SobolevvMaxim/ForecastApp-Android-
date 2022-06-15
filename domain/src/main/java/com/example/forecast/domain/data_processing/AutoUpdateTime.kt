@@ -1,5 +1,7 @@
 package com.example.forecast.domain.data_processing
 
+import java.util.*
+
 enum class AutoUpdateTime {
     ONE_HOUR,
     THREE_HOURS,
@@ -19,10 +21,10 @@ enum class AutoUpdateTime {
 
     companion object {
         fun fromString(s: String): AutoUpdateTime {
-            return when (s.toLowerCase()) {
-                "one_hour" -> AutoUpdateTime.ONE_HOUR
-                "three_hours" -> AutoUpdateTime.THREE_HOURS
-                "six_hours" -> AutoUpdateTime.SIX_HOURS
+            return when (s.lowercase(Locale.ROOT)) {
+                "one_hour" -> ONE_HOUR
+                "three_hours" -> THREE_HOURS
+                "six_hours" -> SIX_HOURS
                 else -> throw IllegalStateException()
             }
         }

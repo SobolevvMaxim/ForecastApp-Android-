@@ -19,7 +19,7 @@ class DayForecastAdapter(
 ) :
     RecyclerView.Adapter<DayForecastAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val temperatureTV: TextView = view.findViewById(R.id.hourly_temp)
         val date: TextView = view.findViewById(R.id.hourly_date)
         val image: ImageView = view.findViewById(R.id.hourly_image)
