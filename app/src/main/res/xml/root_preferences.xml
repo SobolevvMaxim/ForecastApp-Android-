@@ -1,0 +1,33 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory>
+
+        <ListPreference
+            app:defaultValue="celsius"
+            app:entries="@array/temperature_entries"
+            app:entryValues="@array/temperature_values"
+            app:key="key_temperature_unit"
+            app:title="@string/reply_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="one_hour"
+            app:entries="@array/autoupdate_entries"
+            app:entryValues="@array/autoupdate_values"
+            app:key="key_auto_update"
+            app:title="Автообновление"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory android:title="Other">
+        <androidx.preference.Preference
+            android:enabled="true"
+            android:key="About"
+            android:selectable="true"
+            android:summary="Github: https://github.com/SobolevvMaxim/ForecastApp-Android-"
+            android:title="About app" />
+    </androidx.preference.PreferenceCategory>
+
+</PreferenceScreen>

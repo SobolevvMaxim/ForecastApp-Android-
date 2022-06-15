@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.use_case.DeleteCity
 import com.example.forecast.domain.use_case.LoadForecasts
-import com.example.forecast.feature_forecast.presentation.base.BaseViewModel
+import com.example.forecast.feature_forecast.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject

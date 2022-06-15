@@ -1,6 +1,7 @@
 package com.example.forecast.feature_forecast.presentation.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -15,8 +16,8 @@ import com.example.extensions.DateUtils.checkIfDeprecated
 import com.example.extensions.DateUtils.getTime
 import com.example.extensions.LocationUtils.getLastLocation
 import com.example.extensions.LocationUtils.getLocationPermissions
+import com.example.extensions.NetworkManager
 import com.example.extensions.NetworkUtils.isOnline
-import com.example.extensions.NetworkUtils.setNetworkListener
 import com.example.extensions.UIUtils.closeNavigationViewOnBackPressed
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
@@ -28,18 +29,20 @@ import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.model.Coordinates
+import com.example.forecast.feature_forecast.base.BaseFragment
+import com.example.forecast.feature_forecast.base.Event
 import com.example.forecast.feature_forecast.presentation.adapters.CitiesRecyclerAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.DayForecastAdapter
 import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastAdapter
-import com.example.forecast.feature_forecast.presentation.base.BaseFragment
-import com.example.forecast.feature_forecast.presentation.base.Event
-import com.example.forecast.feature_forecast.presentation.utils.ChosenCityInterface
-import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
+import com.example.forecast.feature_forecast.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
+import com.example.forecast.feature_settings.SettingsActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.add_city_dialog.*
 import kotlinx.android.synthetic.main.additional_forecast_info.*
+import kotlinx.android.synthetic.main.cities_header.*
 import kotlinx.android.synthetic.main.main_app_bar.*
 import kotlinx.android.synthetic.main.main_forecast_info.*
 import kotlinx.android.synthetic.main.main_navigation.*
@@ -73,6 +76,17 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             is Event.Loading -> onLoading()
             is Event.Success<CityWeather> -> onSuccess(city.data)
             is Event.Error -> onError(city.throwable)
+        }
+    }
+
+    private val _networkManager by lazy { NetworkManager(context, ::onChangeNetworkState) }
+
+    private fun onChangeNetworkState(available: Boolean) {
+        activity?.runOnUiThread {
+            when (available) {
+                true -> offline_mode.visibility = View.GONE
+                false -> offline_mode.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -169,6 +183,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         super.onResume()
 
         closeNavigationViewOnBackPressed(drawerLayout = mainDrawer)
+        _networkManager.registerNetworkListener()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -187,6 +202,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         citiesViewModel.citiesLiveData.observe(viewLifecycleOwner, citiesObserver)
 
         setRecyclerView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        _networkManager.unregisterNetworkListener()
     }
 
     private fun onSuccess(city: CityWeather) {
@@ -214,14 +235,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setupListeners() {
-        setNetworkListener { isAvailable ->
-            activity?.runOnUiThread {
-                when (isAvailable) {
-                    true -> offline_mode.visibility = View.GONE
-                    false -> offline_mode.visibility = View.VISIBLE
-                }
-            }
-        }
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
@@ -241,6 +254,10 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                     else -> false
                 }
             }
+        }
+
+        settings_button.setOnClickListener {
+            startActivity(Intent(context, SettingsActivity::class.java))
         }
     }
 

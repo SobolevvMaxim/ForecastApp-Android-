@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.utils
+package com.example.forecast.feature_forecast.utils
 
 import com.example.forecast.R
 

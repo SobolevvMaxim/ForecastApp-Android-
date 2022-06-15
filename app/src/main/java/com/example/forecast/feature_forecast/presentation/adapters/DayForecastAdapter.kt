@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.forecast.R
 import com.example.forecast.domain.data_processing.Extensions.getCelsius
 import com.example.forecast.domain.model.Hourly
-import com.example.forecast.feature_forecast.presentation.utils.Utils.getForecastImageID
+import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
 
 class DayForecastAdapter(
     private val forecast: List<Hourly>,

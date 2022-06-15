@@ -2,50 +2,12 @@ package com.example.extensions
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import android.os.Build
 import androidx.fragment.app.Fragment
 import timber.log.Timber
 
 object NetworkUtils {
-
-    fun Fragment.setNetworkListener(onChangeNetworkState: (available: Boolean) -> Unit) {
-        val manager: ConnectivityManager =
-            context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val builder = NetworkRequest.Builder()
-
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
-            builder.addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-
-            val networkRequest = builder.build()
-            manager.registerNetworkCallback(networkRequest,
-                object : ConnectivityManager.NetworkCallback() {
-                    override fun onAvailable(network: Network) {
-                        super.onAvailable(network)
-                        Timber.d("Network available")
-                        onChangeNetworkState(true)
-                    }
-
-                    override fun onUnavailable() {
-                        super.onUnavailable()
-                        Timber.d("Network unavailable")
-                        onChangeNetworkState(false)
-                    }
-
-                    override fun onLost(network: Network) {
-                        super.onLost(network)
-                        Timber.d("Network lost")
-                        onChangeNetworkState(false)
-                    }
-                })
-        } else {
-            TODO("VERSION.SDK_INT < LOLLIPOP")
-        }
-    }
-
 
     fun Fragment.isOnline(): Boolean {
         val connectivityManager =
