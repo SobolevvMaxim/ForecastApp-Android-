@@ -13,7 +13,7 @@ enum class TemperatureUnit {
     override fun toString() = when (this) {
         FAHRENHEIT -> "imperial"
         CELSIUS -> "metric"
-        KELVIN -> ""
+        KELVIN -> "kelvin"
     }
 
     fun format(temperatureInKelvin: Double): String {
@@ -40,10 +40,9 @@ enum class TemperatureUnit {
                 "celsius" -> CELSIUS
                 "metric" -> CELSIUS
                 "kelvin" -> KELVIN
-                "" -> KELVIN
                 "fahrenheit" -> FAHRENHEIT
                 "imperial" -> FAHRENHEIT
-                else -> throw IllegalStateException()
+                else -> CELSIUS
             }
         }
     }

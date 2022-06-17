@@ -31,7 +31,7 @@
         android:id="@+id/settings_button"
         style="@style/AppImageView"
         android:layout_weight="1"
-        android:background="@color/white"
+        android:background="#00FFFFFF"
         android:contentDescription="Settings"
         app:srcCompat="@drawable/ic_baseline_settings_24"
         tools:ignore="TouchTargetSizeCheck" />

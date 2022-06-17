@@ -3,11 +3,12 @@ package com.example.forecast.feature_forecast.presentation.fragments
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.text.trimmedLength
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.preference.PreferenceManager
@@ -19,7 +20,10 @@ import com.example.extensions.LocationUtils.getLastLocation
 import com.example.extensions.LocationUtils.getLocationPermissions
 import com.example.extensions.NetworkManager
 import com.example.extensions.NetworkUtils.isOnline
+import com.example.extensions.UIUtils.addMargins
 import com.example.extensions.UIUtils.closeNavigationViewOnBackPressed
+import com.example.extensions.UIUtils.getNavigationBarHeight
+import com.example.extensions.UIUtils.getStatusBarHeight
 import com.example.extensions.UIUtils.networkCheckByUI
 import com.example.extensions.UIUtils.updateProgressBar
 import com.example.features.RecyclerClickListener
@@ -39,6 +43,7 @@ import com.example.forecast.feature_forecast.presentation.adapters.WeekForecastA
 import com.example.forecast.feature_forecast.presentation.viewmodels.CitiesViewModel
 import com.example.forecast.feature_forecast.presentation.viewmodels.MainViewModel
 import com.example.forecast.feature_forecast.utils.ChosenCityInterface
+import com.example.forecast.feature_forecast.utils.Utils.checkCityInput
 import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
 import com.example.forecast.feature_settings.SettingsActivity
 import com.example.forecast.feature_settings.SettingsPreferences
@@ -74,8 +79,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     private val citiesViewModel by viewModels<CitiesViewModel>()
 
-    private val prefs by lazy { PreferenceManager(context).sharedPreferences }
-
     private val cityObserver = Observer<Event<CityWeather>> { city ->
         when (city) {
             is Event.Loading -> onLoading()
@@ -84,7 +87,12 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         }
     }
 
-    private val settingsPreferences by lazy { SettingsPreferences(prefs, requireContext()) }
+    private val settingsPreferences by lazy {
+        SettingsPreferences(
+            PreferenceManager(requireContext()).sharedPreferences,
+            requireContext()
+        )
+    }
 
     private val _networkManager by lazy { NetworkManager(context, ::onChangeNetworkState) }
 
@@ -101,6 +109,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         cities.run {
             Timber.d("Observed cities: %s", cities)
             if (this.isNullOrEmpty()) {
+                Timber.d("Getting last location...")
                 getLastLocation(
                     successCallback = {
                         Timber.d(
@@ -146,7 +155,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 clickListener = {
                     Timber.d("Cities recycler clicked on item: %s", it)
                     changeChosen(it.id)
-                    mainDrawer.close()
+                    mainDrawer.closeDrawers()
                 },
                 onLongClickListener = {
                     Timber.d("Cities recycler long clicked on item: %s", it)
@@ -177,14 +186,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        getLocationPermissions(
-            onPermissionGained = {
-                citiesViewModel.getAddedCities()
-            },
-            onPermissionDenied = {
-                citiesViewModel.getAddedCities()
-            }
-        )
+
     }
 
     override fun onResume() {
@@ -200,10 +202,21 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         if (!isOnline())
             offline_mode.visibility = View.GONE
 
-        setupListeners()
+        getLocationPermissions(
+            onPermissionGained = {
+                Timber.d("Location permission gained...")
+                citiesViewModel.getAddedCities()
+            },
+            onPermissionDialogClosed = {
+                // TODO: callback triggered sometimes when permission dialog is still opened
+            }
+        )
 
-        viewModel.chosenID
-//        citiesViewModel.getAddedCities()
+
+        activity?.window?.setBackgroundDrawableResource(R.drawable.back)
+
+        setupListeners()
+        setHiddenStatusBarMargins()
 
         viewModel.chosenLiveData.observe(viewLifecycleOwner, cityObserver)
         viewModel.chosenID.observe(viewLifecycleOwner, chosenObserver)
@@ -244,6 +257,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
     }
 
     private fun setupListeners() {
+        mainDrawer.useCustomBehavior(Gravity.LEFT)
 
         swipe_layout.setOnRefreshListener {
             onRefreshListener()
@@ -251,7 +265,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
         topAppBar.apply {
             setNavigationOnClickListener {
-                mainDrawer.open()
+                mainDrawer.openDrawer(Gravity.LEFT)
             }
 
             setOnMenuItemClickListener {
@@ -268,6 +282,13 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
         settings_button.setOnClickListener {
             startActivity(Intent(context, SettingsActivity::class.java))
         }
+    }
+
+    private fun setHiddenStatusBarMargins() {
+        val statusBarHeight: Int = getStatusBarHeight()
+        fragment_drawer.addMargins(0, 0, 0, getNavigationBarHeight())
+        main_fragment_parent.addMargins(0, statusBarHeight, 0, 0)
+        cities_navigation.addMargins(0, statusBarHeight, 0, 0)
     }
 
     private fun setRecyclerView() {
@@ -304,7 +325,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
 
     @SuppressLint("InflateParams")
     private fun addCityDialog() {
-        AlertDialog.Builder(requireContext()).create().apply {
+        AlertDialog.Builder(requireContext(), R.style.AlertDialog_Forecast).create().apply {
             val inflater = requireActivity().layoutInflater
             setView(inflater.inflate(R.layout.add_city_dialog, null))
             setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.positive_button)) { _, _ ->
@@ -321,6 +342,7 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
             ) { dialog, _ ->
                 dialog.cancel()
             }
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_MODE_CHANGED)
             show()
         }
     }
@@ -346,34 +368,6 @@ class MainPageFragment : BaseFragment<MainViewModel>(res = R.layout.main_page_fr
                 dialog.cancel()
             }
             show()
-        }
-    }
-
-    private fun checkCityInput(cityInput: String): Boolean {
-        return when (cityInput.trimmedLength()) {
-            in 0..3 -> {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.incorrect_input),
-                    Toast.LENGTH_LONG
-                ).show()
-                false
-            }
-            else -> {
-                return when (offline_mode.networkCheckByUI()) {
-                    true -> {
-                        true
-                    }
-                    false -> {
-                        Toast.makeText(
-                            context,
-                            getString(R.string.network_unavailable),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        false
-                    }
-                }
-            }
         }
     }
 
