@@ -37,7 +37,7 @@
     <string name="get_city_extra">CHOSEN_CITY</string>
     <string name="city_name">City name</string>
     <string name="chosen_pref_key">CHOSEN_CITY</string>
-    <string name="default_chosen_id">0</string>
+
     <string name="menu_button_description">Menu</string>
     <string name="location_description">Location</string>
     <string name="today_description">Today Description View</string>
@@ -62,4 +62,6 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="key_temperature_unit">key_temperature_unit</string>
     <string name="key_auto_update">key_auto_update</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.adapters
+package com.example.forecast.ui.main_screen.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import com.example.forecast.R
 import com.example.forecast.domain.data_processing.Extensions.getTemperatureByUnit
 import com.example.forecast.domain.data_processing.TemperatureUnit
 import com.example.forecast.domain.model.Hourly
-import com.example.forecast.feature_forecast.utils.Utils.getForecastImageID
+import com.example.forecast.ui.main_screen.utils.Utils.getForecastImageID
 
 class DayForecastAdapter(
     private val forecast: List<Hourly>,

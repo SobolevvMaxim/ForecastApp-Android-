@@ -7,7 +7,6 @@
     app:layout_constraintTop_toTopOf="parent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@drawable/back"
     android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout

@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.viewmodels
+package com.example.forecast.ui.main_screen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,8 +8,8 @@ import com.example.forecast.domain.model.CityToSearch
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.prefstore.IPrefStore
 import com.example.forecast.domain.use_case.*
-import com.example.forecast.feature_forecast.base.BaseViewModel
-import com.example.forecast.feature_forecast.base.Event
+import com.example.forecast.ui.base.BaseViewModel
+import com.example.forecast.ui.base.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class MainViewModel @Inject constructor(
     private val _chosenLiveData = MutableLiveData<Event<CityWeather>>()
     val chosenLiveData: LiveData<Event<CityWeather>> get() = _chosenLiveData
 
-    val chosenID = prefStore.getChosen().asLiveData()
+    val chosenID: LiveData<String> = prefStore.getChosen().asLiveData()
 
     fun searchCityInfoByName(cityToSearch: CityToSearch) {
         _chosenLiveData.postValue(Event.Loading())

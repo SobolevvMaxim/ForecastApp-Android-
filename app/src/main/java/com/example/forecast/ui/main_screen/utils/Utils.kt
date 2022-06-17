@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.utils
+package com.example.forecast.ui.main_screen.utils
 
 import android.widget.Toast
 import androidx.core.text.trimmedLength

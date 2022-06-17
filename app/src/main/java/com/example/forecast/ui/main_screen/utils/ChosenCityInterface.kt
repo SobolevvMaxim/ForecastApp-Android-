@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.utils
+package com.example.forecast.ui.main_screen.utils
 
 interface ChosenCityInterface {
     fun changeChosenCityID(newChosenID: String)

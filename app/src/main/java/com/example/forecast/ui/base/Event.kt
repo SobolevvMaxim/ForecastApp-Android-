@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.base
+package com.example.forecast.ui.base
 
 sealed class Event<T> {
     class Loading<T> : Event<T>()

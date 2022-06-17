@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.presentation.adapters
+package com.example.forecast.ui.cities
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +13,14 @@ import com.example.forecast.R
 import com.example.forecast.domain.data_processing.DataProcessing
 import com.example.forecast.domain.data_processing.TemperatureUnit
 import com.example.forecast.domain.model.CityWeather
-import com.example.forecast.feature_forecast.utils.ChosenCityInterface
+import com.example.forecast.ui.main_screen.utils.ChosenCityInterface
+import com.example.local.di.DefaultChosenID
 import kotlinx.android.synthetic.main.city_item.view.*
+import javax.inject.Inject
 
-class CitiesRecyclerAdapter(
+class CitiesRecyclerAdapter @Inject constructor(
     private val listener: RecyclerClickListener<CityWeather>,
-    var chosenID: String,
+    @DefaultChosenID var chosenID: String = "",
     private val highlightColor: Int,
     private val commonColor: Int,
     private val unit: TemperatureUnit,

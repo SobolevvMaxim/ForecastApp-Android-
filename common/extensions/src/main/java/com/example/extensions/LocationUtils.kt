@@ -11,29 +11,22 @@ import com.google.android.gms.location.LocationServices
 
 object LocationUtils {
 
-    fun Fragment.getLocationPermissions(
+    fun Fragment.getLocationPermissionLauncher(
         onPermissionGained: (() -> Unit)? = null,
-        onPermissionDialogClosed: (() -> Unit)? = null
-    ) {
-        val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                when {
-                    permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                        onPermissionGained?.invoke()
-                    }
-                    else -> {
-                        onPermissionDialogClosed?.invoke()
-                    }
+        onPermissionDenied: (() -> Unit)? = null
+    ) = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    onPermissionGained?.invoke()
+                }
+                else -> {
+                    onPermissionDenied?.invoke()
                 }
             }
         }
-        locationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
     }
 
     fun Fragment.getLastLocation(

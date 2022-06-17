@@ -1,4 +1,4 @@
-package com.example.forecast.feature_settings
+package com.example.forecast.ui.settings
 
 import android.content.Intent
 import android.net.Uri

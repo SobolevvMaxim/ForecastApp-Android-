@@ -1,4 +1,4 @@
-package com.example.forecast.feature_forecast.base
+package com.example.forecast.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
