@@ -55,7 +55,9 @@ class SettingsActivity : AppCompatActivity(R.layout.settings_activity) {
 
             findPreference<Preference>("About")!!.setOnPreferenceClickListener {
                 Intent(Intent.ACTION_VIEW)
-                    .apply { data = Uri.parse("https://github.com/SobolevvMaxim/ForecastApp-Android-") }
+                    .apply {
+                        data = Uri.parse("https://github.com/SobolevvMaxim/ForecastApp-Android-")
+                    }
                     .let { startActivity(it); true }
             }
         }

@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class SettingsPreferences @Inject constructor(
     @ApplicationContext private val context: Context,
-): ISettingsPreferences {
+) : ISettingsPreferences {
     private val preferences = PreferenceManager.getDefaultSharedPreferences(context)
 
     override fun getTemperatureUnit(): TemperatureUnit =
@@ -24,7 +24,9 @@ class SettingsPreferences @Inject constructor(
         )
 
     override fun getAutoUpdateTime(): AutoUpdateTime =
-        AutoUpdateTime.fromString(preferences?.getString(
-            context.getString(R.string.key_auto_update), ""
-        ) ?: "")
+        AutoUpdateTime.fromString(
+            preferences?.getString(
+                context.getString(R.string.key_auto_update), ""
+            ) ?: ""
+        )
 }

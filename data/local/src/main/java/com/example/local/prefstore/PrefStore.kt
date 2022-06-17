@@ -34,7 +34,9 @@ class PrefStore @Inject constructor(
             } else {
                 throw exception
             }
-        }.map { it[PreferencesKeys.CHOSEN_CITY_KEY] ?: context.getString(R.string.default_chosen_id) }
+        }.map {
+            it[PreferencesKeys.CHOSEN_CITY_KEY] ?: context.getString(R.string.default_chosen_id)
+        }
 
 
     override suspend fun changeChosen(newChosenID: String) {

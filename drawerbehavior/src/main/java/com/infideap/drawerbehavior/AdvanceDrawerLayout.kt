@@ -44,7 +44,11 @@ open class AdvanceDrawerLayout : DrawerLayout {
         init(context, attrs, 0)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
         init(context, attrs, defStyle)
     }
 
@@ -207,21 +211,37 @@ open class AdvanceDrawerLayout : DrawerLayout {
             if (setting != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && setting.percentage < 1.0) {
                     if (drawerView.background is ColorDrawable) {
-                        val color = ColorUtils.setAlphaComponent(statusBarColor, (255 - 255 * slideOffset).toInt())
+                        val color = ColorUtils.setAlphaComponent(
+                            statusBarColor,
+                            (255 - 255 * slideOffset).toInt()
+                        )
                         window.statusBarColor = color
                         val bgColor = (drawerView.background as ColorDrawable).color
                         window.decorView.setBackgroundColor(bgColor)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            systemUiVisibility = if (ColorUtils.calculateContrast(Color.WHITE, bgColor) < contrastThreshold && slideOffset > 0.4) View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else 0
+                            systemUiVisibility = if (ColorUtils.calculateContrast(
+                                    Color.WHITE,
+                                    bgColor
+                                ) < contrastThreshold && slideOffset > 0.4
+                            ) View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else 0
                         }
                     } else if (drawerView.background is MaterialShapeDrawable
-                            && (drawerView.background as MaterialShapeDrawable).fillColor != null) {
-                        val color = ColorUtils.setAlphaComponent(statusBarColor, (255 - 255 * slideOffset).toInt())
+                        && (drawerView.background as MaterialShapeDrawable).fillColor != null
+                    ) {
+                        val color = ColorUtils.setAlphaComponent(
+                            statusBarColor,
+                            (255 - 255 * slideOffset).toInt()
+                        )
                         window.statusBarColor = color
-                        val bgColor = (drawerView.background as MaterialShapeDrawable).fillColor!!.defaultColor
+                        val bgColor =
+                            (drawerView.background as MaterialShapeDrawable).fillColor!!.defaultColor
                         window.decorView.setBackgroundColor(bgColor)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            systemUiVisibility = if (ColorUtils.calculateContrast(Color.WHITE, bgColor) < contrastThreshold && slideOffset > 0.4) View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else 0
+                            systemUiVisibility = if (ColorUtils.calculateContrast(
+                                    Color.WHITE,
+                                    bgColor
+                                ) < contrastThreshold && slideOffset > 0.4
+                            ) View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR else 0
                         }
                     }
                 }
@@ -232,8 +252,10 @@ open class AdvanceDrawerLayout : DrawerLayout {
                 ViewCompat.setScaleY(child, 1f - percentage * slideOffset)
                 child.cardElevation = setting.elevation * slideOffset
                 adjust = setting.elevation
-                var isLeftDrawer: Boolean = if (isRtl) childAbsGravity != absHorizGravity else childAbsGravity == absHorizGravity
-                val width = if (isLeftDrawer) drawerView.width + adjust else -drawerView.width - adjust
+                val isLeftDrawer: Boolean =
+                    if (isRtl) childAbsGravity != absHorizGravity else childAbsGravity == absHorizGravity
+                val width =
+                    if (isLeftDrawer) drawerView.width + adjust else -drawerView.width - adjust
                 updateSlideOffset(child, setting, width, slideOffset, isLeftDrawer)
             } else {
                 super.setScrimColor(defaultScrimColor)
@@ -246,29 +268,41 @@ open class AdvanceDrawerLayout : DrawerLayout {
         this.contrastThreshold = contrastThreshold
     }
 
-    val activity: Activity?
+    private val activity: Activity?
         get() = getActivity(context)
 
-    fun getActivity(context: Context?): Activity? {
+    private fun getActivity(context: Context?): Activity? {
         if (context == null) return null
         if (context is Activity) return context
         return if (context is ContextWrapper) getActivity(context.baseContext) else null
     }
 
-    open fun updateSlideOffset(child: CardView, setting: Setting?, width: Float, slideOffset: Float, isLeftDrawer: Boolean) {
+    open fun updateSlideOffset(
+        child: CardView,
+        setting: Setting?,
+        width: Float,
+        slideOffset: Float,
+        isLeftDrawer: Boolean
+    ) {
         child.x = width * slideOffset
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (drawerView != null) updateSlideOffset(drawerView!!, if (isDrawerOpen(drawerView!!)) 1f else 0f)
+        if (drawerView != null) updateSlideOffset(
+            drawerView!!,
+            if (isDrawerOpen(drawerView!!)) 1f else 0f
+        )
     }
 
     fun getDrawerViewAbsoluteGravity(gravity: Int): Int {
-        return GravityCompat.getAbsoluteGravity(gravity, ViewCompat.getLayoutDirection(this)) and GravityCompat.RELATIVE_HORIZONTAL_GRAVITY_MASK
+        return GravityCompat.getAbsoluteGravity(
+            gravity,
+            ViewCompat.getLayoutDirection(this)
+        ) and GravityCompat.RELATIVE_HORIZONTAL_GRAVITY_MASK
     }
 
-    fun getDrawerViewAbsoluteGravity(drawerView: View): Int {
+    private fun getDrawerViewAbsoluteGravity(drawerView: View): Int {
         val gravity = (drawerView.layoutParams as LayoutParams).gravity
         return getDrawerViewAbsoluteGravity(gravity)
     }

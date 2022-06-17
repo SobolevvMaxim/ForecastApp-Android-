@@ -16,7 +16,8 @@ class AppActivity : AppCompatActivity(R.layout.main_activity) {
 
         WindowInsetsControllerCompat(window, main_group).let { controller ->
             controller.hide(WindowInsetsCompat.Type.statusBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)

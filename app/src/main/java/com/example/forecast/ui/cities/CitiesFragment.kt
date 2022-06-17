@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.features.RecyclerClickListener
 import com.example.forecast.R
-import com.example.forecast.ui.base.BaseFragment
 import com.example.forecast.domain.model.CityWeather
 import com.example.forecast.domain.prefstore.ISettingsPreferences
+import com.example.forecast.ui.base.BaseFragment
 import com.example.forecast.ui.main_screen.utils.ChosenCityInterface
 import com.example.forecast.ui.settings.SettingsActivity
 import dagger.hilt.android.AndroidEntryPoint

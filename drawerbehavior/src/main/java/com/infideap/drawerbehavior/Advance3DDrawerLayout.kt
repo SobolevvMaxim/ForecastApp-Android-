@@ -10,15 +10,31 @@ import com.infideap.drawerbehavior.Advance3DDrawerLayout
  * Created by Shiburagi on 21/09/2017.
  */
 class Advance3DDrawerLayout : AdvanceDrawerLayout {
-    constructor(context: Context) : super(context) {}
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
-    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) {}
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
-    override fun updateSlideOffset(child: CardView, setting: AdvanceDrawerLayout.Setting?, width: Float, slideOffset: Float, isLeftDrawer: Boolean) {
+    override fun updateSlideOffset(
+        child: CardView,
+        setting: AdvanceDrawerLayout.Setting?,
+        width: Float,
+        slideOffset: Float,
+        isLeftDrawer: Boolean
+    ) {
         updateSlideOffset(child, setting as Setting, width, slideOffset, isLeftDrawer)
     }
 
-    private fun updateSlideOffset(child: CardView, setting: Setting, width: Float, slideOffset: Float, isLeftDrawer: Boolean) {
+    private fun updateSlideOffset(
+        child: CardView,
+        setting: Setting,
+        width: Float,
+        slideOffset: Float,
+        isLeftDrawer: Boolean
+    ) {
         if (setting.degree > 0) {
             val percentage = setting.degree / 90f
             child.x = width * slideOffset - child.width / 2.0f * percentage * slideOffset
