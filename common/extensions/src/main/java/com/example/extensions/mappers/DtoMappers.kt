@@ -25,7 +25,7 @@ object DtoMappers {
                 Hourly(temp = it.temp, description = it.weather[0].main)
             }
         )
-        val cityWeather = CityWeather(
+        return CityWeather(
             id = UUID.nameUUIDFromBytes(cityToSearch.searchName.encodeToByteArray()).toString(),
             name = cityToSearch.searchName,
             country = timezone.substring(0, 2),
@@ -43,6 +43,5 @@ object DtoMappers {
                 Locale.getDefault()
             ).format(Calendar.getInstance().time),
         )
-        return cityWeather
     }
 }

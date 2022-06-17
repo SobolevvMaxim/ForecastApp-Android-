@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.forecast.domain.prefstore.IPrefStore
+import com.example.local.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -21,7 +22,7 @@ val Context.dataStore: DataStore<androidx.datastore.preferences.core.Preferences
 )
 
 class PrefStore @Inject constructor(
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context,
 ) : IPrefStore {
 
     private val _dataStore = context.dataStore
@@ -33,7 +34,9 @@ class PrefStore @Inject constructor(
             } else {
                 throw exception
             }
-        }.map { it[PreferencesKeys.CHOSEN_CITY_KEY] ?: "0" }
+        }.map {
+            it[PreferencesKeys.CHOSEN_CITY_KEY] ?: context.getString(R.string.default_chosen_id)
+        }
 
 
     override suspend fun changeChosen(newChosenID: String) {

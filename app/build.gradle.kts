@@ -40,11 +40,12 @@ dependencies {
     implementation(project(":data:local"))
     implementation(project(":common:extensions"))
     implementation(project(":common:features"))
+    implementation(project(":drawerbehavior"))
 
     implementation(Libraries.Lifecycle.viewmodel_ktx)
     implementation(Libraries.Lifecycle.livedata_ktx)
     implementation(Libraries.Lifecycle.runtime_ktx)
-    implementation("androidx.preference:preference:1.1.1")
+    implementation(Libraries.preferences)
 
     kapt(Libraries.Hilt.hilt_compiler)
     implementation(Libraries.Hilt.hilt_android)

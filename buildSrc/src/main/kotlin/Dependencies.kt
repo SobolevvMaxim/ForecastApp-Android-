@@ -1,7 +1,7 @@
 const val kotlinVersion = "1.6.10"
 
 object ApiKey {
-    const val API_KEY = "PutYourApiKeyHere"
+    const val API_KEY = "38b77b2ee349a9b3c7b01a4c19660ebb"
 }
 
 object BuildPlugins {
@@ -73,6 +73,7 @@ object Libraries {
         const val location = "19.0.1"
         const val datastore = "1.0.0"
         const val timber = "5.0.1"
+        const val preferences = "1.2.0"
     }
 
     object UI {
@@ -134,6 +135,7 @@ object Libraries {
             "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:${Versions.retrofit_coroutines}"
     }
 
+    const val preferences = "androidx.preference:preference:${Versions.preferences}"
     const val material = "com.google.android.material:material:${Versions.material}"
     const val leak_canary = "com.squareup.leakcanary:leakcanary-android:${Versions.leak_canary}"
     const val multidex = "androidx.multidex:multidex:${Versions.multidex}"

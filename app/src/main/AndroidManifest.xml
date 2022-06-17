@@ -17,21 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Forecast.NoActionBar">
         <activity
-            android:name=".feature_settings.SettingsActivity"
+            android:name="com.example.forecast.ui.settings.SettingsActivity"
             android:exported="false"
             android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Forecast"
-            android:parentActivityName=".feature_forecast.presentation.AppActivity">
+            android:parentActivityName=".ui.AppActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".feature_forecast.presentation.AppActivity" />
+                android:value=".ui.AppActivity" />
         </activity>
         <activity
-            android:name="com.example.forecast.feature_forecast.presentation.AppActivity"
+            android:name="com.example.forecast.ui.AppActivity"
             android:exported="true"
             android:launchMode="standard"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
+            android:windowSoftInputMode="adjustNothing|stateAlwaysHidden"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

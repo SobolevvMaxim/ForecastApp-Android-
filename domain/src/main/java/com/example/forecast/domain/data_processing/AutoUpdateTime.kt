@@ -25,7 +25,7 @@ enum class AutoUpdateTime {
                 "one_hour" -> ONE_HOUR
                 "three_hours" -> THREE_HOURS
                 "six_hours" -> SIX_HOURS
-                else -> throw IllegalStateException()
+                else -> ONE_HOUR
             }
         }
     }

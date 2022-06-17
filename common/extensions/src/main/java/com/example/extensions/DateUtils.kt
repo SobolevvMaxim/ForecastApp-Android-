@@ -7,7 +7,7 @@ import java.util.*
 
 object DateUtils {
 
-    fun SimpleDateFormat.getCityForecastDate(city: CityWeather) =
+    private fun SimpleDateFormat.getCityForecastDate(city: CityWeather) =
         this.parse(city.forecastDate) ?: Date(1)
 
     fun SimpleDateFormat.getTime(time: String): String = this.format(Date(time.toLong() * 1000))

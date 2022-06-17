@@ -34,5 +34,5 @@ dependencies {
 
     implementation(Libraries.DataStore.core)
     implementation(Libraries.DataStore.preferences)
-    implementation("androidx.preference:preference:1.1.1")
+    implementation(Libraries.preferences)
 }

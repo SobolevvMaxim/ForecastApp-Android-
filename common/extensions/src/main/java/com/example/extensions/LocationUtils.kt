@@ -8,35 +8,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.LocationServices
-import timber.log.Timber
 
 object LocationUtils {
 
-    fun Fragment.getLocationPermissions(
+    fun Fragment.getLocationPermissionLauncher(
         onPermissionGained: (() -> Unit)? = null,
         onPermissionDenied: (() -> Unit)? = null
-    ) {
-        val locationPermissionRequest = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                when {
-                    permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-                        Timber.d("Location permission gained...")
-                        onPermissionGained?.invoke()
-                    }
-                    else -> {
-                        Timber.d("Location permission denied...")
-                        onPermissionDenied?.invoke()
-                    }
+    ) = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    onPermissionGained?.invoke()
+                }
+                else -> {
+                    onPermissionDenied?.invoke()
                 }
             }
         }
-        locationPermissionRequest.launch(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-        )
     }
 
     fun Fragment.getLastLocation(
@@ -44,7 +34,6 @@ object LocationUtils {
         locationNullCallback: () -> Unit,
         noPermissionCallback: () -> Unit
     ) {
-        Timber.d("Getting last location...")
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         if (ActivityCompat.checkSelfPermission(

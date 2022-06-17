@@ -2,7 +2,7 @@ package com.example.forecast.domain.data_processing
 
 object UnitConverter {
     /**
-     * Convert [temperatureInKelvin] from [KELVIN] to [to]
+     * Convert [temperatureInKelvin] from [temperatureInKelvin] to [to]
      */
     fun convertTemperature(temperatureInKelvin: Double, to: TemperatureUnit): Double {
         return when (to) {
