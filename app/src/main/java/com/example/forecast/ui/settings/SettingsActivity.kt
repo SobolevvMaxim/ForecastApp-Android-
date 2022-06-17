@@ -11,6 +11,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.forecast.R
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.settings_activity.*
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(R.layout.settings_activity) {
@@ -23,7 +24,9 @@ class SettingsActivity : AppCompatActivity(R.layout.settings_activity) {
                 .replace(R.id.settings, SettingsFragment())
                 .commit()
         }
+        setSupportActionBar(settings_toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        collapsing_toolbar.title = getString(R.string.title_activity_settings)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

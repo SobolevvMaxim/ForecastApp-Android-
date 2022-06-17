@@ -28,6 +28,7 @@
             android:selectable="true"
             android:summary="Github: https://github.com/SobolevvMaxim/ForecastApp-Android-"
             android:title="О приложении" />
+
     </androidx.preference.PreferenceCategory>
 
 </PreferenceScreen>
